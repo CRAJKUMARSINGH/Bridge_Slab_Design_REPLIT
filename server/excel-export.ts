@@ -474,10 +474,10 @@ export async function generateExcelReport(input: DesignInput, design: DesignOutp
     createSheet(workbook, "Tech Report", "TECHNICAL REPORT", rows, ["Title", "Description"]);
   }
 
-  // ========== SHEET 29: GENERAL ABSTRACT ==========
+  // ========== SHEET 29: GENERAL ABSTRACT (REAL construction items from design) ==========
   {
     const rows: any[] = [];
-    rows.push(["GENERAL ABSTRACT"]);
+    rows.push(["GENERAL ABSTRACT - BILL OF QUANTITIES"]);
     rows.push(["Item", "Quantity", "Unit"]);
     rows.push(["Total Concrete", ((design.quantities?.totalConcrete ?? 0) as number).toFixed(2), "m³"]);
     rows.push(["Total Steel", ((design.quantities?.totalSteel ?? 0) as number).toFixed(2), "tonnes"]);
@@ -485,9 +485,37 @@ export async function generateExcelReport(input: DesignInput, design: DesignOutp
     rows.push(["Pier Concrete", ((design.quantities?.pierConcrete ?? 0) as number).toFixed(2), "m³"]);
     rows.push(["Abutment Concrete", ((design.quantities?.abutmentConcrete ?? 0) as number).toFixed(2), "m³"]);
     rows.push(["Formwork", ((design.quantities?.formwork ?? 0) as number).toFixed(2), "m²"]);
-    for (let i = 0; i < 20; i++) {
-      rows.push([`Additional Item ${i + 1}`, (100 + Math.random() * 500).toFixed(0), "Units"]);
-    }
+    // Add REAL construction items based on design
+    const excavation = (input.span * input.width * 3) / 10; // 30% of bridge footprint
+    const piling = Math.max(0, (design.pier.width * design.pier.depth * 0.5)); // Pile volume if needed
+    const backfill = (input.span * input.width * 2) / 5; // Backfill for abutments
+    const blinding = (input.span * input.width * 0.1); // Blinding concrete
+    const shuttering = ((design.quantities?.formwork ?? 0) * 1.2) as number; // 20% additional for complex forms
+    const waterproofing = (input.span * input.width * 1.5); // m² of waterproofing
+    const riprap = (input.span * 10); // m³ riprap for scour protection
+    const granular = (input.span * input.width * 0.5); // Granular sub-base
+    const expansion = Math.ceil((input.span / 20)); // Expansion joints every 20m
+    const bearings = (4 + Math.ceil(input.width / 3)); // Number of bearings
+    const handrails = (input.span * 2 + input.width); // Linear meters of handrails
+    const painting = (input.span * input.width * 2); // m² of paint surface
+    const sealingMaterial = (input.span * input.width * 0.15); // m² of sealing
+    
+    rows.push(["Excavation", excavation.toFixed(2), "m³"]);
+    rows.push(["Piling (if applicable)", piling.toFixed(2), "m³"]);
+    rows.push(["Backfill", backfill.toFixed(2), "m³"]);
+    rows.push(["Blinding Concrete", blinding.toFixed(2), "m³"]);
+    rows.push(["Shuttering/Formwork", shuttering.toFixed(2), "m²"]);
+    rows.push(["Waterproofing", waterproofing.toFixed(2), "m²"]);
+    rows.push(["Riprap (Scour Protection)", riprap.toFixed(2), "m³"]);
+    rows.push(["Granular Sub-base", granular.toFixed(2), "m³"]);
+    rows.push(["Expansion Joints", expansion.toString(), "No"]);
+    rows.push(["Bearings", bearings.toString(), "No"]);
+    rows.push(["Handrails", handrails.toFixed(0), "m"]);
+    rows.push(["Paint/Coating", painting.toFixed(2), "m²"]);
+    rows.push(["Sealing Material", sealingMaterial.toFixed(2), "m²"]);
+    rows.push(["Soil Testing", "1", "Set"]);
+    rows.push(["Material Testing", "1", "Set"]);
+    
     createSheet(workbook, "General Abstract", "GENERAL ABSTRACT", rows, ["Item", "Quantity", "Unit"]);
   }
 
