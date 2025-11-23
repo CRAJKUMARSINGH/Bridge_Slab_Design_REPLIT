@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRoute } from "wouter";
 import WorkbookSidebar, { SHEET_GROUPS } from "@/components/workbook/WorkbookSidebar";
 import GeneralInputSheet from "../components/workbook/sheets/GeneralInputSheet";
 import LoadAnalysisSheet from "../components/workbook/sheets/LoadAnalysisSheet";
@@ -6,6 +8,9 @@ import LiveLoadSheet from "../components/workbook/sheets/LiveLoadSheet";
 import StructuralAnalysisSheet from "../components/workbook/sheets/StructuralAnalysisSheet";
 import DesignSheet from "../components/workbook/sheets/DesignSheet";
 import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
+import { getProject, updateProject } from "@/lib/api";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Save } from "lucide-react";
 
 // Initial Engineering State
 const INITIAL_PROJECT_DATA = {
@@ -24,12 +29,65 @@ const INITIAL_PROJECT_DATA = {
 export type ProjectData = typeof INITIAL_PROJECT_DATA;
 
 export default function WorkbookLayout() {
+  const [match, params] = useRoute("/workbook/:id");
+  const projectId = params?.id ? parseInt(params.id) : null;
+  const queryClient = useQueryClient();
+
   const [activeSheetId, setActiveSheetId] = useState("1.1");
   const [projectData, setProjectData] = useState<ProjectData>(INITIAL_PROJECT_DATA);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  const { data: project, isLoading } = useQuery({
+    queryKey: ["project", projectId],
+    queryFn: () => getProject(projectId!),
+    enabled: !!projectId,
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: (data: ProjectData) =>
+      updateProject(projectId!, { designData: data }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      setHasUnsavedChanges(false);
+    },
+  });
+
+  // Load project data when it's fetched
+  useEffect(() => {
+    if (project?.designData) {
+      setProjectData(project.designData as ProjectData);
+    }
+  }, [project]);
+
+  // Auto-save on data change (debounced)
+  useEffect(() => {
+    if (!hasUnsavedChanges || !projectId) return;
+    
+    const timer = setTimeout(() => {
+      saveMutation.mutate(projectData);
+    }, 2000); // Auto-save after 2 seconds of inactivity
+
+    return () => clearTimeout(timer);
+  }, [projectData, hasUnsavedChanges, projectId]);
 
   const updateProjectData = (key: keyof ProjectData, value: any) => {
     setProjectData(prev => ({ ...prev, [key]: value }));
+    setHasUnsavedChanges(true);
   };
+
+  const handleManualSave = () => {
+    if (projectId) {
+      saveMutation.mutate(projectData);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg text-muted-foreground">Loading project...</div>
+      </div>
+    );
+  }
 
   const activeSheetInfo = SHEET_GROUPS
     .flatMap(g => g.sheets)
@@ -74,16 +132,46 @@ export default function WorkbookLayout() {
       
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="h-14 border-b flex items-center justify-between px-6 bg-card shrink-0">
-           <div className="flex items-center gap-2">
-             <span className="text-muted-foreground font-mono text-sm">Sheet {activeSheetId}:</span>
-             <h1 className="font-semibold">{activeSheetInfo?.label}</h1>
+           <div className="flex items-center gap-4">
+             <Button
+               variant="ghost"
+               size="sm"
+               onClick={() => window.location.href = "/"}
+               data-testid="button-back-to-projects"
+             >
+               <ArrowLeft className="h-4 w-4 mr-2" />
+               Projects
+             </Button>
+             <div className="h-6 w-px bg-border" />
+             <div className="flex items-center gap-2">
+               <span className="text-muted-foreground font-mono text-sm">Sheet {activeSheetId}:</span>
+               <h1 className="font-semibold">{activeSheetInfo?.label}</h1>
+             </div>
            </div>
            <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2 bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs font-mono">
                 <span>L={projectData.span}m</span>
                 <span>fck=M{projectData.fck}</span>
               </div>
-              <div>Auto-Calc: ON</div>
+              <div className="flex items-center gap-2">
+                <div>Auto-Calc: ON</div>
+                {hasUnsavedChanges && (
+                  <span className="text-orange-600">● Unsaved</span>
+                )}
+                {saveMutation.isPending && (
+                  <span className="text-blue-600">Saving...</span>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleManualSave}
+                  disabled={!hasUnsavedChanges || saveMutation.isPending}
+                  data-testid="button-save"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save
+                </Button>
+              </div>
            </div>
         </header>
         
