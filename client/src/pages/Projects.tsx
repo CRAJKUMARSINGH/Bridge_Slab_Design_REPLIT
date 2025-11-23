@@ -26,27 +26,11 @@ export default function Projects() {
   });
 
   const queryClient = useQueryClient();
+  const [isCreating, setIsCreating] = useState(false);
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: getAllProjects,
-  });
-
-  const createMutation = useMutation({
-    mutationFn: createProject,
-    onSuccess: (newProject) => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-      setIsDialogOpen(false);
-      setCreateError("");
-      setNewProject({ name: "", location: "", district: "", engineer: "" });
-      toast.success("Project created! Redirecting...");
-      setLocation(`/workbook/${newProject.id}`);
-    },
-    onError: (error) => {
-      const message = error instanceof Error ? error.message : "Failed to create project";
-      setCreateError(message);
-      toast.error(message);
-    },
   });
 
   const deleteMutation = useMutation({
@@ -74,24 +58,42 @@ export default function Projects() {
     }
   };
 
-  const handleCreate = () => {
-    if (!newProject.name.trim()) return;
+  const handleCreate = async () => {
+    if (!newProject.name.trim()) {
+      setCreateError("Project name is required");
+      return;
+    }
 
-    createMutation.mutate({
-      ...newProject,
-      designData: {
-        designType: "slab",
-        span: 6.0,
-        width: 7.5,
-        supportWidth: 400,
-        wearingCoat: 80,
-        fck: 25,
-        fy: 415,
-        loadClass: "Class AA",
-        depth: 550,
-        cover: 40,
-      },
-    });
+    setIsCreating(true);
+    try {
+      setCreateError("");
+      const result = await createProject({
+        ...newProject,
+        designData: {
+          designType: "slab",
+          span: 6.0,
+          width: 7.5,
+          supportWidth: 400,
+          wearingCoat: 80,
+          fck: 25,
+          fy: 415,
+          loadClass: "Class AA",
+          depth: 550,
+          cover: 40,
+        },
+      });
+      toast.success("Project created!");
+      setIsDialogOpen(false);
+      setNewProject({ name: "", location: "", district: "", engineer: "" });
+      await queryClient.invalidateQueries({ queryKey: ["projects"] });
+      setLocation(`/workbook/${result.id}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to create project";
+      setCreateError(message);
+      toast.error(message);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -237,11 +239,11 @@ export default function Projects() {
                     </Button>
                     <Button
                       onClick={handleCreate}
-                      disabled={!newProject.name.trim() || createMutation.isPending}
+                      disabled={!newProject.name.trim() || isCreating}
                       data-testid="button-create-project"
                       className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {createMutation.isPending ? "Creating..." : "Create Project"}
+                      {isCreating ? "Creating..." : "Create Project"}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
