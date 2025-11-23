@@ -1,100 +1,177 @@
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Plus, Ruler, Calculator, Upload } from "lucide-react";
-import ExcelUpload from "@/components/workbook/ExcelUpload";
+import { useLocation } from "wouter";
+import { toast } from "sonner";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
   const [, setLocation] = useLocation();
 
-  const handleProjectCreate = async (projectData: any) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsLoading(true);
+
     try {
-      const response = await fetch("/api/projects", {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload-design-excel", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(projectData),
+        body: formData,
       });
 
-      if (response.ok) {
-        const project = await response.json();
-        setLocation(`/workbook/${project.id}`);
+      if (!response.ok) {
+        throw new Error("Failed to parse Excel file");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Design auto-generated from Excel!");
+
+        // Create project
+        const projectResponse = await fetch("/api/projects", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: result.projectName || "Bridge Design from Excel",
+            location: result.location || "Not specified",
+            engineer: "Auto-generated from Excel",
+            designData: result.designOutput,
+          }),
+        });
+
+        if (projectResponse.ok) {
+          const project = await projectResponse.json();
+          setLocation(`/workbook/${project.id}`);
+        }
+      } else {
+        throw new Error(result.message || "Failed to parse Excel");
       }
     } catch (error) {
-      console.error("Error creating project:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to upload Excel file"
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background p-8 font-sans">
-      <div className="max-w-5xl mx-auto space-y-8">
-        <header className="border-b pb-6">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-primary">Submersible Bridge Design Suite</h1>
-            <p className="text-muted-foreground mt-2">Auto-generate comprehensive designs from Excel hydraulic data</p>
-          </div>
-        </header>
-
-        <div>
-          <ExcelUpload onProjectCreate={handleProjectCreate} />
+    <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa", padding: "40px 20px", fontFamily: "system-ui, sans-serif" }}>
+      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+        
+        {/* Header */}
+        <div style={{ marginBottom: "40px", textAlign: "center" }}>
+          <h1 style={{ fontSize: "32px", fontWeight: "bold", color: "#1a1a1a", margin: "0 0 10px 0" }}>
+            🌉 Submersible Bridge Design Suite
+          </h1>
+          <p style={{ fontSize: "16px", color: "#666", margin: "0" }}>
+            Auto-generate comprehensive bridge designs from Excel hydraulic data
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer group border-l-4 border-l-primary" onClick={() => window.location.href = '/workbook'}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calculator className="h-5 w-5 text-primary" />
-                <span>Recent Design #1024</span>
-              </CardTitle>
-              <CardDescription>Modified 2 hours ago</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Span:</span>
-                  <span className="font-medium font-mono">12.0m</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Width:</span>
-                  <span className="font-medium font-mono">7.5m</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Status:</span>
-                  <span className="font-medium text-green-600">Vetting Ready</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-muted/50 border-dashed flex flex-col items-center justify-center text-center p-6 h-full hover:bg-muted/80 transition-colors" onClick={() => window.location.href = '/workbook'}>
-             <div className="p-4 rounded-full bg-background mb-4">
-               <Ruler className="h-8 w-8 text-muted-foreground" />
-             </div>
-             <h3 className="font-semibold">Full Design Workbook</h3>
-             <p className="text-sm text-muted-foreground mt-1">Access all 44 calculation sheets and matrices</p>
-             <Link href="/workbook">
-               <Button variant="link" className="mt-2">Open Workbook &rarr;</Button>
-             </Link>
-          </Card>
+        {/* Main Upload Card */}
+        <div style={{
+          backgroundColor: "white",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          padding: "40px",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          marginBottom: "30px"
+        }}>
+          <h2 style={{ fontSize: "20px", fontWeight: "600", color: "#000", marginBottom: "20px", textAlign: "center" }}>
+            📊 Import Bridge Design Data
+          </h2>
+
+          {/* Upload Area */}
+          <label style={{
+            display: "block",
+            border: "2px dashed #3b82f6",
+            borderRadius: "8px",
+            padding: "60px 20px",
+            textAlign: "center",
+            backgroundColor: "#eff6ff",
+            cursor: isLoading ? "not-allowed" : "pointer",
+            transition: "all 0.2s",
+            opacity: isLoading ? 0.6 : 1,
+          }}>
+            <div style={{ fontSize: "48px", marginBottom: "16px" }}>📁</div>
+            <div style={{ fontSize: "18px", fontWeight: "600", color: "#1e3a8a", marginBottom: "8px" }}>
+              Click to upload Excel file
+            </div>
+            <div style={{ fontSize: "14px", color: "#3b82f6", marginBottom: "16px" }}>
+              Or drag and drop your file here
+            </div>
+            <div style={{ fontSize: "12px", color: "#666" }}>
+              File should contain: Discharge, HFL, Bed Slope, Span, Width, Bearing Capacity
+            </div>
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleFileUpload}
+              disabled={isLoading}
+              style={{ display: "none" }}
+              data-testid="input-excel-upload"
+            />
+          </label>
+
+          {isLoading && (
+            <div style={{
+              marginTop: "20px",
+              padding: "16px",
+              backgroundColor: "#dbeafe",
+              borderRadius: "6px",
+              textAlign: "center",
+              color: "#1e40af",
+              fontWeight: "500"
+            }}>
+              ⏳ Analyzing Excel file and generating design...
+            </div>
+          )}
+
+          {/* Required Data Info */}
+          <div style={{
+            marginTop: "30px",
+            padding: "16px",
+            backgroundColor: "#f3f4f6",
+            borderRadius: "6px",
+            borderLeft: "4px solid #3b82f6"
+          }}>
+            <h3 style={{ fontSize: "14px", fontWeight: "600", color: "#1f2937", marginTop: "0", marginBottom: "12px" }}>
+              ✓ Excel file must contain:
+            </h3>
+            <ul style={{ margin: "0", paddingLeft: "20px", fontSize: "13px", color: "#4b5563", lineHeight: "1.8" }}>
+              <li><strong>Discharge (Q):</strong> Design discharge in m³/s</li>
+              <li><strong>HFL:</strong> Highest Flood Level in meters</li>
+              <li><strong>Bed Slope:</strong> River bed slope in m/m</li>
+              <li><strong>Proposed Span:</strong> Bridge span in meters</li>
+              <li><strong>Proposed Width:</strong> Bridge width in meters</li>
+              <li><strong>Soil Bearing Capacity:</strong> In kPa</li>
+            </ul>
+          </div>
         </div>
 
-        <section className="mt-12">
-          <h2 className="text-xl font-semibold mb-4">Reporting Standards</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-             <div className="flex items-start gap-4 p-4 rounded-lg border bg-card">
-               <div className="p-2 bg-primary/10 rounded text-primary">
-                 <FileText className="h-6 w-6" />
-               </div>
-               <div>
-                 <h3 className="font-medium">IIT Mumbai Vetting Format</h3>
-                 <p className="text-sm text-muted-foreground mt-1">
-                   Generates detailed step-by-step calculation reports suitable for third-party vetting.
-                   Includes Moment computations, Shear checks, and Reinforcement details.
-                 </p>
-               </div>
-             </div>
+        {/* Example Values */}
+        <div style={{
+          backgroundColor: "#f0fdf4",
+          border: "1px solid #dcfce7",
+          borderRadius: "8px",
+          padding: "20px"
+        }}>
+          <h3 style={{ fontSize: "14px", fontWeight: "600", color: "#166534", margin: "0 0 12px 0" }}>
+            📌 Example Excel Values:
+          </h3>
+          <div style={{ fontSize: "13px", color: "#4b5563", fontFamily: "monospace", backgroundColor: "white", padding: "12px", borderRadius: "4px" }}>
+            Discharge: 902.15 m³/s<br />
+            HFL: 100.6 m<br />
+            Bed Slope: 0.0008 m/m<br />
+            Proposed Span: 30 m<br />
+            Proposed Width: 7.5 m<br />
+            Bearing Capacity: 150 kPa
           </div>
-        </section>
+        </div>
       </div>
     </div>
   );
