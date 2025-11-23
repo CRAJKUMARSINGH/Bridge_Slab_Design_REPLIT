@@ -2,7 +2,7 @@ import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema } from "@shared/schema";
-import { generateExcelReport } from "./excel-export";
+import { generateCompleteExcelReport } from "./excel-export";
 import { generatePDF } from "./pdf-export";
 import { parseExcelForDesignInput } from "./excel-parser";
 import { generateCompleteDesign } from "./design-engine";
@@ -67,7 +67,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const designData = project.designData as any;
-      const buffer = await generateExcelReport(
+      const buffer = await generateCompleteExcelReport(
         designData.input,
         designData.output,
         project.name || "Bridge Design"
