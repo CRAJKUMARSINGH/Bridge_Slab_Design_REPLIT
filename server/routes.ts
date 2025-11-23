@@ -98,11 +98,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const buffer = await generatePDF(project, designData.output);
       res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_vetting_report.pdf"`);
+      res.setHeader("Content-Disposition", `inline; filename="${project.name || "design"}_vetting_report.pdf"`);
       res.send(buffer);
     } catch (error) {
       console.error("Error exporting PDF:", error);
       res.status(500).json({ error: "Failed to export PDF" });
+    }
+  });
+
+  // Serve generated sample PDF
+  app.get("/api/sample-pdf", async (req, res) => {
+    try {
+      const fs = await import("fs");
+      const path = await import("path");
+      const pdfPath = path.join(process.cwd(), "attached_assets", "Bridge_Design_Report.pdf");
+      const buffer = fs.readFileSync(pdfPath);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "inline; filename=Bridge_Design_Report.pdf");
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error serving PDF:", error);
+      res.status(500).json({ error: "PDF not found" });
     }
   });
 
