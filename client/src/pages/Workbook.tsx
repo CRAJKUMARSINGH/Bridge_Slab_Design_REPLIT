@@ -60,7 +60,8 @@ export default function WorkbookLayout() {
   const queryClient = useQueryClient();
 
   const [activeSheetId, setActiveSheetId] = useState("1.1");
-  const [projectData, setProjectData] = useState<ProjectData>(INITIAL_PROJECT_DATA);
+  const [projectData, setProjectData] = useState<any>(INITIAL_PROJECT_DATA);
+  const [fullDesignData, setFullDesignData] = useState<any>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const { data: project, isLoading } = useQuery({
@@ -78,10 +79,11 @@ export default function WorkbookLayout() {
     },
   });
 
-  // Load project data when it's fetched
+  // Load project data when it's fetched - store FULL design data with output
   useEffect(() => {
     if (project?.designData) {
       setProjectData(project.designData as ProjectData);
+      setFullDesignData(project.designData); // Store full data including output
     }
   }, [project]);
 
@@ -97,7 +99,7 @@ export default function WorkbookLayout() {
   }, [projectData, hasUnsavedChanges, projectId]);
 
   const updateProjectData = (key: keyof ProjectData, value: any) => {
-    setProjectData(prev => ({ ...prev, [key]: value }));
+    setProjectData((prev: any) => ({ ...prev, [key]: value }));
     setHasUnsavedChanges(true);
   };
 
@@ -148,7 +150,7 @@ export default function WorkbookLayout() {
     switch (activeSheetId) {
       // Output Data Sheet - Display 47-sheet Excel output
       case "0.0":
-        return <OutputDataSheet data={project?.designData} />;
+        return <OutputDataSheet data={fullDesignData} />;
       
       // Input Data Sheet - Main parameter entry
       case "0.1":
