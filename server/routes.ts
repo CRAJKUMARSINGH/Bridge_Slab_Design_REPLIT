@@ -122,6 +122,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve 49 HTML design sheets
+  app.get("/api/html-sheets", async (req, res) => {
+    try {
+      const fs = await import("fs");
+      const path = await import("path");
+      const sheetsDir = path.join(process.cwd(), "attached_assets", "html-sheets");
+      const files = fs.readdirSync(sheetsDir).filter(f => f.endsWith('.html'));
+      res.json({ 
+        sheets: files.sort(),
+        total: files.length,
+        baseUrl: "/api/html-sheets/"
+      });
+    } catch (error) {
+      console.error("Error listing sheets:", error);
+      res.status(500).json({ error: "Failed to list sheets" });
+    }
+  });
+
+  app.get("/api/html-sheets/:filename", async (req, res) => {
+    try {
+      const fs = await import("fs");
+      const path = await import("path");
+      const safeFilename = req.params.filename.replace(/\.\./g, '').replace(/\//g, '');
+      const filePath = path.join(process.cwd(), "attached_assets", "html-sheets", safeFilename);
+      const content = fs.readFileSync(filePath, 'utf-8');
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.send(content);
+    } catch (error) {
+      console.error("Error serving sheet:", error);
+      res.status(404).json({ error: "Sheet not found" });
+    }
+  });
+
+  app.get("/api/html-sheets-index", async (req, res) => {
+    try {
+      const fs = await import("fs");
+      const path = await import("path");
+      const indexPath = path.join(process.cwd(), "attached_assets", "html-sheets", "index.html");
+      const content = fs.readFileSync(indexPath, 'utf-8');
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.send(content);
+    } catch (error) {
+      console.error("Error serving index:", error);
+      res.status(404).json({ error: "Index not found" });
+    }
+  });
+
   // Project management routes
   app.get("/api/projects", async (req, res) => {
     try {
