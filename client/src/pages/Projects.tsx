@@ -16,6 +16,7 @@ export default function Projects() {
   const [, setLocation] = useLocation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [createError, setCreateError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newProject, setNewProject] = useState({
     name: "",
@@ -36,8 +37,15 @@ export default function Projects() {
     onSuccess: (newProject) => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       setIsDialogOpen(false);
+      setCreateError("");
       setNewProject({ name: "", location: "", district: "", engineer: "" });
+      toast.success("Project created! Redirecting...");
       setLocation(`/workbook/${newProject.id}`);
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Failed to create project";
+      setCreateError(message);
+      toast.error(message);
     },
   });
 
@@ -163,6 +171,11 @@ export default function Projects() {
                     <DialogTitle className="text-white">Create New Bridge Design</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
+                    {createError && (
+                      <div className="bg-red-500/20 border border-red-500/50 text-red-300 p-3 rounded text-sm">
+                        {createError}
+                      </div>
+                    )}
                     <div>
                       <Label htmlFor="name" className="text-slate-200">Project Name *</Label>
                       <Input
@@ -171,7 +184,10 @@ export default function Projects() {
                         placeholder="e.g., NH-8 Slab Bridge"
                         className="bg-slate-700 border-slate-600 text-white focus:border-blue-500 focus:ring-blue-500/50"
                         value={newProject.name}
-                        onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+                        onChange={(e) => {
+                          setNewProject({ ...newProject, name: e.target.value });
+                          setCreateError("");
+                        }}
                       />
                     </div>
                     <div>
@@ -210,10 +226,20 @@ export default function Projects() {
                   </div>
                   <DialogFooter>
                     <Button
+                      variant="outline"
+                      onClick={() => {
+                        setIsDialogOpen(false);
+                        setCreateError("");
+                      }}
+                      className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
                       onClick={handleCreate}
                       disabled={!newProject.name.trim() || createMutation.isPending}
                       data-testid="button-create-project"
-                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {createMutation.isPending ? "Creating..." : "Create Project"}
                     </Button>
