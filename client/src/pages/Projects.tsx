@@ -72,6 +72,7 @@ export default function Projects() {
     createMutation.mutate({
       ...newProject,
       designData: {
+        designType: "slab",
         span: 6.0,
         width: 7.5,
         supportWidth: 400,
