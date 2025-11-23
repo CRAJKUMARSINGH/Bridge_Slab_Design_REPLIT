@@ -8,9 +8,9 @@ import LiveLoadSheet from "../components/workbook/sheets/LiveLoadSheet";
 import StructuralAnalysisSheet from "../components/workbook/sheets/StructuralAnalysisSheet";
 import DesignSheet from "../components/workbook/sheets/DesignSheet";
 import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
-import { getProject, updateProject, exportProjectAsExcel } from "@/lib/api";
+import { getProject, updateProject, exportProjectAsExcel, exportProjectAsPDF } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Save, Download } from "lucide-react";
+import { ArrowLeft, Save, Download, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 // Initial Engineering State
@@ -82,13 +82,23 @@ export default function WorkbookLayout() {
     }
   };
 
-  const handleExport = async () => {
+  const handleExportExcel = async () => {
     if (!projectId || !project) return;
     try {
       await exportProjectAsExcel(projectId, project.name);
-      toast.success("Report exported successfully!");
+      toast.success("Excel report exported successfully!");
     } catch (error) {
-      toast.error("Failed to export report");
+      toast.error("Failed to export Excel report");
+    }
+  };
+
+  const handleExportPDF = async () => {
+    if (!projectId || !project) return;
+    try {
+      await exportProjectAsPDF(projectId, project.name);
+      toast.success("PDF vetting report exported successfully!");
+    } catch (error) {
+      toast.error("Failed to export PDF report");
     }
   };
 
@@ -175,12 +185,22 @@ export default function WorkbookLayout() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleExport}
-                  data-testid="button-export"
-                  title="Export 44-sheet vetting report"
+                  onClick={handleExportPDF}
+                  data-testid="button-export-pdf"
+                  title="Export 100+ page PDF vetting report"
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  PDF Report
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportExcel}
+                  data-testid="button-export-excel"
+                  title="Export 44-sheet Excel report"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Export Report
+                  Excel Report
                 </Button>
                 <Button
                   variant="outline"

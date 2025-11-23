@@ -74,3 +74,24 @@ export async function exportProjectAsExcel(id: number, projectName: string): Pro
     throw error;
   }
 }
+
+export async function exportProjectAsPDF(id: number, projectName: string): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE}/projects/${id}/export-pdf`);
+    if (!response.ok) {
+      throw new Error("Failed to export PDF");
+    }
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${projectName || "design"}_vetting_report.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("PDF export failed:", error);
+    throw error;
+  }
+}

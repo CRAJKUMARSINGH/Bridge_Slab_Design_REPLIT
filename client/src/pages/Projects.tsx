@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, FileText, Download } from "lucide-react";
+import { Plus, Trash2, FileText, Download, File } from "lucide-react";
 import { format } from "date-fns";
-import { exportProjectAsExcel } from "@/lib/api";
+import { exportProjectAsExcel, exportProjectAsPDF } from "@/lib/api";
 import { toast } from "sonner";
 
 export default function Projects() {
@@ -47,12 +47,21 @@ export default function Projects() {
     },
   });
 
-  const handleExport = async (id: number, name: string) => {
+  const handleExportExcel = async (id: number, name: string) => {
     try {
       await exportProjectAsExcel(id, name);
-      toast.success(`${name} exported successfully!`);
+      toast.success(`${name} exported to Excel!`);
     } catch (error) {
-      toast.error("Failed to export project");
+      toast.error("Failed to export to Excel");
+    }
+  };
+
+  const handleExportPDF = async (id: number, name: string) => {
+    try {
+      await exportProjectAsPDF(id, name);
+      toast.success(`${name} PDF report generated!`);
+    } catch (error) {
+      toast.error("Failed to generate PDF");
     }
   };
 
@@ -198,10 +207,22 @@ export default function Projects() {
                         size="icon"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleExport(project.id, project.name);
+                          handleExportPDF(project.id, project.name);
                         }}
-                        data-testid={`button-export-${project.id}`}
-                        title="Export as Excel report"
+                        data-testid={`button-export-pdf-${project.id}`}
+                        title="Export 100+ page PDF vetting report"
+                      >
+                        <File className="h-4 w-4 text-red-600" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleExportExcel(project.id, project.name);
+                        }}
+                        data-testid={`button-export-excel-${project.id}`}
+                        title="Export 44-sheet Excel report"
                       >
                         <Download className="h-4 w-4 text-blue-600" />
                       </Button>
