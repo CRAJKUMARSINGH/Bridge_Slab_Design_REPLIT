@@ -50,7 +50,7 @@ function addTable(doc: jsPDF, headers: string[], rows: (string | number)[][], st
 
     x = MARGIN;
     row.forEach((cell, i) => {
-      doc.text(String(cell), x + 1, y + 1, { maxWidth: colWidths[i] - 2 });
+      doc.text(String(cell || ""), x + 1, y + 1, { maxWidth: colWidths[i] - 2 });
       x += colWidths[i];
     });
     y += lineHeight;
@@ -64,216 +64,97 @@ export async function generatePDF(project: Project, design: DesignOutput): Promi
     const doc = new jsPDF();
     let y = MARGIN;
 
-    // PAGE 1: COVER PAGE
+    // PAGE 1: COVER
     doc.setFontSize(28);
     doc.setFont(undefined, "bold");
     doc.setTextColor(...COLORS.primary);
-    doc.text("SUBMERSIBLE BRIDGE DESIGN REPORT", PAGE_WIDTH / 2, 40, { align: "center" });
+    doc.text("BRIDGE DESIGN REPORT", PAGE_WIDTH / 2, 40, { align: "center" });
 
     doc.setFontSize(14);
     doc.setTextColor(...COLORS.dark);
-    doc.text("IRC:6-2016 & IRC:112-2015 Compliant", PAGE_WIDTH / 2, 60, { align: "center" });
+    doc.text("IRC:6-2016 & IRC:112-2015", PAGE_WIDTH / 2, 60, { align: "center" });
 
     y = 100;
     doc.setFontSize(11);
     doc.text(`Project: ${project.name}`, MARGIN, y);
     y += 10;
-    doc.text(`Span: ${design.projectInfo.span}m | Width: ${design.projectInfo.width}m`, MARGIN, y);
-    y += 10;
-    doc.text(`Discharge: ${design.projectInfo.discharge}m³/s | Design WL: ${design.projectInfo.flowDepth}m`, MARGIN, y);
-    y += 20;
+    doc.text(`Span: ${design.projectInfo.span}m | Width: ${design.projectInfo.width}m | Discharge: ${design.projectInfo.discharge}m³/s`, MARGIN, y);
 
-    doc.setFontSize(10);
-    doc.setFont(undefined, "bold");
-    doc.text("Design Code References:", MARGIN, y);
-    y += 8;
-    doc.setFont(undefined, "normal");
-    doc.setFontSize(9);
-    doc.text("• IRC:6-2016: Standard Specifications for Road Bridges", MARGIN + 5, y);
-    y += 7;
-    doc.text("• IRC:112-2015: Code of Practice for Concrete Roads", MARGIN + 5, y);
-    y += 7;
-    doc.text("• IS:456-2000: Code of Practice for Plain and RCC", MARGIN + 5, y);
-    y += 20;
-
-    doc.setFontSize(10);
-    doc.setFont(undefined, "bold");
-    doc.text("Report Structure:", MARGIN, y);
-    y += 8;
-    doc.setFont(undefined, "normal");
-    doc.setFontSize(9);
-    const sections = [
-      "1. Design Input & Hydraulic Analysis",
-      "2. Pier Structural Design & Stability Checks",
-      "3. Abutment Design & Verification",
-      "4. Slab Design (Pigeaud's Method)",
-      "5. Reinforcement Schedules & Details",
-      "6. Material Quantities & Cost Estimate",
-    ];
-    sections.forEach(section => {
-      doc.text(section, MARGIN + 5, y);
-      y += 7;
-    });
-
-    // PAGE 2: HYDRAULIC CALCULATIONS
+    // PAGE 2: HYDRAULICS
     doc.addPage();
     y = MARGIN;
-    y = addSection(doc, "HYDRAULIC DESIGN ANALYSIS (LACEY'S METHOD)", y);
+    y = addSection(doc, "HYDRAULIC DESIGN", y);
     
     const hydRows = [
-      ["Cross-Sectional Area", design.hydraulics.crossSectionalArea.toFixed(2), "m²"],
-      ["Flow Velocity", design.hydraulics.velocity.toFixed(2), "m/s"],
-      ["Lacey Silt Factor", design.hydraulics.laceysSiltFactor.toFixed(2), "-"],
+      ["Velocity", design.hydraulics.velocity.toFixed(2), "m/s"],
       ["Afflux", design.hydraulics.afflux.toFixed(3), "m"],
-      ["Design Water Level", design.hydraulics.designWaterLevel.toFixed(2), "m (abs)"],
-      ["Contraction Loss", design.hydraulics.contraction.toFixed(3), "m"],
+      ["Design Water Level", design.hydraulics.designWaterLevel.toFixed(2), "m"],
       ["Froude Number", design.hydraulics.froudeNumber.toFixed(3), "-"],
+      ["Cross-Sectional Area", design.hydraulics.crossSectionalArea.toFixed(2), "m²"],
     ];
     y = addTable(doc, ["Parameter", "Value", "Unit"], hydRows, y);
 
-    y += 5;
-    doc.setFontSize(9);
-    doc.setFont(undefined, "bold");
-    doc.text("Hydraulic Design Data:", MARGIN, y);
-    y += 6;
-    doc.setFont(undefined, "normal");
-    doc.setFontSize(8);
-    const hydInfo = [
-      `Design Discharge (Q): ${design.projectInfo.discharge} m³/s`,
-      `HFL: ${design.projectInfo.floodLevel.toFixed(2)}m (absolute)`,
-      `Bed Level: ${design.projectInfo.bedLevel.toFixed(2)}m (absolute)`,
-      `Flow Depth: ${design.projectInfo.flowDepth.toFixed(2)}m`,
-    ];
-    hydInfo.forEach(info => {
-      doc.text(info, MARGIN + 2, y);
-      y += 4;
-    });
-
-    // PAGE 3: PIER DESIGN
+    // PAGE 3: PIER
     doc.addPage();
     y = MARGIN;
-    y = addSection(doc, "PIER STRUCTURAL DESIGN & STABILITY", y);
-
+    y = addSection(doc, "PIER DESIGN", y);
+    
     const pierRows = [
-      ["Pier Width", design.pier.width.toFixed(2), "m"],
-      ["Pier Length", design.pier.length.toFixed(2), "m"],
-      ["Pier Depth", design.pier.depth.toFixed(2), "m"],
-      ["Number of Piers", design.pier.numberOfPiers, "nos"],
-      ["Pier Spacing", design.pier.spacing.toFixed(2), "m"],
-      ["Base Width", design.pier.baseWidth.toFixed(2), "m"],
-      ["Hydrostatic Force", design.pier.hydrostaticForce.toFixed(1), "kN"],
-      ["Drag Force", design.pier.dragForce.toFixed(1), "kN"],
-      ["Total Horizontal Force", design.pier.totalHorizontalForce.toFixed(1), "kN"],
+      ["Width", design.pier.width.toFixed(2), "m"],
+      ["Length", design.pier.length.toFixed(2), "m"],
+      ["Number", design.pier.numberOfPiers, "nos"],
+      ["Spacing", design.pier.spacing.toFixed(2), "m"],
+      ["Sliding FOS", design.pier.slidingFOS.toFixed(2), design.pier.slidingFOS >= 1.5 ? "✓ SAFE" : "✗"],
+      ["Overturning FOS", design.pier.overturningFOS.toFixed(2), design.pier.overturningFOS >= 1.8 ? "✓ SAFE" : "✗"],
+      ["Bearing FOS", design.pier.bearingFOS.toFixed(2), design.pier.bearingFOS >= 2.5 ? "✓ SAFE" : "✗"],
     ];
-    y = addTable(doc, ["Parameter", "Value", "Unit"], pierRows, y);
+    y = addTable(doc, ["Property", "Value", "Status"], pierRows, y);
 
-    y += 5;
-    doc.setFontSize(9);
-    doc.setFont(undefined, "bold");
-    doc.text("Stability Checks (Minimum FOS: 1.5, 1.8, 2.5):", MARGIN, y);
-    y += 6;
-
-    const stabRows = [
-      ["Sliding FOS", design.pier.slidingFOS.toFixed(2), design.pier.slidingFOS >= 1.5 ? "✓ SAFE" : "✗ UNSAFE"],
-      ["Overturning FOS", design.pier.overturningFOS.toFixed(2), design.pier.overturningFOS >= 1.8 ? "✓ SAFE" : "✗ UNSAFE"],
-      ["Bearing Capacity FOS", design.pier.bearingFOS.toFixed(2), design.pier.bearingFOS >= 2.5 ? "✓ SAFE" : "✗ UNSAFE"],
-    ];
-    y = addTable(doc, ["Check", "FOS Value", "Status"], stabRows, y);
-
-    y += 5;
-    doc.setFont(undefined, "bold");
-    doc.text("Reinforcement:", MARGIN, y);
-    y += 5;
-    doc.setFont(undefined, "normal");
-    doc.text(`Main Steel: Ø${design.pier.mainSteel.diameter}mm @ ${design.pier.mainSteel.spacing}mm c/c (${design.pier.mainSteel.quantity} bars)`, MARGIN + 2, y);
-    y += 4;
-    doc.text(`Link Steel: Ø${design.pier.linkSteel.diameter}mm @ ${design.pier.linkSteel.spacing}mm c/c (${design.pier.linkSteel.quantity} bars)`, MARGIN + 2, y);
-
-    // PAGE 4: ABUTMENT DESIGN
+    // PAGE 4: ABUTMENT
     doc.addPage();
     y = MARGIN;
-    y = addSection(doc, "ABUTMENT STRUCTURAL DESIGN", y);
-
+    y = addSection(doc, "ABUTMENT DESIGN", y);
+    
     const abRows = [
-      ["Abutment Height", design.abutment.height.toFixed(2), "m"],
-      ["Abutment Width", design.abutment.width.toFixed(2), "m"],
-      ["Abutment Depth", design.abutment.depth.toFixed(2), "m"],
+      ["Height", design.abutment.height.toFixed(2), "m"],
+      ["Width", design.abutment.width.toFixed(2), "m"],
       ["Base Width", design.abutment.baseWidth.toFixed(2), "m"],
-      ["Wing Wall Height", design.abutment.wingWallHeight.toFixed(2), "m"],
-      ["Active Earth Pressure", design.abutment.activeEarthPressure.toFixed(1), "kN"],
-      ["Vertical Load", design.abutment.verticalLoad.toFixed(1), "kN"],
+      ["Sliding FOS", design.abutment.slidingFOS.toFixed(2), design.abutment.slidingFOS >= 1.5 ? "✓ SAFE" : "✗"],
+      ["Overturning FOS", design.abutment.overturningFOS.toFixed(2), design.abutment.overturningFOS >= 2.0 ? "✓ SAFE" : "✗"],
+      ["Bearing FOS", design.abutment.bearingFOS.toFixed(2), design.abutment.bearingFOS >= 2.5 ? "✓ SAFE" : "✗"],
     ];
-    y = addTable(doc, ["Parameter", "Value", "Unit"], abRows, y);
+    y = addTable(doc, ["Property", "Value", "Status"], abRows, y);
 
-    y += 5;
-    doc.setFontSize(9);
-    doc.setFont(undefined, "bold");
-    doc.text("Stability Checks (Minimum FOS: 1.5, 2.0, 2.5):", MARGIN, y);
-    y += 6;
-
-    const abStabRows = [
-      ["Sliding FOS", design.abutment.slidingFOS.toFixed(2), design.abutment.slidingFOS >= 1.5 ? "✓ SAFE" : "✗ UNSAFE"],
-      ["Overturning FOS", design.abutment.overturningFOS.toFixed(2), design.abutment.overturningFOS >= 2.0 ? "✓ SAFE" : "✗ UNSAFE"],
-      ["Bearing Capacity FOS", design.abutment.bearingFOS.toFixed(2), design.abutment.bearingFOS >= 2.5 ? "✓ SAFE" : "✗ UNSAFE"],
-    ];
-    y = addTable(doc, ["Check", "FOS Value", "Status"], abStabRows, y);
-
-    // PAGE 5: SLAB DESIGN
+    // PAGE 5: SLAB
     doc.addPage();
     y = MARGIN;
-    y = addSection(doc, "SLAB DESIGN (PIGEAUD'S METHOD)", y);
-
+    y = addSection(doc, "SLAB DESIGN", y);
+    
     const slabRows = [
-      ["Slab Thickness", design.slab.thickness.toFixed(0), "mm"],
-      ["Wearing Coat", design.slab.wearingCoat.toFixed(3), "m"],
-      ["Dead Load", design.slab.deadLoad.toFixed(2), "kN/m²"],
-      ["Live Load", design.slab.liveLoad.toFixed(2), "kN/m²"],
-      ["Impact Factor", design.slab.impactFactor.toFixed(2), "-"],
-      ["Design Load", design.slab.designLoad.toFixed(2), "kN/m²"],
-      ["Longitudinal Moment", design.slab.longitudinalMoment.toFixed(1), "kN.m/m"],
-      ["Transverse Moment", design.slab.transverseMoment.toFixed(1), "kN.m/m"],
-      ["Shear Force", design.slab.shearForce.toFixed(1), "kN/m"],
+      ["Thickness", (design.slab.thickness ?? 0).toFixed(0), "mm"],
+      ["Design Load", (design.slab.designLoad ?? 0).toFixed(2), "kN/m²"],
+      ["Longitudinal Moment", (design.slab.longitudinalMoment ?? 0).toFixed(1), "kN.m/m"],
+      ["Transverse Moment", (design.slab.transverseMoment ?? 0).toFixed(1), "kN.m/m"],
+      ["Shear Force", (design.slab.shearForce ?? 0).toFixed(1), "kN/m"],
+      ["Main Steel Area", design.slab.mainSteel?.area ? design.slab.mainSteel.area.toFixed(0) : "TBD", "mm²/m"],
+      ["Distribution Area", (design.slab.distributionSteel?.area ?? 0).toFixed(0), "mm²/m"],
     ];
     y = addTable(doc, ["Parameter", "Value", "Unit"], slabRows, y);
-
-    y += 5;
-    doc.setFontSize(9);
-    doc.setFont(undefined, "bold");
-    doc.text("Reinforcement Schedule:", MARGIN, y);
-    y += 6;
-    doc.setFont(undefined, "normal");
-    doc.setFontSize(8);
-    doc.text(`Main Steel: Ø${design.slab.mainSteel.diameter}mm @ ${design.slab.mainSteel.spacing}mm c/c`, MARGIN + 2, y);
-    y += 4;
-    doc.text(`Area Provided: ${design.slab.mainSteel.area.toFixed(0)} mm²/m`, MARGIN + 2, y);
-    y += 4;
-    doc.text(`Distribution: Ø${design.slab.distributionSteel.diameter}mm @ ${design.slab.distributionSteel.spacing}mm c/c`, MARGIN + 2, y);
-    y += 4;
-    doc.text(`Area Provided: ${design.slab.distributionSteel.area.toFixed(0)} mm²/m`, MARGIN + 2, y);
 
     // PAGE 6: QUANTITIES
     doc.addPage();
     y = MARGIN;
-    y = addSection(doc, "MATERIAL QUANTITY ESTIMATE", y);
-
+    y = addSection(doc, "MATERIAL QUANTITIES", y);
+    
     const qtyRows = [
-      ["Slab Concrete", design.quantities.slabConcrete.toFixed(2), "m³"],
-      ["Pier Concrete", design.quantities.pierConcrete.toFixed(2), "m³"],
-      ["Abutment Concrete (both)", design.quantities.abutmentConcrete.toFixed(2), "m³"],
-      ["TOTAL CONCRETE", design.quantities.totalConcrete.toFixed(2), "m³"],
-      ["Slab Steel", design.quantities.slabSteel.toFixed(2), "tonnes"],
-      ["Pier Steel", design.quantities.pierSteel.toFixed(2), "tonnes"],
-      ["Abutment Steel (both)", design.quantities.abutmentSteel.toFixed(2), "tonnes"],
-      ["TOTAL STEEL", design.quantities.totalSteel.toFixed(2), "tonnes"],
-      ["Formwork", design.quantities.formwork.toFixed(2), "m²"],
+      ["Concrete (Total)", (design.quantities.totalConcrete ?? 0).toFixed(2), "m³"],
+      ["Steel (Total)", (design.quantities.totalSteel ?? 0).toFixed(2), "tonnes"],
+      ["Formwork", (design.quantities.formwork ?? 0).toFixed(2), "m²"],
+      ["Slab Concrete", (design.quantities.slabConcrete ?? 0).toFixed(2), "m³"],
+      ["Pier Concrete", (design.quantities.pierConcrete ?? 0).toFixed(2), "m³"],
+      ["Abutment Concrete", (design.quantities.abutmentConcrete ?? 0).toFixed(2), "m³"],
     ];
     y = addTable(doc, ["Item", "Quantity", "Unit"], qtyRows, y);
-
-    // Footer
-    doc.setFontSize(8);
-    doc.setTextColor(...COLORS.dark);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, MARGIN, PAGE_HEIGHT - 10);
-    doc.text("Page " + doc.getNumberOfPages(), PAGE_WIDTH - MARGIN - 20, PAGE_HEIGHT - 10);
 
     const buffer = doc.output("arraybuffer");
     return Buffer.from(buffer);
