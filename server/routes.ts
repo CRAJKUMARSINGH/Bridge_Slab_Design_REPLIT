@@ -135,7 +135,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/projects", async (req, res) => {
     try {
-      const validated = insertProjectSchema.parse(req.body);
+      const body = req.body;
+      
+      // Check if designData with input is provided
+      let projectData: any = { ...body };
+      if (body.designData && body.designData.input) {
+        const designInput = body.designData.input;
+        
+        // Generate complete design
+        const designOutput = generateCompleteDesign(designInput);
+        
+        // Flatten design data to match schema (copy input fields to top level + store full output)
+        projectData.designData = {
+          ...designInput,
+          ...{
+            input: designInput,
+            output: designOutput
+          }
+        };
+      }
+      
+      // Parse and validate using schema
+      const validated = insertProjectSchema.parse(projectData);
       const project = await storage.createProject(validated);
       res.status(201).json(project);
     } catch (error) {

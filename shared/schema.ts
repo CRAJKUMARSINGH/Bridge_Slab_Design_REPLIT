@@ -65,6 +65,10 @@ export const DesignDataSchema = z.object({
   stabilityFOS: z.number().optional(),
   baseWidth: z.number().optional(),
   
+  // Full design data structure
+  input: z.any().optional(),
+  output: z.any().optional(),
+  
   // Additional notes
   designType: z.string().optional().default("Submersible Skew Bridge"),
   location: z.string().optional(),
