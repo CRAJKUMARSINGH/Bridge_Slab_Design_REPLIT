@@ -26,6 +26,13 @@ interface SheetNavProps {
 
 export const SHEET_GROUPS = [
   {
+    title: "📊 DESIGN OUTPUT - 47-Sheet Report",
+    icon: FileSpreadsheet,
+    sheets: [
+      { id: "0.0", name: "Output_Summary", label: "Design Output Summary" },
+    ]
+  },
+  {
     title: "⚡ INPUT DATA - Modify Parameters Here",
     icon: Settings,
     sheets: [

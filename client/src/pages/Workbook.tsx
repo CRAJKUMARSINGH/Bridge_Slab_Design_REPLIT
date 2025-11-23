@@ -8,6 +8,7 @@ import LiveLoadSheet from "../components/workbook/sheets/LiveLoadSheet";
 import StructuralAnalysisSheet from "../components/workbook/sheets/StructuralAnalysisSheet";
 import DesignSheet from "../components/workbook/sheets/DesignSheet";
 import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
+import OutputDataSheet from "../components/workbook/sheets/OutputDataSheet";
 import HydraulicsSheet from "../components/workbook/sheets/HydraulicsSheet";
 import PierDesignSheet from "../components/workbook/sheets/PierDesignSheet";
 import AbutmentDesignSheet from "../components/workbook/sheets/AbutmentDesignSheet";
@@ -145,6 +146,10 @@ export default function WorkbookLayout() {
 
   const renderSheetContent = () => {
     switch (activeSheetId) {
+      // Output Data Sheet - Display 47-sheet Excel output
+      case "0.0":
+        return <OutputDataSheet data={project?.designData} />;
+      
       // Input Data Sheet - Main parameter entry
       case "0.1":
         return <InputDataSheet data={projectData} onUpdate={updateProjectData} onRecalculate={handleRecalculate} />;

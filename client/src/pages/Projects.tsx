@@ -310,27 +310,141 @@ export default function Projects() {
                   </Button>
                 </div>
 
-                {/* Features Grid */}
+                {/* Key Features Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
                   <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-xl p-6 backdrop-blur hover:border-blue-500/50 transition-all">
                     <Zap className="h-8 w-8 text-blue-400 mx-auto mb-4" />
                     <h3 className="text-white font-semibold mb-2">Auto-Generate</h3>
-                    <p className="text-slate-400 text-sm">47-sheet Excel reports instantly</p>
+                    <p className="text-slate-400 text-sm">47-sheet Excel reports instantly from 6-10 parameters</p>
                   </div>
                   <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-xl p-6 backdrop-blur hover:border-cyan-500/50 transition-all">
                     <Lock className="h-8 w-8 text-cyan-400 mx-auto mb-4" />
                     <h3 className="text-white font-semibold mb-2">IRC Compliant</h3>
-                    <p className="text-slate-400 text-sm">6-2016 & 112-2015 standards built-in</p>
+                    <p className="text-slate-400 text-sm">IRC:6-2016 & IRC:112-2015 standards implemented</p>
                   </div>
                   <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-xl p-6 backdrop-blur hover:border-emerald-500/50 transition-all">
                     <BarChart3 className="h-8 w-8 text-emerald-400 mx-auto mb-4" />
                     <h3 className="text-white font-semibold mb-2">Complete Analysis</h3>
-                    <p className="text-slate-400 text-sm">380+ load cases & cost estimates</p>
+                    <p className="text-slate-400 text-sm">380+ load cases analyzed with detailed output</p>
                   </div>
                   <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-xl p-6 backdrop-blur hover:border-violet-500/50 transition-all">
                     <Clock className="h-8 w-8 text-violet-400 mx-auto mb-4" />
                     <h3 className="text-white font-semibold mb-2">Professional Reports</h3>
-                    <p className="text-slate-400 text-sm">Excel & PDF ready for review</p>
+                    <p className="text-slate-400 text-sm">Excel & PDF ready for IIT Mumbai review</p>
+                  </div>
+                </div>
+
+                {/* What You Get - Detailed Output Breakdown */}
+                <div className="mt-24 pt-24 border-t border-slate-700/50">
+                  <h2 className="text-4xl font-bold text-white mb-6 text-center">What You Get</h2>
+                  <p className="text-slate-400 text-center mb-16 max-w-2xl mx-auto">
+                    Each project generates a complete 47-sheet professional engineering report with comprehensive analysis
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Hydraulic Analysis */}
+                    <div className="bg-gradient-to-br from-blue-900/20 to-cyan-900/20 border border-blue-500/30 rounded-xl p-8">
+                      <h3 className="text-blue-300 font-bold text-lg mb-4">Hydraulic Analysis (7 Sheets)</h3>
+                      <ul className="space-y-2 text-slate-300 text-sm">
+                        <li>✓ Afflux calculation at 96 discharge percentages</li>
+                        <li>✓ Cross-section survey with detailed geometry</li>
+                        <li>✓ Water surface profile analysis</li>
+                        <li>✓ Velocity & Froude number calculations</li>
+                        <li>✓ Manning's equation & bed slope analysis</li>
+                        <li>✓ Safe bearing capacity assessment</li>
+                        <li>✓ Lacey's silt factor calculations</li>
+                      </ul>
+                    </div>
+
+                    {/* Pier Design */}
+                    <div className="bg-gradient-to-br from-cyan-900/20 to-blue-900/20 border border-cyan-500/30 rounded-xl p-8">
+                      <h3 className="text-cyan-300 font-bold text-lg mb-4">Pier Design (6 Sheets)</h3>
+                      <ul className="space-y-2 text-slate-300 text-sm">
+                        <li>✓ 70 load case analysis</li>
+                        <li>✓ 170 stress distribution points</li>
+                        <li>✓ Footing design with bending moments</li>
+                        <li>✓ Cap design and reinforcement layout</li>
+                        <li>✓ Stress check under combined loading</li>
+                        <li>✓ Seismic & temperature effects included</li>
+                        <li>✓ Safety factors verified (IRC:112-2015)</li>
+                      </ul>
+                    </div>
+
+                    {/* Abutments */}
+                    <div className="bg-gradient-to-br from-emerald-900/20 to-teal-900/20 border border-emerald-500/30 rounded-xl p-8">
+                      <h3 className="text-emerald-300 font-bold text-lg mb-4">Both Abutment Types (16 Sheets)</h3>
+                      <ul className="space-y-2 text-slate-300 text-sm">
+                        <li>✓ Type 1 Abutment: 155 stability cases</li>
+                        <li>✓ Cantilever Abutment: 155 stability cases</li>
+                        <li>✓ Footing design with stress distribution</li>
+                        <li>✓ Return wall & dirt wall analysis</li>
+                        <li>✓ Dead load & live load BM diagrams</li>
+                        <li>✓ Sliding & overturning checks</li>
+                        <li>✓ Reinforcement schedules for each</li>
+                      </ul>
+                    </div>
+
+                    {/* Slab & Materials */}
+                    <div className="bg-gradient-to-br from-violet-900/20 to-emerald-900/20 border border-violet-500/30 rounded-xl p-8">
+                      <h3 className="text-violet-300 font-bold text-lg mb-4">Slab Design & Materials (9 Sheets)</h3>
+                      <ul className="space-y-2 text-slate-300 text-sm">
+                        <li>✓ Pigeaud's moment coefficient analysis</li>
+                        <li>✓ Main & distribution reinforcement design</li>
+                        <li>✓ Stress check under wheel loads</li>
+                        <li>✓ Bill of quantities (3,726 m³ concrete)</li>
+                        <li>✓ Steel reinforcement (5.72 tonnes)</li>
+                        <li>✓ Formwork & labour estimates</li>
+                        <li>✓ Cost breakdown (₹19.7 Million total)</li>
+                      </ul>
+                    </div>
+
+                    {/* Load Analysis */}
+                    <div className="bg-gradient-to-br from-orange-900/20 to-red-900/20 border border-orange-500/30 rounded-xl p-8">
+                      <h3 className="text-orange-300 font-bold text-lg mb-4">Load Analysis (2 Sheets)</h3>
+                      <ul className="space-y-2 text-slate-300 text-sm">
+                        <li>✓ IRC Class AA loading applied</li>
+                        <li>✓ Dead load combinations</li>
+                        <li>✓ Live load + impact factors</li>
+                        <li>✓ Seismic load calculations</li>
+                        <li>✓ Temperature effects (±45°C)</li>
+                        <li>✓ Variation with discharge</li>
+                        <li>✓ Load case matrix generation</li>
+                      </ul>
+                    </div>
+
+                    {/* Documentation */}
+                    <div className="bg-gradient-to-br from-indigo-900/20 to-violet-900/20 border border-indigo-500/30 rounded-xl p-8">
+                      <h3 className="text-indigo-300 font-bold text-lg mb-4">Technical Documentation (4 Sheets)</h3>
+                      <ul className="space-y-2 text-slate-300 text-sm">
+                        <li>✓ Professional cover page with stamp</li>
+                        <li>✓ Design narrative with formulas</li>
+                        <li>✓ IRC standards compliance notes</li>
+                        <li>✓ Bridge measurements & geometry</li>
+                        <li>✓ Step-by-step calculation sheets</li>
+                        <li>✓ All 47 sheets indexed</li>
+                        <li>✓ Ready for IIT Mumbai review</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Summary Stats */}
+                  <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6">
+                      <div className="text-3xl font-bold text-blue-400">47</div>
+                      <div className="text-slate-400 text-sm mt-2">Professional Sheets</div>
+                    </div>
+                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6">
+                      <div className="text-3xl font-bold text-cyan-400">380+</div>
+                      <div className="text-slate-400 text-sm mt-2">Load Case Analyses</div>
+                    </div>
+                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6">
+                      <div className="text-3xl font-bold text-emerald-400">266</div>
+                      <div className="text-slate-400 text-sm mt-2">Stress Points</div>
+                    </div>
+                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6">
+                      <div className="text-3xl font-bold text-violet-400">2</div>
+                      <div className="text-slate-400 text-sm mt-2">Abutment Types</div>
+                    </div>
                   </div>
                 </div>
               </div>
