@@ -10,9 +10,16 @@ interface GeneralInputSheetProps {
 
 export default function GeneralInputSheet({ data, onUpdate }: GeneralInputSheetProps) {
   
+  // Safe defaults for undefined values
+  const fck = data.fck ?? 25;
+  const fy = data.fy ?? 415;
+  const span = data.span ?? 0;
+  const width = data.width ?? 0;
+  const depth = data.depth ?? 0;
+  
   // Derived Constants for Display
-  const sigma_cbc = data.fck / 3;
-  const sigma_st = data.fy === 415 ? 230 : 240; // Simplified rule
+  const sigma_cbc = fck / 3;
+  const sigma_st = fy === 415 ? 230 : 240; // Simplified rule
   const m = 280 / (3 * sigma_cbc);
   
   return (
@@ -29,7 +36,7 @@ export default function GeneralInputSheet({ data, onUpdate }: GeneralInputSheetP
                     <Input 
                       className="rounded-r-none font-mono bg-yellow-50 border-primary/50" 
                       type="number"
-                      value={data.span} 
+                      value={span} 
                       onChange={(e) => onUpdate('span', parseFloat(e.target.value))} 
                     />
                     <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">m</div>
@@ -41,7 +48,7 @@ export default function GeneralInputSheet({ data, onUpdate }: GeneralInputSheetP
                     <Input 
                       className="rounded-r-none font-mono bg-yellow-50" 
                       type="number"
-                      value={data.width} 
+                      value={width} 
                       onChange={(e) => onUpdate('width', parseFloat(e.target.value))} 
                     />
                     <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">m</div>
@@ -53,7 +60,7 @@ export default function GeneralInputSheet({ data, onUpdate }: GeneralInputSheetP
                     <Input 
                       className="rounded-r-none font-mono bg-yellow-50" 
                       type="number"
-                      value={data.depth} 
+                      value={depth} 
                       onChange={(e) => onUpdate('depth', parseFloat(e.target.value))} 
                     />
                     <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">mm</div>
@@ -69,7 +76,7 @@ export default function GeneralInputSheet({ data, onUpdate }: GeneralInputSheetP
                    <div className="space-y-1">
                       <Label className="text-xs">Concrete Grade (fck)</Label>
                       <Select 
-                        value={data.fck.toString()} 
+                        value={fck.toString()} 
                         onValueChange={(v) => onUpdate('fck', parseInt(v))}
                       >
                         <SelectTrigger className="h-9 text-sm bg-yellow-50 border-primary/50"><SelectValue /></SelectTrigger>
@@ -85,7 +92,7 @@ export default function GeneralInputSheet({ data, onUpdate }: GeneralInputSheetP
                    <div className="space-y-1">
                       <Label className="text-xs">Steel Grade (fy)</Label>
                       <Select 
-                        value={data.fy.toString()} 
+                        value={fy.toString()} 
                         onValueChange={(v) => onUpdate('fy', parseInt(v))}
                       >
                         <SelectTrigger className="h-9 text-sm bg-yellow-50 border-primary/50"><SelectValue /></SelectTrigger>
