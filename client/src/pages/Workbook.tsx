@@ -2,6 +2,7 @@ import { useState } from "react";
 import WorkbookSidebar, { SHEET_GROUPS } from "@/components/workbook/WorkbookSidebar";
 import GeneralInputSheet from "../components/workbook/sheets/GeneralInputSheet";
 import LoadAnalysisSheet from "../components/workbook/sheets/LoadAnalysisSheet";
+import LiveLoadSheet from "../components/workbook/sheets/LiveLoadSheet";
 import StructuralAnalysisSheet from "../components/workbook/sheets/StructuralAnalysisSheet";
 import DesignSheet from "../components/workbook/sheets/DesignSheet";
 import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
@@ -44,6 +45,15 @@ export default function WorkbookLayout() {
       case "2.2":
       case "2.5":
         return <LoadAnalysisSheet data={projectData} />;
+      case "3.1":
+      case "3.2":
+      case "3.3":
+      case "3.4":
+      case "3.5":
+      case "3.6":
+      case "3.7":
+      case "3.8":
+        return <LiveLoadSheet data={projectData} />;
       case "4.2":
       case "4.3":
       case "4.7":

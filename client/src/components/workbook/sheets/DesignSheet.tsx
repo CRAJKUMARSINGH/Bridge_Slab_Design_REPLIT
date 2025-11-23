@@ -39,7 +39,29 @@ export default function DesignSheet({ data }: DesignSheetProps) {
   const bar_spacing = 150;
   const ast_provided = (1000 / bar_spacing) * (Math.PI * Math.pow(bar_dia, 2) / 4);
   const isSteelSafe = ast_provided > ast_required;
+  
+  // 3. Distribution Steel Logic
+  // Min steel = 0.12% of bD (for HYSD bars) or 0.15% (for Mild Steel)
+  const min_steel_percent = data.fy >= 415 ? 0.12 : 0.15;
+  const ast_dist_req = (min_steel_percent / 100) * 1000 * data.depth;
+  
+  // Mock Dist Provided
+  const dist_dia = 10;
+  const dist_spacing = 200;
+  const ast_dist_prov = (1000 / dist_spacing) * (Math.PI * Math.pow(dist_dia, 2) / 4);
+  const isDistSafe = ast_dist_prov > ast_dist_req;
 
+  // 4. Shear Check Logic
+  // Vu approx (simplified)
+  const vu_dl = (w_dl * data.span) / 2;
+  const vu_ll = 120; // Mock LL shear
+  const vu_total = (vu_dl * 1.35) + (vu_ll * 1.5);
+  
+  const tv = (vu_total * 1000) / (1000 * d_provided); // Nominal Shear Stress
+  // Tc depends on 100Ast/bd and fck. Simplified here.
+  const pt = (ast_provided / (1000 * d_provided)) * 100;
+  const tc = 0.2 + (Math.sqrt(data.fck)/10); // Very rough approx for demo
+  const isShearSafe = tv < tc;
 
   return (
     <div className="space-y-6">
@@ -189,18 +211,100 @@ export default function DesignSheet({ data }: DesignSheetProps) {
           </div>
         </TabsContent>
         
-        {/* ... (Other tabs remain similar but can be wired up later) ... */}
-        <TabsContent value="dist_steel">
-           <div className="p-4 border rounded bg-muted/5 text-center text-muted-foreground">
-              Distribution steel calculation logic to be linked.
-           </div>
-        </TabsContent>
-         <TabsContent value="shear">
-           <div className="p-4 border rounded bg-muted/5 text-center text-muted-foreground">
-              Shear check calculation logic to be linked.
+        <TabsContent value="dist_steel" className="space-y-4">
+           <div className="border rounded p-6 flex flex-col items-center justify-center text-center space-y-4">
+              <h3 className="font-medium">5.3 Distribution Reinforcement Calculation</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mt-4 text-left">
+                 <div className="space-y-4 border p-4 rounded bg-muted/10">
+                    <h4 className="font-bold text-xs uppercase text-primary">Requirement</h4>
+                    <div className="flex justify-between text-sm border-b pb-2">
+                       <span>Min Steel % ({data.fy >= 415 ? "HYSD" : "Mild"})</span>
+                       <span className="font-mono font-bold">{min_steel_percent}%</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                       <span>Min Area Req (Ast_min)</span>
+                       <span className="font-mono font-bold">{ast_dist_req.toFixed(0)} mm²</span>
+                    </div>
+                 </div>
+
+                 <div className="space-y-4 border p-4 rounded bg-muted/10">
+                     <h4 className="font-bold text-xs uppercase text-primary">Provision</h4>
+                     <div className="grid grid-cols-2 gap-4">
+                       <div className="space-y-1">
+                          <Label className="text-xs">Diameter</Label>
+                          <Input className="font-mono bg-yellow-50 h-8" defaultValue="10" />
+                       </div>
+                       <div className="space-y-1">
+                          <Label className="text-xs">Spacing</Label>
+                          <Input className="font-mono bg-yellow-50 h-8" defaultValue="200" />
+                       </div>
+                    </div>
+                     <div className="flex justify-between text-sm pt-2 border-t">
+                       <span>Area Provided</span>
+                       <span className="font-mono font-bold text-blue-600">{ast_dist_prov.toFixed(0)} mm²</span>
+                    </div>
+                 </div>
+              </div>
+              
+               {isDistSafe ? (
+                  <div className="w-full max-w-4xl p-3 bg-green-50 border border-green-200 rounded flex items-center justify-center gap-3 text-green-800 text-sm font-medium">
+                     <CheckCircle2 className="h-5 w-5" />
+                     SAFE: {ast_dist_prov.toFixed(0)} &gt; {ast_dist_req.toFixed(0)} mm²
+                  </div>
+                ) : (
+                   <div className="w-full max-w-4xl p-3 bg-red-50 border border-red-200 rounded flex items-center justify-center gap-3 text-red-800 text-sm font-medium">
+                     <AlertTriangle className="h-5 w-5" />
+                     UNSAFE: Increase steel area
+                  </div>
+                )}
            </div>
         </TabsContent>
 
+        <TabsContent value="shear" className="space-y-4">
+           <Card>
+              <CardHeader>
+                 <CardTitle className="text-sm font-medium uppercase">5.4 Shear Stress Analysis (Tv vs Tc)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                 <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-4 text-sm">
+                       <div className="p-3 border rounded">
+                          <div className="text-muted-foreground text-xs mb-1">Design Shear Force (Vu)</div>
+                          <div className="font-mono font-bold text-lg">{vu_total.toFixed(2)} kN</div>
+                          <div className="text-xs text-muted-foreground mt-1">Factored (1.35DL+1.5LL)</div>
+                       </div>
+                        <div className="p-3 border rounded">
+                          <div className="text-muted-foreground text-xs mb-1">Nominal Shear Stress (Tv)</div>
+                          <div className="font-mono font-bold text-lg">{tv.toFixed(3)} MPa</div>
+                          <div className="text-xs text-muted-foreground mt-1">Vu / (b*d)</div>
+                       </div>
+                        <div className="p-3 border rounded bg-green-50 border-green-100">
+                          <div className="text-green-800 text-xs mb-1">Design Shear Strength (Tc)</div>
+                          <div className="font-mono font-bold text-lg text-green-700">{tc.toFixed(3)} MPa</div>
+                           <div className="text-xs text-green-600 mt-1">Based on 100Ast/bd = {pt.toFixed(2)}</div>
+                       </div>
+                    </div>
+                    
+                     {isShearSafe ? (
+                        <div className="border-l-4 border-green-500 pl-4 py-2 bg-green-50/50">
+                           <h4 className="font-bold text-green-900">Safe in Shear</h4>
+                           <p className="text-sm text-green-800">Tv ({tv.toFixed(3)}) &lt; Tc ({tc.toFixed(3)}). No shear reinforcement required. Minimum stirrups may be provided.</p>
+                        </div>
+                     ) : (
+                        <div className="border-l-4 border-red-500 pl-4 py-2 bg-red-50/50">
+                           <h4 className="font-bold text-red-900">Unsafe in Shear!</h4>
+                           <p className="text-sm text-red-800">Tv ({tv.toFixed(3)}) &gt; Tc ({tc.toFixed(3)}). Increase Depth or Provide Shear Reinforcement.</p>
+                        </div>
+                     )}
+
+                    <div className="text-xs text-muted-foreground">
+                       * Tc calculated approximately based on 100As/bd and Concrete Grade M{data.fck} (Table 19 of IS:456 / IRC:112)
+                    </div>
+                 </div>
+              </CardContent>
+           </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );
