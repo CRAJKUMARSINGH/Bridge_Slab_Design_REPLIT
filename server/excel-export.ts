@@ -393,7 +393,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     row++;
 
     // SECTION 4: WATER FORCES
-    ws.getCell(row, 1).value = "HYDRAULIC FORCES ON PIER");
+    ws.getCell(row, 1).value = "HYDRAULIC FORCES ON PIER";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     ws.mergeCells(`A${row}:D${row}`);
     row += 2;
@@ -877,7 +877,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     row += 1;
 
     // SECTION 2: CONTACT AREA & PRESSURE
-    ws.getCell(row, 1).value = "CONTACT AREA & BEARING PRESSURE");
+    ws.getCell(row, 1).value = "CONTACT AREA & BEARING PRESSURE";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
@@ -890,7 +890,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     row++;
 
     // SECTION 3: DESIGN LOADS WITH IMPACT
-    ws.getCell(row, 1).value = "DESIGN LOADS WITH IMPACT FACTOR");
+    ws.getCell(row, 1).value = "DESIGN LOADS WITH IMPACT FACTOR";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
@@ -905,7 +905,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     row++;
 
     // SECTION 4: LIVE LOAD ON VARIOUS ELEMENTS
-    ws.getCell(row, 1).value = "LIVE LOAD DISTRIBUTION ON BRIDGE ELEMENTS");
+    ws.getCell(row, 1).value = "LIVE LOAD DISTRIBUTION ON BRIDGE ELEMENTS";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
@@ -917,7 +917,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     row++;
 
     // SECTION 5: FOOTWAY & COUNTERWEIGHT
-    ws.getCell(row, 1).value = "FOOTWAY LOAD & COUNTERWEIGHT");
+    ws.getCell(row, 1).value = "FOOTWAY LOAD & COUNTERWEIGHT";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
@@ -927,7 +927,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     row++;
 
     // FINAL STATUS
-    ws.getCell(row, 1).value = "VERIFICATION STATUS");
+    ws.getCell(row, 1).value = "VERIFICATION STATUS";
     ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FF27AE60" } };
     ws.mergeCells(`A${row}:C${row}`);
     row++;
@@ -1099,9 +1099,6 @@ Status: ✓ SAFE
     ws.getCell(row, 1).alignment = { horizontal: "left", vertical: "top", wrapText: true };
     ws.getRow(row).height = 280;
   }
-
-  return workbook.xlsx.writeBuffer();
-}
 
   // Type 1 Dirt Wall BM (DL)
   {
@@ -1607,7 +1604,7 @@ Status: ✓ SAFE
     row++;
 
     // SECTION 2: STEEL REINFORCEMENT
-    ws.getCell(row, 1).value = "STEEL REINFORCEMENT (Fe500)");
+    ws.getCell(row, 1).value = "STEEL REINFORCEMENT (Fe500)";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     ws.mergeCells(`A${row}:D${row}`);
     row += 2;
@@ -1625,7 +1622,7 @@ Status: ✓ SAFE
     row++;
 
     // SECTION 3: FORMWORK & SCAFFOLDING
-    ws.getCell(row, 1).value = "FORMWORK & SCAFFOLDING");
+    ws.getCell(row, 1).value = "FORMWORK & SCAFFOLDING";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     ws.mergeCells(`A${row}:D${row}`);
     row += 2;
