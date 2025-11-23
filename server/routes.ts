@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { insertProjectSchema } from "@shared/schema";
 import { generateExcelReport } from "./excel-export";
 import { generatePDF } from "./pdf-export";
-import { parseExcelForDesignInput } from "./excel-parser";
+import { parseExcelForDesignInput, parseComprehensiveWorkbook } from "./excel-parser";
 import { generateCompleteDesign } from "./design-engine";
 import multer from "multer";
 
@@ -12,13 +12,16 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
-  // Excel Upload - Parse and Auto-generate Design
+  // Excel Upload - Parse and Auto-generate Design (or import comprehensive workbook)
   app.post("/api/upload-design-excel", upload.single("file"), async (req: Request & { file?: any }, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
       }
 
+      // Try to parse as comprehensive workbook first
+      const comprehensiveData = parseComprehensiveWorkbook(req.file.buffer);
+      
       // Parse Excel to extract design parameters
       const designInput = parseExcelForDesignInput(req.file.buffer);
       
@@ -31,13 +34,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create project in database with design data
       const project = await storage.createProject({
-        name: `Bridge Design - Span ${designInput.span}m`,
-        location: "Extracted from Excel",
+        name: comprehensiveData?.projectInfo.name || `Bridge Design - Span ${designInput.span}m`,
+        location: comprehensiveData?.projectInfo.location || "Extracted from Excel",
         district: "Auto-designed",
-        engineer: "Auto-Design System",
+        engineer: comprehensiveData?.projectInfo.engineer || "Auto-Design System",
         designData: {
           input: designInput,
           output: designOutput,
+          workbookData: comprehensiveData, // Store all workbook sheets
         } as any,
       });
 
@@ -49,6 +53,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         location: project.location,
         designInput,
         designOutput,
+        workbookSheets: comprehensiveData?.allSheets ? Object.keys(comprehensiveData.allSheets).length : 0,
       });
     } catch (error) {
       console.error("Error uploading Excel:", error);
@@ -92,6 +97,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const designData = project.designData as any;
+      if (!designData || !designData.output) {
+        return res.status(400).json({ error: "Project does not have design data. Please re-generate the design." });
+      }
+      
       const buffer = await generatePDF(project, designData.output);
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_vetting_report.pdf"`);
