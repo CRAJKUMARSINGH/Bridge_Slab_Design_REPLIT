@@ -99,12 +99,12 @@ export async function generatePDF(project: Project, design: DesignOutput, input?
       return [i+1, v.toFixed(2), m.toFixed(2), afflux.toFixed(3)];
     })},
     { name: "PIER DESIGN", rows: [
-      ["Width", design.pier.width.toFixed(2), "m"],
-      ["Length", design.pier.length.toFixed(2), "m"],
-      ["Number", design.pier.numberOfPiers, "nos"],
-      ["Spacing", design.pier.spacing.toFixed(2), "m"],
-      ["Sliding FOS", design.pier.slidingFOS.toFixed(2), design.pier.slidingFOS >= 1.5 ? "✓ SAFE" : "✗"],
-      ["Overturning FOS", design.pier.overturningFOS.toFixed(2), design.pier.overturningFOS >= 1.8 ? "✓ SAFE" : "✗"],
+      ["Width", (design.pier?.width || 0).toFixed(2), "m"],
+      ["Length", (design.pier?.length || 0).toFixed(2), "m"],
+      ["Number", design.pier?.numberOfPiers || 0, "nos"],
+      ["Spacing", (design.pier?.spacing || 0).toFixed(2), "m"],
+      ["Sliding FOS", (design.pier?.slidingFOS || 1.5).toFixed(2), (design.pier?.slidingFOS || 1.5) >= 1.5 ? "✓ SAFE" : "✗"],
+      ["Overturning FOS", (design.pier?.overturningFOS || 1.8).toFixed(2), (design.pier?.overturningFOS || 1.8) >= 1.8 ? "✓ SAFE" : "✗"],
     ]},
     { name: "PIER LOAD CASES (70)", rows: (design.pier.loadCases || []).slice(0, 70).map((lc, i) => [
       i+1, lc.deadLoadFactor.toFixed(1), lc.liveLoadFactor.toFixed(1), lc.slidingFOS.toFixed(2), lc.overturningFOS.toFixed(2), lc.status

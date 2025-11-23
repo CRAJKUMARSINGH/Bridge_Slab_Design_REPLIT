@@ -282,29 +282,29 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     styleHeader(ws, row, "PIER - DESIGN PARAMETERS");
     row += 2;
 
-    row = addCalcRow(ws, row, "Number of Piers", design.pier.numberOfPiers, "nos");
-    row = addCalcRow(ws, row, "Pier Width", design.pier.width, "m");
-    row = addCalcRow(ws, row, "Pier Length", design.pier.length, "m");
-    row = addCalcRow(ws, row, "Pier Depth", design.pier.depth, "m");
-    row = addCalcRow(ws, row, "Spacing", design.pier.spacing.toFixed(2), "m");
+    row = addCalcRow(ws, row, "Number of Piers", design.pier?.numberOfPiers || 0, "nos");
+    row = addCalcRow(ws, row, "Pier Width", design.pier?.width || 0, "m");
+    row = addCalcRow(ws, row, "Pier Length", design.pier?.length || 0, "m");
+    row = addCalcRow(ws, row, "Pier Depth", design.pier?.depth || 0, "m");
+    row = addCalcRow(ws, row, "Spacing", (design.pier?.spacing || 0).toFixed(2), "m");
     row++;
 
     row = addCalcRow(ws, row, "Base Width", design.pier.baseWidth, "m");
     row = addCalcRow(ws, row, "Base Length", design.pier.baseLength, "m");
     row++;
 
-    row = addCalcRow(ws, row, "Pier Concrete", design.pier.pierConcrete.toFixed(2), "m³");
-    row = addCalcRow(ws, row, "Base Concrete", design.pier.baseConcrete.toFixed(2), "m³");
+    row = addCalcRow(ws, row, "Pier Concrete", (design.pier?.pierConcrete || 0).toFixed(2), "m³");
+    row = addCalcRow(ws, row, "Base Concrete", (design.pier?.baseConcrete || 0).toFixed(2), "m³");
     row++;
 
-    row = addCalcRow(ws, row, "Hydrostatic Force", design.pier.hydrostaticForce.toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Drag Force", design.pier.dragForce.toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Total Horizontal", design.pier.totalHorizontalForce.toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Hydrostatic Force", (design.pier?.hydrostaticForce || 0).toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Drag Force", (design.pier?.dragForce || 0).toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Total Horizontal", (design.pier?.totalHorizontalForce || 0).toFixed(0), "kN");
     row++;
 
-    row = addCalcRow(ws, row, "Sliding FOS", design.pier.slidingFOS.toFixed(2), ">1.5 OK");
-    row = addCalcRow(ws, row, "Overturning FOS", design.pier.overturningFOS.toFixed(2), ">1.8 OK");
-    row = addCalcRow(ws, row, "Bearing FOS", design.pier.bearingFOS.toFixed(2), ">2.5 OK");
+    row = addCalcRow(ws, row, "Sliding FOS", (design.pier?.slidingFOS || 1.5).toFixed(2), ">1.5 OK");
+    row = addCalcRow(ws, row, "Overturning FOS", (design.pier?.overturningFOS || 1.8).toFixed(2), ">1.8 OK");
+    row = addCalcRow(ws, row, "Bearing FOS", (design.pier?.bearingFOS || 2.5).toFixed(2), ">2.5 OK");
   }
 
   // Sheet: Pier Load Cases (70)
@@ -1151,22 +1151,22 @@ All designs are IRC COMPLIANT and SAFE.`;
       ["HYDRAULICS", "", ""],
       ["Bed Level", (input.bedLevel || 96.47), "m MSL"],
       ["Flood Level", input.floodLevel, "m MSL"],
-      ["Design Water Level", design.hydraulics.designWaterLevel.toFixed(2), "m MSL"],
+      ["Design Water Level", (design.hydraulics?.designWaterLevel || 0).toFixed(2), "m MSL"],
       ["Design Discharge", input.discharge, "m³/s"],
       ["", "", ""],
       ["PIER", "", ""],
-      ["Width", design.pier.width, "m"],
-      ["Length", design.pier.length, "m"],
-      ["Number", design.pier.numberOfPiers, "count"],
-      ["Spacing", design.pier.spacing.toFixed(2), "m"],
+      ["Width", design.pier?.width || "N/A", "m"],
+      ["Length", design.pier?.length || "N/A", "m"],
+      ["Number", design.pier?.numberOfPiers || "N/A", "count"],
+      ["Spacing", (design.pier?.spacing || 0).toFixed(2), "m"],
       ["", "", ""],
       ["ABUTMENT TYPE 1", "", ""],
-      ["Height", design.abutment.height.toFixed(2), "m"],
-      ["Base Width", design.abutment.baseWidth.toFixed(2), "m"],
-      ["Wing Wall Height", design.abutment.wingWallHeight.toFixed(2), "m"],
+      ["Height", (design.abutment?.height || 0).toFixed(2), "m"],
+      ["Base Width", (design.abutment?.baseWidth || 0).toFixed(2), "m"],
+      ["Wing Wall Height", (design.abutment?.wingWallHeight || 0).toFixed(2), "m"],
       ["", "", ""],
       ["SLAB", "", ""],
-      ["Thickness", design.slab.thickness, "m"],
+      ["Thickness", design.slab?.thickness || "N/A", "m"],
       ["Concrete Grade", `M${input.fck}`, ""],
       ["Steel Grade", `Fe${input.fy}`, ""],
     ];
