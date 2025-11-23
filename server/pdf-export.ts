@@ -2,14 +2,14 @@ import { jsPDF } from "jspdf";
 import { Project } from "@shared/schema";
 import { DesignOutput } from "./design-engine";
 
-const COLORS = { primary: [54, 96, 146], light: [236, 240, 241], dark: [44, 62, 80] };
+const COLORS = { primary: [54, 96, 146] as [number, number, number], light: [236, 240, 241] as [number, number, number], dark: [44, 62, 80] as [number, number, number] };
 const PAGE_WIDTH = 210, PAGE_HEIGHT = 297, MARGIN = 15, CONTENT_WIDTH = PAGE_WIDTH - 2 * MARGIN;
 
 function addSection(doc: jsPDF, title: string, y: number): number {
   doc.setFontSize(12);
-  doc.setFont(undefined, "bold");
-  doc.setTextColor(...COLORS.primary);
-  doc.setFillColor(...COLORS.light);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(COLORS.primary[0], COLORS.primary[1], COLORS.primary[2]);
+  doc.setFillColor(COLORS.light[0], COLORS.light[1], COLORS.light[2]);
   doc.rect(MARGIN, y - 5, CONTENT_WIDTH, 8, "F");
   doc.text(title, MARGIN + 2, y + 1);
   return y + 12;
@@ -20,9 +20,9 @@ function addTable(doc: jsPDF, headers: string[], rows: (string | number)[][], st
   let y = startY;
   const lineHeight = 6;
 
-  doc.setFillColor(...COLORS.primary);
+  doc.setFillColor(COLORS.primary[0], COLORS.primary[1], COLORS.primary[2]);
   doc.setTextColor(255, 255, 255);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
 
   let x = MARGIN;
@@ -33,8 +33,8 @@ function addTable(doc: jsPDF, headers: string[], rows: (string | number)[][], st
 
   y += lineHeight;
 
-  doc.setTextColor(...COLORS.dark);
-  doc.setFont(undefined, "normal");
+  doc.setTextColor(COLORS.dark[0], COLORS.dark[1], COLORS.dark[2]);
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
 
   rows.forEach((row, idx) => {
@@ -44,7 +44,7 @@ function addTable(doc: jsPDF, headers: string[], rows: (string | number)[][], st
     }
 
     if (idx % 2 === 0) {
-      doc.setFillColor(...COLORS.light);
+      doc.setFillColor(COLORS.light[0], COLORS.light[1], COLORS.light[2]);
       doc.rect(MARGIN, y - lineHeight / 2 + 1, CONTENT_WIDTH, lineHeight, "F");
     }
 
@@ -66,12 +66,12 @@ export async function generatePDF(project: Project, design: DesignOutput): Promi
 
     // PAGE 1: COVER
     doc.setFontSize(28);
-    doc.setFont(undefined, "bold");
-    doc.setTextColor(...COLORS.primary);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(COLORS.primary[0], COLORS.primary[1], COLORS.primary[2]);
     doc.text("BRIDGE DESIGN REPORT", PAGE_WIDTH / 2, 40, { align: "center" });
 
     doc.setFontSize(14);
-    doc.setTextColor(...COLORS.dark);
+    doc.setTextColor(COLORS.dark[0], COLORS.dark[1], COLORS.dark[2]);
     doc.text("IRC:6-2016 & IRC:112-2015", PAGE_WIDTH / 2, 60, { align: "center" });
 
     y = 100;
