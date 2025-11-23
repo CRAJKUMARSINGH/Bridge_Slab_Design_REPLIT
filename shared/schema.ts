@@ -30,17 +30,44 @@ export const projects = pgTable("projects", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Design data structure matching the workbook state
+// Design data structure - Submersible Skew Bridge
 export const DesignDataSchema = z.object({
-  span: z.number(),
-  width: z.number(),
-  supportWidth: z.number(),
-  wearingCoat: z.number(),
-  fck: z.number(),
-  fy: z.number(),
-  loadClass: z.string(),
-  depth: z.number(),
-  cover: z.number(),
+  // Geometry
+  span: z.number().optional(),
+  width: z.number().optional(),
+  supportWidth: z.number().optional(),
+  depth: z.number().optional(),
+  cover: z.number().optional(),
+  
+  // Materials
+  fck: z.number().optional(),
+  fy: z.number().optional(),
+  wearingCoat: z.number().optional(),
+  loadClass: z.string().optional(),
+  
+  // Hydraulics
+  discharge: z.number().optional(),
+  floodLevel: z.number().optional(),
+  crossSectionalArea: z.number().optional(),
+  velocity: z.number().optional(),
+  afflux: z.number().optional(),
+  
+  // Pier Design
+  pierWidth: z.number().optional(),
+  numberOfPiers: z.number().optional(),
+  pierDepth: z.number().optional(),
+  
+  // Abutment Design
+  abutmentHeight: z.number().optional(),
+  abutmentWidth: z.number().optional(),
+  
+  // Stability
+  stabilityFOS: z.number().optional(),
+  baseWidth: z.number().optional(),
+  
+  // Additional notes
+  designType: z.string().optional().default("Submersible Skew Bridge"),
+  location: z.string().optional(),
 });
 
 export const insertProjectSchema = createInsertSchema(projects, {

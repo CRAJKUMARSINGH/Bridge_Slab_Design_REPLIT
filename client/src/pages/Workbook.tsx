@@ -8,23 +8,46 @@ import LiveLoadSheet from "../components/workbook/sheets/LiveLoadSheet";
 import StructuralAnalysisSheet from "../components/workbook/sheets/StructuralAnalysisSheet";
 import DesignSheet from "../components/workbook/sheets/DesignSheet";
 import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
+import HydraulicsSheet from "../components/workbook/sheets/HydraulicsSheet";
+import PierDesignSheet from "../components/workbook/sheets/PierDesignSheet";
+import AbutmentDesignSheet from "../components/workbook/sheets/AbutmentDesignSheet";
 import { getProject, updateProject, exportProjectAsExcel, exportProjectAsPDF } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Save, Download, FileText } from "lucide-react";
 import { toast } from "sonner";
 
-// Initial Engineering State
+// Initial Engineering State - Submersible Skew Bridge
 const INITIAL_PROJECT_DATA = {
-  span: 6.0,
+  // Slab geometry
+  span: 30.0,
   width: 7.5,
   supportWidth: 400,
   wearingCoat: 80,
-  fck: 25, // M25
-  fy: 415, // Fe415
+  fck: 25,
+  fy: 415,
   loadClass: "Class AA",
-  // Derived / Intermediate (Simplified for demo)
   depth: 550,
   cover: 40,
+  
+  // Hydraulics
+  discharge: 902.15,
+  floodLevel: 100.6,
+  crossSectionalArea: 490.3,
+  velocity: 1.84,
+  afflux: 0.45,
+  
+  // Pier Design
+  pierWidth: 1.2,
+  numberOfPiers: 11,
+  pierDepth: 2.5,
+  
+  // Abutment Design
+  abutmentHeight: 5.5,
+  abutmentWidth: 2.8,
+  baseWidth: 3.0,
+  stabilityFOS: 1.5,
+  
+  designType: "Submersible Skew Bridge",
 };
 
 export type ProjectData = typeof INITIAL_PROJECT_DATA;
@@ -116,14 +139,21 @@ export default function WorkbookLayout() {
 
   const renderSheetContent = () => {
     switch (activeSheetId) {
+      // General Input
       case "1.1":
       case "1.2":
       case "1.3":
         return <GeneralInputSheet data={projectData} onUpdate={updateProjectData} />;
+      
+      // Hydraulics
       case "2.1":
       case "2.2":
+      case "2.3":
+      case "2.4":
       case "2.5":
-        return <LoadAnalysisSheet data={projectData} />;
+        return <HydraulicsSheet data={projectData} onUpdate={updateProjectData} />;
+      
+      // Pier Design
       case "3.1":
       case "3.2":
       case "3.3":
@@ -132,16 +162,26 @@ export default function WorkbookLayout() {
       case "3.6":
       case "3.7":
       case "3.8":
-        return <LiveLoadSheet data={projectData} />;
+        return <PierDesignSheet data={projectData} onUpdate={updateProjectData} />;
+      
+      // Abutment Design
+      case "4.1":
       case "4.2":
       case "4.3":
+      case "4.4":
+      case "4.5":
+      case "4.6":
       case "4.7":
-        return <StructuralAnalysisSheet data={projectData} />;
+      case "4.8":
+        return <AbutmentDesignSheet data={projectData} onUpdate={updateProjectData} />;
+      
+      // Structural Analysis
       case "5.1":
       case "5.2":
       case "5.3":
       case "5.4":
-        return <DesignSheet data={projectData} />;
+        return <StructuralAnalysisSheet data={projectData} />;
+      
       default:
         return <DefaultSheet sheetName={activeSheetInfo?.label || "Sheet"} />;
     }
