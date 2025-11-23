@@ -1,9 +1,9 @@
 import { useState } from "react";
 import WorkbookSidebar, { SHEET_GROUPS } from "@/components/workbook/WorkbookSidebar";
-import GeneralInputSheet from "@/components/workbook/sheets/GeneralInputSheet";
-import LoadAnalysisSheet from "@/components/workbook/sheets/LoadAnalysisSheet";
-import StructuralAnalysisSheet from "@/components/workbook/sheets/StructuralAnalysisSheet";
-import DefaultSheet from "@/components/workbook/sheets/DefaultSheet";
+import GeneralInputSheet from "../components/workbook/sheets/GeneralInputSheet";
+import LoadAnalysisSheet from "../components/workbook/sheets/LoadAnalysisSheet";
+import StructuralAnalysisSheet from "../components/workbook/sheets/StructuralAnalysisSheet";
+import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
 
 export default function WorkbookLayout() {
   const [activeSheetId, setActiveSheetId] = useState("1.1");
