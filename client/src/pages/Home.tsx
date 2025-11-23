@@ -6,7 +6,6 @@ import { FileText, Plus, Ruler, Calculator, Upload } from "lucide-react";
 import ExcelUpload from "@/components/workbook/ExcelUpload";
 
 export default function Home() {
-  const [showExcelUpload, setShowExcelUpload] = useState(false);
   const [, setLocation] = useLocation();
 
   const handleProjectCreate = async (projectData: any) => {
@@ -29,35 +28,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background p-8 font-sans">
       <div className="max-w-5xl mx-auto space-y-8">
-        <header className="flex items-center justify-between border-b pb-6">
+        <header className="border-b pb-6">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-primary">Submersible Bridge Design Suite</h1>
             <p className="text-muted-foreground mt-2">Auto-generate comprehensive designs from Excel hydraulic data</p>
           </div>
-          <div className="flex gap-2">
-            <Button
-              size="lg"
-              className="gap-2 shadow-lg"
-              onClick={() => setShowExcelUpload(!showExcelUpload)}
-              data-testid="button-upload-excel"
-            >
-              <Upload className="h-4 w-4" />
-              Upload Excel
-            </Button>
-            <Link href="/design">
-              <Button size="lg" className="gap-2 shadow-lg">
-                <Plus className="h-4 w-4" />
-                New Design
-              </Button>
-            </Link>
-          </div>
         </header>
 
-        {showExcelUpload && (
-          <div className="mb-6">
-            <ExcelUpload onProjectCreate={handleProjectCreate} />
-          </div>
-        )}
+        <div>
+          <ExcelUpload onProjectCreate={handleProjectCreate} />
+        </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="hover:shadow-md transition-shadow cursor-pointer group border-l-4 border-l-primary" onClick={() => window.location.href = '/workbook'}>
