@@ -11,6 +11,7 @@ import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
 import HydraulicsSheet from "../components/workbook/sheets/HydraulicsSheet";
 import PierDesignSheet from "../components/workbook/sheets/PierDesignSheet";
 import AbutmentDesignSheet from "../components/workbook/sheets/AbutmentDesignSheet";
+import InputDataSheet from "../components/workbook/sheets/InputDataSheet";
 import { getProject, updateProject, exportProjectAsExcel, exportProjectAsPDF } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Save, Download, FileText } from "lucide-react";
@@ -137,8 +138,17 @@ export default function WorkbookLayout() {
     .flatMap(g => g.sheets)
     .find(s => s.id === activeSheetId);
 
+  const handleRecalculate = () => {
+    // Trigger recalculation - data is already updated via updateProjectData
+    setHasUnsavedChanges(true);
+  };
+
   const renderSheetContent = () => {
     switch (activeSheetId) {
+      // Input Data Sheet - Main parameter entry
+      case "0.1":
+        return <InputDataSheet data={projectData} onUpdate={updateProjectData} onRecalculate={handleRecalculate} />;
+      
       // General Input
       case "1.1":
       case "1.2":

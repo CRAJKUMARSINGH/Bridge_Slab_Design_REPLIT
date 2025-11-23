@@ -26,6 +26,13 @@ interface SheetNavProps {
 
 export const SHEET_GROUPS = [
   {
+    title: "⚡ INPUT DATA - Modify Parameters Here",
+    icon: Settings,
+    sheets: [
+      { id: "0.1", name: "Input_Data", label: "Design Input Parameters" },
+    ]
+  },
+  {
     title: "1.0 General Data & Input",
     icon: Settings,
     sheets: [
