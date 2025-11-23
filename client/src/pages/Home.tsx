@@ -1,24 +1,63 @@
-import { Link } from "wouter";
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Plus, Ruler, Calculator } from "lucide-react";
+import { FileText, Plus, Ruler, Calculator, Upload } from "lucide-react";
+import ExcelUpload from "@/components/workbook/ExcelUpload";
 
 export default function Home() {
+  const [showExcelUpload, setShowExcelUpload] = useState(false);
+  const [, setLocation] = useLocation();
+
+  const handleProjectCreate = async (projectData: any) => {
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(projectData),
+      });
+
+      if (response.ok) {
+        const project = await response.json();
+        setLocation(`/workbook/${project.id}`);
+      }
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-8 font-sans">
       <div className="max-w-5xl mx-auto space-y-8">
         <header className="flex items-center justify-between border-b pb-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-primary">Slab Bridge Design Suite</h1>
-            <p className="text-muted-foreground mt-2">Professional Structural Analysis & Detailed Reporting</p>
+            <h1 className="text-3xl font-bold tracking-tight text-primary">Submersible Bridge Design Suite</h1>
+            <p className="text-muted-foreground mt-2">Auto-generate comprehensive designs from Excel hydraulic data</p>
           </div>
-          <Link href="/design">
-            <Button size="lg" className="gap-2 shadow-lg">
-              <Plus className="h-4 w-4" />
-              New Design Project
+          <div className="flex gap-2">
+            <Button
+              size="lg"
+              className="gap-2 shadow-lg"
+              onClick={() => setShowExcelUpload(!showExcelUpload)}
+              data-testid="button-upload-excel"
+            >
+              <Upload className="h-4 w-4" />
+              Upload Excel
             </Button>
-          </Link>
+            <Link href="/design">
+              <Button size="lg" className="gap-2 shadow-lg">
+                <Plus className="h-4 w-4" />
+                New Design
+              </Button>
+            </Link>
+          </div>
         </header>
+
+        {showExcelUpload && (
+          <div className="mb-6">
+            <ExcelUpload onProjectCreate={handleProjectCreate} />
+          </div>
+        )}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="hover:shadow-md transition-shadow cursor-pointer group border-l-4 border-l-primary" onClick={() => window.location.href = '/workbook'}>
