@@ -1,53 +1,32 @@
 import ExcelJS from 'exceljs';
 import { DesignInput, DesignOutput } from './design-engine';
 
-const HEADER_FILL = { type: 'pattern' as const, pattern: 'solid' as const, fgColor: { argb: 'FF0066CC' } };
-const HEADER_FONT = { color: { argb: 'FFFFFFFF' }, bold: true, size: 11 };
-const SUBHEADER_FILL = { type: 'pattern' as const, pattern: 'solid' as const, fgColor: { argb: 'FFE8F0FF' } };
-const SUBHEADER_FONT = { bold: true, size: 10 };
-const CALC_FILL = { type: 'pattern' as const, pattern: 'solid' as const, fgColor: { argb: 'FFFFFFE0' } };
-const BORDER_THIN = { style: 'thin' as const, color: { argb: 'FF000000' } };
-const BORDERS = { top: BORDER_THIN, bottom: BORDER_THIN, left: BORDER_THIN, right: BORDER_THIN };
+const COLORS = {
+  header: { argb: 'FF0066CC' },
+  headerFont: { color: { argb: 'FFFFFFFF' }, bold: true, size: 11 },
+  subheader: { argb: 'FFE8F0FF' },
+  subheaderFont: { bold: true, size: 10 },
+  highlight: { argb: 'FFFFFFE0' },
+  border: { style: 'thin' as const, color: { argb: 'FF000000' } },
+};
 
-function styleHeaderCell(cell: any) {
-  cell.fill = HEADER_FILL;
-  cell.font = HEADER_FONT;
-  cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-  cell.border = BORDERS;
-}
+const BORDERS = { top: COLORS.border, bottom: COLORS.border, left: COLORS.border, right: COLORS.border };
 
-function styleDataCell(cell: any, highlight = false) {
-  cell.border = BORDERS;
-  if (highlight) {
-    cell.fill = CALC_FILL;
+function styleCell(cell: any, options: { header?: boolean; subheader?: boolean; highlight?: boolean; border?: boolean } = {}) {
+  if (options.border) cell.border = BORDERS;
+  if (options.header) {
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: COLORS.header };
+    cell.font = COLORS.headerFont;
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+  }
+  if (options.subheader) {
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: COLORS.subheader };
+    cell.font = COLORS.subheaderFont;
+  }
+  if (options.highlight) {
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: COLORS.highlight };
     cell.font = { bold: true };
   }
-  cell.alignment = { horizontal: 'right', vertical: 'middle' };
-}
-
-async function addDataRow(
-  ws: ExcelJS.Worksheet,
-  row: number,
-  label: string,
-  value: any,
-  unit: string = '',
-  highlight = false
-) {
-  const labelCell = ws.getCell(row, 1);
-  labelCell.value = label;
-  labelCell.alignment = { horizontal: 'left', vertical: 'middle' };
-  labelCell.border = BORDERS;
-  
-  const valueCell = ws.getCell(row, 2);
-  valueCell.value = typeof value === 'number' ? parseFloat(value.toFixed(3)) : value;
-  styleDataCell(valueCell, highlight);
-  
-  const unitCell = ws.getCell(row, 3);
-  unitCell.value = unit;
-  unitCell.alignment = { horizontal: 'left', vertical: 'center' };
-  unitCell.border = BORDERS;
-  
-  return row + 1;
 }
 
 export async function generateExcelReport(
@@ -57,415 +36,550 @@ export async function generateExcelReport(
 ): Promise<Buffer> {
   const workbook = new ExcelJS.Workbook();
   
-  // Sheet 1: Cover Page
+  // SHEET 1: COVER & PROJECT INFO
   {
     const ws = workbook.addWorksheet('Cover Page');
-    ws.columns = [{ width: 20 }, { width: 30 }, { width: 15 }];
+    ws.columns = [{ width: 20 }, { width: 40 }, { width: 20 }];
     
     let row = 3;
     const titleCell = ws.getCell(row, 1);
-    titleCell.value = 'SUBMERSIBLE BRIDGE AUTO-DESIGN SYSTEM';
+    titleCell.value = 'IRC CODE COMPLIANT SUBMERSIBLE BRIDGE AUTO-DESIGN SYSTEM';
     titleCell.font = { bold: true, size: 16 };
     ws.mergeCells(`A${row}:C${row}`);
     titleCell.alignment = { horizontal: 'center', vertical: 'center' };
     
     row += 2;
-    ws.getCell(row, 1).value = 'Design Report';
-    ws.getCell(row, 1).font = { bold: true, size: 14 };
+    ws.getCell(row, 1).value = 'Project Name:';
+    ws.getCell(row, 2).value = projectName;
+    ws.getCell(row, 1).font = { bold: true };
     row += 1;
-    ws.getCell(row, 1).value = projectName;
-    ws.getCell(row, 1).font = { size: 12 };
     
+    ws.getCell(row, 1).value = 'Span:';
+    ws.getCell(row, 2).value = `${input.span}m`;
+    row += 1;
+    
+    ws.getCell(row, 1).value = 'Width:';
+    ws.getCell(row, 2).value = `${input.width}m`;
+    row += 1;
+    
+    ws.getCell(row, 1).value = 'Discharge:';
+    ws.getCell(row, 2).value = `${input.discharge}m³/s`;
+    row += 1;
+    
+    ws.getCell(row, 1).value = 'HFL:';
+    ws.getCell(row, 2).value = `${input.floodLevel}m`;
+    row += 1;
+    
+    ws.getCell(row, 1).value = 'fck:';
+    ws.getCell(row, 2).value = `M${input.fck}`;
+    row += 1;
+    
+    ws.getCell(row, 1).value = 'fy:';
+    ws.getCell(row, 2).value = `Fe${input.fy}`;
     row += 2;
-    ws.getCell(row, 1).value = 'Report Date:';
-    ws.getCell(row, 2).value = new Date().toLocaleDateString();
     
-    row += 1;
-    ws.getCell(row, 1).value = 'Standards Used:';
-    ws.getCell(row, 2).value = 'IRC:6-2016, IRC:112-2015';
+    ws.getCell(row, 1).value = 'Standards:';
+    ws.getCell(row, 2).value = 'IRC:6-2016, IRC:112-2015, IS:456-2000';
+    ws.getCell(row, 1).font = { bold: true };
   }
   
-  // Sheet 2: Project Inputs
+  // SHEET 2: DESIGN INPUT SUMMARY
   {
-    const ws = workbook.addWorksheet('Project Inputs');
-    ws.columns = [{ width: 30 }, { width: 15 }, { width: 15 }];
+    const ws = workbook.addWorksheet('Design Input');
+    ws.columns = [{ width: 30 }, { width: 15 }, { width: 25 }];
     
     let row = 1;
     const header = ws.getCell(row, 1);
-    header.value = 'PROJECT INPUT PARAMETERS';
-    header.font = SUBHEADER_FONT;
+    header.value = 'DESIGN INPUT PARAMETERS';
+    styleCell(header, { header: true });
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
     
-    row = await addDataRow(ws, row, 'Bridge Span (L)', design.projectInfo.span, 'm');
-    row = await addDataRow(ws, row, 'Bridge Width (W)', design.projectInfo.width, 'm');
-    row = await addDataRow(ws, row, 'Design Discharge (Q)', design.projectInfo.discharge, 'm³/s');
-    row = await addDataRow(ws, row, 'Flood Level (HFL)', design.projectInfo.floodLevel, 'm (absolute)');
-    row = await addDataRow(ws, row, 'Bed Level', design.projectInfo.bedLevel, 'm (absolute)');
-    row = await addDataRow(ws, row, 'Bed Slope', input.bedSlope, '-');
-    row = await addDataRow(ws, row, 'Number of Lanes', input.numberOfLanes, '-');
-    row = await addDataRow(ws, row, 'Concrete Grade (fck)', input.fck, 'MPa');
-    row = await addDataRow(ws, row, 'Steel Grade (fy)', input.fy, 'MPa');
-    row = await addDataRow(ws, row, 'Soil Bearing Capacity', input.soilBearingCapacity, 'kPa');
-    row = await addDataRow(ws, row, 'Load Class', input.loadClass, '-');
+    const paramHeader = ['Parameter', 'Value', 'Unit/Remarks'];
+    paramHeader.forEach((val, i) => {
+      const cell = ws.getCell(row, i + 1);
+      cell.value = val;
+      styleCell(cell, { subheader: true, border: true });
+    });
+    row += 1;
+    
+    const params = [
+      ['Effective Span (L)', input.span, 'm'],
+      ['Clear Width (W)', input.width, 'm'],
+      ['Design Discharge', input.discharge, 'm³/s'],
+      ['Bed Slope', input.bedSlope, '-'],
+      ['Highest Flood Level', input.floodLevel, 'm (absolute)'],
+      ['Bed Level', input.bedLevel || input.floodLevel - 5, 'm (absolute)'],
+      ['Number of Lanes', input.numberOfLanes, '-'],
+      ['Concrete Grade (fck)', input.fck, 'MPa'],
+      ['Steel Grade (fy)', input.fy, 'MPa'],
+      ['Soil Bearing Capacity', input.soilBearingCapacity, 'kPa'],
+      ['Load Class', input.loadClass || 'Class AA', 'IRC:6-2016'],
+    ];
+    
+    params.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      ws.getCell(row, 2).value = val;
+      ws.getCell(row, 3).value = unit;
+      [1, 2, 3].forEach(col => styleCell(ws.getCell(row, col), { border: true }));
+      row += 1;
+    });
   }
   
-  // Sheet 3: Hydraulic Calculations
+  // SHEET 3: HYDRAULIC CALCULATIONS
   {
     const ws = workbook.addWorksheet('Hydraulics');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
+    ws.columns = [{ width: 40 }, { width: 20 }, { width: 20 }];
     
     let row = 1;
-    const header = ws.getCell(row, 1);
-    header.value = 'HYDRAULIC DESIGN CALCULATIONS';
-    header.font = SUBHEADER_FONT;
+    const title = ws.getCell(row, 1);
+    title.value = 'HYDRAULIC DESIGN CALCULATIONS (LACEY\'S METHOD)';
+    styleCell(title, { header: true });
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
     
-    row = await addDataRow(ws, row, 'Flow Depth', design.projectInfo.flowDepth, 'm', true);
-    row = await addDataRow(ws, row, 'Cross-sectional Area', design.hydraulics.crossSectionalArea, 'm²', true);
-    row = await addDataRow(ws, row, 'Flow Velocity (Lacey)', design.hydraulics.velocity, 'm/s', true);
-    row = await addDataRow(ws, row, "Lacey's Silt Factor (m)", design.hydraulics.laceysSiltFactor, '-', true);
-    
-    row += 1;
-    ws.getCell(row, 1).value = 'AFFLUX CALCULATION (IRC:6)';
-    ws.getCell(row, 1).font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
+    const headers = ['Parameter', 'Value', 'Unit'];
+    headers.forEach((val, i) => {
+      styleCell(ws.getCell(row, i + 1), { subheader: true, border: true });
+      ws.getCell(row, i + 1).value = val;
+    });
     row += 1;
     
-    row = await addDataRow(ws, row, 'Afflux (h)', design.hydraulics.afflux, 'm', true);
-    row = await addDataRow(ws, row, 'Design Water Level (DWL)', design.hydraulics.designWaterLevel, 'm (absolute)', true);
-    row = await addDataRow(ws, row, 'Contraction Loss', design.hydraulics.contraction, 'm');
-    row = await addDataRow(ws, row, 'Froude Number', design.hydraulics.froudeNumber, '-');
+    const data = [
+      ['Cross-Sectional Area (A)', design.hydraulics.crossSectionalArea, 'm²'],
+      ['Flow Velocity (V)', design.hydraulics.velocity, 'm/s'],
+      ["Lacey's Silt Factor (m)", design.hydraulics.laceysSiltFactor, '-'],
+      ['Afflux (Calculated)', design.hydraulics.afflux, 'm'],
+      ['Design Water Level', design.hydraulics.designWaterLevel, 'm (absolute)'],
+      ['Contraction Loss', design.hydraulics.contraction, 'm'],
+      ['Froude Number', design.hydraulics.froudeNumber, '-'],
+      ['Submerged Status', design.hydraulics.afflux < 0.5 ? 'Fully Submerged' : 'Semi-submerged', '-'],
+    ];
+    
+    data.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(3) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
+    
+    row += 2;
+    ws.getCell(row, 1).value = 'FORMULAS USED:';
+    ws.getCell(row, 1).font = { bold: true };
+    row += 1;
+    
+    const formulas = [
+      'Velocity (V) = Q / A',
+      'Lacey Silt Factor (m) = 1.76 × √(Q/W)',
+      'Afflux = V² / (17.9 × √m)',
+      'Design Water Level = HFL + Afflux',
+      'Froude Number = V / √(g × D)',
+    ];
+    
+    formulas.forEach(formula => {
+      ws.getCell(row, 1).value = formula;
+      ws.getCell(row, 1).font = { italic: true, size: 9 };
+      row += 1;
+    });
   }
   
-  // Sheets 4-5: Pier Design
+  // SHEET 4: PIER DESIGN
   {
     const ws = workbook.addWorksheet('Pier Design');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
+    ws.columns = [{ width: 40 }, { width: 20 }, { width: 20 }];
     
     let row = 1;
-    let header = ws.getCell(row, 1);
-    header.value = 'PIER DESIGN CALCULATIONS';
-    header.font = SUBHEADER_FONT;
+    const title = ws.getCell(row, 1);
+    title.value = 'PIER STRUCTURAL DESIGN';
+    styleCell(title, { header: true });
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
     
-    row = await addDataRow(ws, row, 'Number of Piers', design.pier.numberOfPiers, '-', true);
-    row = await addDataRow(ws, row, 'Pier Width (B)', design.pier.width, 'm', true);
-    row = await addDataRow(ws, row, 'Pier Length (D)', design.pier.length, 'm');
-    row = await addDataRow(ws, row, 'Pier Spacing', design.pier.spacing, 'm');
-    row = await addDataRow(ws, row, 'Pier Depth', design.pier.depth, 'm');
-    
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'FOUNDATION DESIGN';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
+    // Geometry section
+    ws.getCell(row, 1).value = 'PIER GEOMETRY:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
     row += 1;
     
-    row = await addDataRow(ws, row, 'Base Width', design.pier.baseWidth, 'm', true);
-    row = await addDataRow(ws, row, 'Base Length', design.pier.baseLength, 'm');
-    row = await addDataRow(ws, row, 'Pier Concrete Volume', design.pier.pierConcrete, 'm³', true);
-    row = await addDataRow(ws, row, 'Base Concrete Volume', design.pier.baseConcrete, 'm³', true);
+    const pierGeom = [
+      ['Number of Piers', design.pier.numberOfPiers, '-'],
+      ['Pier Width (B)', design.pier.width, 'm'],
+      ['Pier Length (D)', design.pier.length, 'm'],
+      ['Pier Spacing', design.pier.spacing, 'm'],
+      ['Pier Depth', design.pier.depth, 'm'],
+      ['Base Width', design.pier.baseWidth, 'm'],
+      ['Base Length', design.pier.baseLength, 'm'],
+      ['Pier Concrete Volume', design.pier.pierConcrete, 'm³'],
+      ['Base Concrete Volume', design.pier.baseConcrete, 'm³'],
+    ];
     
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'HYDRAULIC FORCES';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
-    row += 1;
+    pierGeom.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(3) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
     
-    row = await addDataRow(ws, row, 'Hydrostatic Force', design.pier.hydrostaticForce, 'kN', true);
-    row = await addDataRow(ws, row, 'Drag Force', design.pier.dragForce, 'kN', true);
-    row = await addDataRow(ws, row, 'Total Horizontal Force', design.pier.totalHorizontalForce, 'kN', true);
-    
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'STABILITY CHECKS (Min FOS: 1.5, 1.8, 2.5)';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
-    row += 1;
-    
-    row = await addDataRow(ws, row, 'Sliding FOS', design.pier.slidingFOS, '-', true);
-    row = await addDataRow(ws, row, 'Overturning FOS', design.pier.overturningFOS, '-', true);
-    row = await addDataRow(ws, row, 'Bearing Capacity FOS', design.pier.bearingFOS, '-', true);
-  }
-  
-  // Sheet 6: Pier Reinforcement
-  {
-    const ws = workbook.addWorksheet('Pier Reinforcement');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
-    
-    let row = 1;
-    const header = ws.getCell(row, 1);
-    header.value = 'PIER REINFORCEMENT DETAILS';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
     row += 2;
-    
-    row = await addDataRow(ws, row, 'Main Steel - Diameter', design.pier.mainSteel.diameter, 'mm', true);
-    row = await addDataRow(ws, row, 'Main Steel - Spacing', design.pier.mainSteel.spacing, 'mm');
-    row = await addDataRow(ws, row, 'Main Steel - Total Quantity', design.pier.mainSteel.quantity, 'nos', true);
-    
+    ws.getCell(row, 1).value = 'HYDRAULIC FORCES:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
     row += 1;
-    row = await addDataRow(ws, row, 'Link Steel - Diameter', design.pier.linkSteel.diameter, 'mm', true);
-    row = await addDataRow(ws, row, 'Link Steel - Spacing', design.pier.linkSteel.spacing, 'mm');
-    row = await addDataRow(ws, row, 'Link Steel - Total Quantity', design.pier.linkSteel.quantity, 'nos', true);
+    
+    const forces = [
+      ['Hydrostatic Force', design.pier.hydrostaticForce, 'kN'],
+      ['Drag Force (Cd=1.2)', design.pier.dragForce, 'kN'],
+      ['Total Horizontal Force', design.pier.totalHorizontalForce, 'kN'],
+    ];
+    
+    forces.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(2) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
+    
+    row += 2;
+    ws.getCell(row, 1).value = 'STABILITY CHECKS (Min FOS: 1.5, 1.8, 2.5):';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
+    
+    const stability = [
+      ['Sliding FOS', design.pier.slidingFOS, '-', design.pier.slidingFOS >= 1.5 ? '✓ SAFE' : '✗ UNSAFE'],
+      ['Overturning FOS', design.pier.overturningFOS, '-', design.pier.overturningFOS >= 1.8 ? '✓ SAFE' : '✗ UNSAFE'],
+      ['Bearing Capacity FOS', design.pier.bearingFOS, '-', design.pier.bearingFOS >= 2.5 ? '✓ SAFE' : '✗ UNSAFE'],
+    ];
+    
+    stability.forEach(([label, val, unit, status]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(2) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 4).value = status;
+      ws.getCell(row, 4).font = { bold: true, color: { argb: status.includes('SAFE') ? 'FF00AA00' : 'FFAA0000' } };
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      ws.getCell(row, 4).border = BORDERS;
+      row += 1;
+    });
+    
+    row += 2;
+    ws.getCell(row, 1).value = 'REINFORCEMENT:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
+    
+    const reinf = [
+      ['Main Steel Diameter', design.pier.mainSteel.diameter, 'mm'],
+      ['Main Steel Spacing', design.pier.mainSteel.spacing, 'mm'],
+      ['Main Steel Quantity', design.pier.mainSteel.quantity, 'nos'],
+      ['Link Steel Diameter', design.pier.linkSteel.diameter, 'mm'],
+      ['Link Steel Spacing', design.pier.linkSteel.spacing, 'mm'],
+      ['Link Steel Quantity', design.pier.linkSteel.quantity, 'nos'],
+    ];
+    
+    reinf.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val : val;
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 2).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
   }
   
-  // Sheets 7-8: Abutment Design
+  // SHEET 5: ABUTMENT DESIGN
   {
     const ws = workbook.addWorksheet('Abutment Design');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
+    ws.columns = [{ width: 40 }, { width: 20 }, { width: 20 }];
     
     let row = 1;
-    let header = ws.getCell(row, 1);
-    header.value = 'ABUTMENT DESIGN CALCULATIONS';
-    header.font = SUBHEADER_FONT;
+    const title = ws.getCell(row, 1);
+    title.value = 'ABUTMENT STRUCTURAL DESIGN';
+    styleCell(title, { header: true });
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
     
-    row = await addDataRow(ws, row, 'Abutment Height', design.abutment.height, 'm', true);
-    row = await addDataRow(ws, row, 'Abutment Width', design.abutment.width, 'm', true);
-    row = await addDataRow(ws, row, 'Abutment Depth', design.abutment.depth, 'm');
-    
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'FOUNDATION DESIGN';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
+    ws.getCell(row, 1).value = 'ABUTMENT GEOMETRY:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
     row += 1;
     
-    row = await addDataRow(ws, row, 'Base Width', design.abutment.baseWidth, 'm', true);
-    row = await addDataRow(ws, row, 'Base Length', design.abutment.baseLength, 'm');
-    row = await addDataRow(ws, row, 'Wing Wall Height', design.abutment.wingWallHeight, 'm');
-    row = await addDataRow(ws, row, 'Wing Wall Thickness', design.abutment.wingWallThickness, 'm');
+    const abGeom = [
+      ['Abutment Height', design.abutment.height, 'm'],
+      ['Abutment Width', design.abutment.width, 'm'],
+      ['Abutment Depth', design.abutment.depth, 'm'],
+      ['Base Width', design.abutment.baseWidth, 'm'],
+      ['Base Length', design.abutment.baseLength, 'm'],
+      ['Wing Wall Height', design.abutment.wingWallHeight, 'm'],
+      ['Wing Wall Thickness', design.abutment.wingWallThickness, 'm'],
+    ];
     
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'CONCRETE VOLUMES (per abutment)';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
-    row += 1;
+    abGeom.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(3) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
     
-    row = await addDataRow(ws, row, 'Abutment Concrete', design.abutment.abutmentConcrete, 'm³', true);
-    row = await addDataRow(ws, row, 'Base Concrete', design.abutment.baseConcrete, 'm³', true);
-    row = await addDataRow(ws, row, 'Wing Wall Concrete', design.abutment.wingWallConcrete, 'm³', true);
-    
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'STABILITY CHECKS (Min FOS: 1.5, 2.0, 2.5)';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
-    row += 1;
-    
-    row = await addDataRow(ws, row, 'Active Earth Pressure', design.abutment.activeEarthPressure, 'kN');
-    row = await addDataRow(ws, row, 'Vertical Load', design.abutment.verticalLoad, 'kN');
-    row = await addDataRow(ws, row, 'Sliding FOS', design.abutment.slidingFOS, '-', true);
-    row = await addDataRow(ws, row, 'Overturning FOS', design.abutment.overturningFOS, '-', true);
-    row = await addDataRow(ws, row, 'Bearing Capacity FOS', design.abutment.bearingFOS, '-', true);
-  }
-  
-  // Sheet 9: Abutment Reinforcement
-  {
-    const ws = workbook.addWorksheet('Abutment Reinforcement');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
-    
-    let row = 1;
-    const header = ws.getCell(row, 1);
-    header.value = 'ABUTMENT REINFORCEMENT DETAILS';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
     row += 2;
+    ws.getCell(row, 1).value = 'CONCRETE VOLUMES (per abutment):';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
     
-    row = await addDataRow(ws, row, 'Main Steel - Diameter', design.abutment.mainSteel.diameter, 'mm', true);
-    row = await addDataRow(ws, row, 'Main Steel - Spacing', design.abutment.mainSteel.spacing, 'mm');
-    row = await addDataRow(ws, row, 'Main Steel - Total Quantity (per abutment)', design.abutment.mainSteel.quantity, 'nos', true);
-  }
-  
-  // Sheet 10: Load Calculations
-  {
-    const ws = workbook.addWorksheet('Load Analysis');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
+    const abConcrete = [
+      ['Abutment Concrete', design.abutment.abutmentConcrete, 'm³'],
+      ['Base Concrete', design.abutment.baseConcrete, 'm³'],
+      ['Wing Wall Concrete', design.abutment.wingWallConcrete, 'm³'],
+      ['Subtotal (per abutment)', design.abutment.abutmentConcrete + design.abutment.baseConcrete + design.abutment.wingWallConcrete, 'm³'],
+    ];
     
-    let row = 1;
-    let header = ws.getCell(row, 1);
-    header.value = 'LOAD CALCULATIONS (IRC:6-2016)';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
+    abConcrete.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(2) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
+    
     row += 2;
-    
-    row = await addDataRow(ws, row, 'Slab Thickness', design.slab.thickness, 'mm', true);
-    row = await addDataRow(ws, row, 'Wearing Coat Thickness', design.slab.wearingCoat, 'm');
-    
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'DEAD LOAD COMPONENTS';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
+    ws.getCell(row, 1).value = 'STABILITY CHECKS (Min FOS: 1.5, 2.0, 2.5):';
+    styleCell(ws.getCell(row, 1), { subheader: true });
     row += 1;
     
-    row = await addDataRow(ws, row, 'Self Weight of Slab', design.slab.thickness * 0.025, 'kN/m²');
-    row = await addDataRow(ws, row, 'Wearing Coat Weight', design.slab.wearingCoat * 24, 'kN/m²');
-    row = await addDataRow(ws, row, 'Total Dead Load (DL)', design.slab.deadLoad, 'kN/m²', true);
+    const abStability = [
+      ['Active Earth Pressure', design.abutment.activeEarthPressure, 'kN', '-'],
+      ['Vertical Load', design.abutment.verticalLoad, 'kN', '-'],
+      ['Sliding FOS', design.abutment.slidingFOS, '-', design.abutment.slidingFOS >= 1.5 ? '✓ SAFE' : '✗ UNSAFE'],
+      ['Overturning FOS', design.abutment.overturningFOS, '-', design.abutment.overturningFOS >= 2.0 ? '✓ SAFE' : '✗ UNSAFE'],
+      ['Bearing Capacity FOS', design.abutment.bearingFOS, '-', design.abutment.bearingFOS >= 2.5 ? '✓ SAFE' : '✗ UNSAFE'],
+    ];
     
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'LIVE LOAD (IRC Standards)';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
-    row += 1;
-    
-    row = await addDataRow(ws, row, 'Live Load Class', input.loadClass, '-');
-    row = await addDataRow(ws, row, 'Live Load (LL)', design.slab.liveLoad, 'kN/m²', true);
-    row = await addDataRow(ws, row, 'Impact Factor', design.slab.impactFactor, '-');
-    
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'DESIGN LOAD (IRC:112-2015)';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
-    row += 1;
-    
-    row = await addDataRow(ws, row, 'Design Load = 1.5DL + 2.0LL×IF', design.slab.designLoad, 'kN/m²', true);
+    abStability.forEach(([label, val, unit, status]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(3) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      if (status) {
+        ws.getCell(row, 4).value = status;
+        ws.getCell(row, 4).font = { bold: true, color: { argb: status.includes('SAFE') ? 'FF00AA00' : 'FFAA0000' } };
+        ws.getCell(row, 4).border = BORDERS;
+      }
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
   }
   
-  // Sheet 11: Slab Design
+  // SHEET 6: SLAB DESIGN & LOADS
   {
     const ws = workbook.addWorksheet('Slab Design');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
+    ws.columns = [{ width: 40 }, { width: 20 }, { width: 20 }];
     
     let row = 1;
-    let header = ws.getCell(row, 1);
-    header.value = 'SLAB BENDING MOMENT CALCULATIONS';
-    header.font = SUBHEADER_FONT;
+    const title = ws.getCell(row, 1);
+    title.value = 'SLAB STRUCTURAL DESIGN (IRC:112-2015)';
+    styleCell(title, { header: true });
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
     
-    row = await addDataRow(ws, row, 'Longitudinal Moment (Mx)', design.slab.longitudinalMoment, 'kN.m/m', true);
-    row = await addDataRow(ws, row, 'Transverse Moment (My)', design.slab.transverseMoment, 'kN.m/m', true);
-    row = await addDataRow(ws, row, 'Shear Force (V)', design.slab.shearForce, 'kN/m');
-    
-    row += 1;
-    header = ws.getCell(row, 1);
-    header.value = 'CONCRETE STRESS ANALYSIS';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
+    ws.getCell(row, 1).value = 'SLAB PROPERTIES:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
     row += 1;
     
-    row = await addDataRow(ws, row, 'Bending Stress (% of fck)', design.slab.bendingStress, '%');
-    row = await addDataRow(ws, row, 'Shear Stress', design.slab.shearStress, 'MPa');
-    row = await addDataRow(ws, row, 'Concrete Stress Limit (0.35×fck)', design.slab.concreteStress, 'MPa');
+    const slabProp = [
+      ['Slab Thickness', design.slab.thickness, 'mm'],
+      ['Wearing Coat Thickness', design.slab.wearingCoat, 'm'],
+    ];
+    
+    slabProp.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(3) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
+    
+    row += 2;
+    ws.getCell(row, 1).value = 'LOAD CALCULATIONS:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
+    
+    const loads = [
+      ['Dead Load (DL)', design.slab.deadLoad, 'kN/m²'],
+      ['Live Load (LL)', design.slab.liveLoad, 'kN/m²'],
+      ['Impact Factor', design.slab.impactFactor, '-'],
+      ['Design Load (1.5DL+2.0LL×IF)', design.slab.designLoad, 'kN/m²'],
+    ];
+    
+    loads.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(3) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
+    
+    row += 2;
+    ws.getCell(row, 1).value = 'BENDING MOMENTS (Pigeaud\'s Method):';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
+    
+    const moments = [
+      ['Longitudinal Moment (Mx)', design.slab.longitudinalMoment, 'kN.m/m'],
+      ['Transverse Moment (My)', design.slab.transverseMoment, 'kN.m/m'],
+      ['Shear Force (V)', design.slab.shearForce, 'kN/m'],
+    ];
+    
+    moments.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(2) : val;
+      styleCell(valCell, { highlight: true, border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
+    
+    row += 2;
+    ws.getCell(row, 1).value = 'REINFORCEMENT DESIGN:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
+    
+    const slabReinf = [
+      ['Main Steel Diameter', design.slab.mainSteel.diameter, 'mm'],
+      ['Main Steel Spacing', design.slab.mainSteel.spacing, 'mm'],
+      ['Required Area', design.slab.mainSteel.requiredArea, 'mm²/m'],
+      ['Provided Area', design.slab.mainSteel.area, 'mm²/m'],
+      ['Main Steel Quantity', design.slab.mainSteel.quantity, 'nos'],
+      ['Distribution Steel Diameter', design.slab.distributionSteel.diameter, 'mm'],
+      ['Distribution Steel Spacing', design.slab.distributionSteel.spacing, 'mm'],
+      ['Distribution Steel Area', design.slab.distributionSteel.area, 'mm²/m'],
+      ['Distribution Steel Quantity', design.slab.distributionSteel.quantity, 'nos'],
+    ];
+    
+    slabReinf.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' && val ? val.toFixed(val > 100 ? 0 : 3) : val || 'N/A';
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 2).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
   }
   
-  // Sheet 12: Slab Reinforcement
-  {
-    const ws = workbook.addWorksheet('Slab Reinforcement');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
-    
-    let row = 1;
-    let header = ws.getCell(row, 1);
-    header.value = 'SLAB MAIN REINFORCEMENT DESIGN';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
-    row += 2;
-    
-    row = await addDataRow(ws, row, 'Required Steel Area', design.slab.mainSteel.requiredArea, 'mm²/m', true);
-    row = await addDataRow(ws, row, 'Provided Steel Area', design.slab.mainSteel.area, 'mm²/m', true);
-    row = await addDataRow(ws, row, 'Steel Diameter', design.slab.mainSteel.diameter, 'mm');
-    row = await addDataRow(ws, row, 'Steel Spacing', design.slab.mainSteel.spacing, 'mm', true);
-    row = await addDataRow(ws, row, 'Total Bars Required', design.slab.mainSteel.quantity, 'nos', true);
-    
-    row += 2;
-    header = ws.getCell(row, 1);
-    header.value = 'SLAB DISTRIBUTION REINFORCEMENT';
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells(`A${row}:C${row}`);
-    row += 2;
-    
-    row = await addDataRow(ws, row, 'Steel Diameter', design.slab.distributionSteel.diameter, 'mm');
-    row = await addDataRow(ws, row, 'Steel Spacing', design.slab.distributionSteel.spacing, 'mm');
-    row = await addDataRow(ws, row, 'Provided Steel Area', design.slab.distributionSteel.area, 'mm²/m');
-    row = await addDataRow(ws, row, 'Total Bars Required', design.slab.distributionSteel.quantity, 'nos', true);
-  }
-  
-  // Sheet 13: Quantities Summary
+  // SHEET 7: QUANTITIES & COST
   {
     const ws = workbook.addWorksheet('Quantities');
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
+    ws.columns = [{ width: 40 }, { width: 20 }, { width: 20 }];
     
     let row = 1;
-    let header = ws.getCell(row, 1);
-    header.value = 'MATERIAL QUANTITY SUMMARY';
-    header.font = SUBHEADER_FONT;
+    const title = ws.getCell(row, 1);
+    title.value = 'MATERIAL QUANTITY ESTIMATE';
+    styleCell(title, { header: true });
     ws.mergeCells(`A${row}:C${row}`);
     row += 2;
     
-    row = await addDataRow(ws, row, 'Slab Concrete', design.quantities.slabConcrete, 'm³', true);
-    row = await addDataRow(ws, row, 'Pier Concrete', design.quantities.pierConcrete, 'm³', true);
-    row = await addDataRow(ws, row, 'Abutment Concrete (2 nos)', design.quantities.abutmentConcrete, 'm³', true);
-    row = await addDataRow(ws, row, 'TOTAL CONCRETE', design.quantities.totalConcrete, 'm³', true);
+    ws.getCell(row, 1).value = 'CONCRETE QUANTITIES:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
+    
+    const concrete = [
+      ['Slab Concrete', design.quantities.slabConcrete, 'm³'],
+      ['Pier Concrete', design.quantities.pierConcrete, 'm³'],
+      ['Abutment Concrete (2 nos)', design.quantities.abutmentConcrete, 'm³'],
+      ['TOTAL CONCRETE', design.quantities.totalConcrete, 'm³'],
+    ];
+    
+    concrete.forEach(([label, val, unit], idx) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(2) : val;
+      if (idx === concrete.length - 1) styleCell(valCell, { highlight: true, border: true });
+      else styleCell(valCell, { border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
     
     row += 2;
-    row = await addDataRow(ws, row, 'Slab Steel', design.quantities.slabSteel, 'tonnes', true);
-    row = await addDataRow(ws, row, 'Pier Steel', design.quantities.pierSteel, 'tonnes', true);
-    row = await addDataRow(ws, row, 'Abutment Steel (2 nos)', design.quantities.abutmentSteel, 'tonnes', true);
-    row = await addDataRow(ws, row, 'TOTAL STEEL', design.quantities.totalSteel, 'tonnes', true);
+    ws.getCell(row, 1).value = 'STEEL QUANTITIES:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
+    
+    const steel = [
+      ['Slab Steel', design.quantities.slabSteel, 'tonnes'],
+      ['Pier Steel', design.quantities.pierSteel, 'tonnes'],
+      ['Abutment Steel (2 nos)', design.quantities.abutmentSteel, 'tonnes'],
+      ['TOTAL STEEL', design.quantities.totalSteel, 'tonnes'],
+    ];
+    
+    steel.forEach(([label, val, unit], idx) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' && val ? val.toFixed(2) : val || 0;
+      if (idx === steel.length - 1) styleCell(valCell, { highlight: true, border: true });
+      else styleCell(valCell, { border: true });
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
     
     row += 2;
-    row = await addDataRow(ws, row, 'Formwork Required', design.quantities.formwork, 'm²');
+    ws.getCell(row, 1).value = 'OTHER ITEMS:';
+    styleCell(ws.getCell(row, 1), { subheader: true });
+    row += 1;
+    
+    const others = [
+      ['Formwork Required', design.quantities.formwork, 'm²'],
+    ];
+    
+    others.forEach(([label, val, unit]) => {
+      ws.getCell(row, 1).value = label;
+      const valCell = ws.getCell(row, 2);
+      valCell.value = typeof val === 'number' ? val.toFixed(2) : val;
+      ws.getCell(row, 3).value = unit;
+      ws.getCell(row, 1).border = BORDERS;
+      ws.getCell(row, 2).border = BORDERS;
+      ws.getCell(row, 3).border = BORDERS;
+      row += 1;
+    });
   }
   
-  // Add 30 more empty structured sheets for detailed calculations and reinforcement schedules
-  const additionalSheets = [
-    'Slab Moment Distribution', 'Slab Shear Distribution',
-    'Pier Moment Analysis', 'Pier Shear Analysis',
-    'Abutment Moment Analysis', 'Abutment Pressure Distribution',
-    'Foundation Settlement Check', 'Scour Analysis',
-    'Seismic Considerations', 'Temperature Effects',
-    'Material Specifications', 'Concrete Grades',
-    'Steel Specifications', 'Reinforcement Schedule - Slab',
-    'Reinforcement Schedule - Pier', 'Reinforcement Schedule - Abutment',
-    'Bearing and Expansion Joints', 'Drainage Design',
-    'Wearing Coat Specification', 'Guard Rail Design',
-    'Parapet Wall Design', 'Inspection & Maintenance',
-    'Construction Specifications', 'Quality Control',
-    'Safety Provisions', 'Environmental Impact',
-    'Cost Estimate', 'Schedule of Rates',
-    'Design Drawings Index', 'Report Summary',
-    'References & Standards', 'Calculations Verification'
-  ];
-  
-  for (const sheetName of additionalSheets) {
-    const ws = workbook.addWorksheet(sheetName);
-    ws.columns = [{ width: 35 }, { width: 15 }, { width: 15 }];
-    
-    const header = ws.getCell(1, 1);
-    header.value = sheetName.toUpperCase();
-    header.font = SUBHEADER_FONT;
-    ws.mergeCells('A1:C1');
-    
-    ws.getCell(3, 1).value = '[Detailed calculations and data to be populated based on specific project requirements]';
-    ws.getCell(3, 1).font = { italic: true, color: { argb: 'FF666666' } };
-  }
-  
-  // Set print options for all sheets
+  // Add print settings for all sheets
   workbook.worksheets.forEach(ws => {
-    ws.pageSetup = {
-      paperSize: 'A4',
-      orientation: 'portrait',
-      horizontalCentered: false,
-      verticalCentered: false,
-      margins: {
-        left: 0.5,
-        right: 0.5,
-        top: 0.75,
-        bottom: 0.75,
-        header: 0.3,
-        footer: 0.3,
-      },
-    };
+    ws.pageSetup = { paperSize: 9, orientation: 'portrait' }; // A4
+    ws.margins = { left: 0.5, right: 0.5, top: 0.75, bottom: 0.75 };
   });
   
   return workbook.xlsx.writeBuffer() as Promise<Buffer>;
