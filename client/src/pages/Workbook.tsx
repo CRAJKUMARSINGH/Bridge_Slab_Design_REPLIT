@@ -9,6 +9,7 @@ import StructuralAnalysisSheet from "../components/workbook/sheets/StructuralAna
 import DesignSheet from "../components/workbook/sheets/DesignSheet";
 import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
 import OutputDataSheet from "../components/workbook/sheets/OutputDataSheet";
+import PDFPreviewSheet from "../components/workbook/sheets/PDFPreviewSheet";
 import HydraulicsSheet from "../components/workbook/sheets/HydraulicsSheet";
 import PierDesignSheet from "../components/workbook/sheets/PierDesignSheet";
 import AbutmentDesignSheet from "../components/workbook/sheets/AbutmentDesignSheet";
@@ -148,8 +149,12 @@ export default function WorkbookLayout() {
 
   const renderSheetContent = () => {
     switch (activeSheetId) {
-      // Output Data Sheet - Display 47-sheet Excel output
+      // PDF Preview Sheet - Display full PDF report preview
       case "0.0":
+        return <PDFPreviewSheet data={fullDesignData} onExportPDF={handleExportPDF} />;
+      
+      // Output Data Sheet - Display 47-sheet Excel output
+      case "0.0.1":
         return <OutputDataSheet data={fullDesignData} />;
       
       // Input Data Sheet - Main parameter entry
