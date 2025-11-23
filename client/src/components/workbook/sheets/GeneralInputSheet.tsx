@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function GeneralInputSheet() {
   return (
@@ -9,7 +10,7 @@ export default function GeneralInputSheet() {
         {/* Project Info Section */}
         <div className="col-span-12 lg:col-span-8 space-y-6">
           <section className="space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-primary border-b pb-2">Project Details</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-primary border-b pb-2">1.0 Project Details</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground uppercase">Project Name</Label>
@@ -31,7 +32,7 @@ export default function GeneralInputSheet() {
           </section>
 
           <section className="space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-primary border-b pb-2">Geometry Inputs</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-primary border-b pb-2">1.1 Geometry Inputs</h3>
             <div className="grid grid-cols-3 gap-4">
                <div className="space-y-1">
                   <Label className="text-xs">Effective Span (L)</Label>
@@ -47,10 +48,24 @@ export default function GeneralInputSheet() {
                     <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">m</div>
                   </div>
                </div>
+               <div className="space-y-1">
+                  <Label className="text-xs">Support Width</Label>
+                  <div className="flex">
+                    <Input className="rounded-r-none font-mono bg-yellow-50" defaultValue="400" />
+                    <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">mm</div>
+                  </div>
+               </div>
                 <div className="space-y-1">
                   <Label className="text-xs">Kerb Width</Label>
                   <div className="flex">
                     <Input className="rounded-r-none font-mono bg-yellow-50" defaultValue="0.60" />
+                    <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">m</div>
+                  </div>
+               </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Kerb Height</Label>
+                  <div className="flex">
+                    <Input className="rounded-r-none font-mono bg-yellow-50" defaultValue="0.30" />
                     <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">m</div>
                   </div>
                </div>
@@ -61,13 +76,6 @@ export default function GeneralInputSheet() {
                     <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">mm</div>
                   </div>
                </div>
-               <div className="space-y-1">
-                  <Label className="text-xs">Support Width</Label>
-                  <div className="flex">
-                    <Input className="rounded-r-none font-mono bg-yellow-50" defaultValue="400" />
-                    <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">mm</div>
-                  </div>
-               </div>
                 <div className="space-y-1">
                   <Label className="text-xs">Cross Camber</Label>
                   <div className="flex">
@@ -75,33 +83,81 @@ export default function GeneralInputSheet() {
                     <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">%</div>
                   </div>
                </div>
+               <div className="space-y-1">
+                  <Label className="text-xs">Skew Angle</Label>
+                  <div className="flex">
+                    <Input className="rounded-r-none font-mono bg-yellow-50" defaultValue="0" />
+                    <div className="bg-muted border border-l-0 px-3 flex items-center text-xs rounded-r-md text-muted-foreground">deg</div>
+                  </div>
+               </div>
             </div>
           </section>
           
           <section className="space-y-4">
-             <h3 className="text-sm font-bold uppercase tracking-wider text-primary border-b pb-2">Material Properties</h3>
+             <h3 className="text-sm font-bold uppercase tracking-wider text-primary border-b pb-2">1.2 Material Specifications</h3>
              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div className="col-span-3 grid grid-cols-4 gap-px bg-border border">
+                <div className="col-span-3 grid grid-cols-5 gap-px bg-border border">
                    <div className="bg-muted/50 p-2 font-medium">Material</div>
                    <div className="bg-muted/50 p-2 font-medium">Grade</div>
                    <div className="bg-muted/50 p-2 font-medium">Density (kN/m³)</div>
                    <div className="bg-muted/50 p-2 font-medium">Modulus (E)</div>
+                   <div className="bg-muted/50 p-2 font-medium">Poisson's (μ)</div>
                    
                    <div className="bg-white p-2">Concrete</div>
-                   <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="M25" /></div>
+                   <div className="bg-white p-2">
+                      <Select defaultValue="M25">
+                        <SelectTrigger className="h-7 text-xs bg-yellow-50"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="M20">M20</SelectItem>
+                          <SelectItem value="M25">M25</SelectItem>
+                          <SelectItem value="M30">M30</SelectItem>
+                          <SelectItem value="M35">M35</SelectItem>
+                        </SelectContent>
+                      </Select>
+                   </div>
                    <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="25.00" /></div>
                    <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="25000" /></div>
+                   <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="0.15" /></div>
                    
                    <div className="bg-white p-2">Steel</div>
-                   <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="Fe415" /></div>
+                   <div className="bg-white p-2">
+                      <Select defaultValue="Fe415">
+                        <SelectTrigger className="h-7 text-xs bg-yellow-50"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Fe415">Fe415</SelectItem>
+                          <SelectItem value="Fe500">Fe500</SelectItem>
+                          <SelectItem value="Fe500D">Fe500D</SelectItem>
+                        </SelectContent>
+                      </Select>
+                   </div>
                    <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="78.50" /></div>
                    <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="200000" /></div>
+                   <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="0.30" /></div>
                    
                    <div className="bg-white p-2">Wearing Coat</div>
                    <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="Asphalt" /></div>
                    <div className="bg-white p-2"><Input className="h-7 text-xs font-mono bg-yellow-50" defaultValue="22.00" /></div>
                    <div className="bg-white p-2 bg-muted/10">-</div>
+                    <div className="bg-white p-2 bg-muted/10">-</div>
                 </div>
+             </div>
+          </section>
+
+          <section className="space-y-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-primary border-b pb-2">1.3 Partial Safety Factors</h3>
+             <div className="grid grid-cols-3 gap-4">
+               <div className="space-y-1">
+                  <Label className="text-xs">Load Factor (DL)</Label>
+                  <Input className="rounded font-mono bg-yellow-50" defaultValue="1.35" />
+               </div>
+               <div className="space-y-1">
+                  <Label className="text-xs">Load Factor (LL)</Label>
+                  <Input className="rounded font-mono bg-yellow-50" defaultValue="1.50" />
+               </div>
+               <div className="space-y-1">
+                  <Label className="text-xs">Material Factor (Conc)</Label>
+                  <Input className="rounded font-mono bg-yellow-50" defaultValue="1.50" />
+               </div>
              </div>
           </section>
         </div>
@@ -110,7 +166,7 @@ export default function GeneralInputSheet() {
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900 p-4 rounded-sm space-y-4">
              <h4 className="font-semibold text-blue-800 dark:text-blue-300 flex items-center gap-2">
-               Design Constants (Auto)
+               Computed Parameters (Auto)
              </h4>
              <div className="space-y-2 text-sm">
                <div className="flex justify-between">
@@ -139,11 +195,6 @@ export default function GeneralInputSheet() {
                </div>
              </div>
           </div>
-
-           <div className="bg-muted p-4 rounded-sm text-xs text-muted-foreground leading-relaxed">
-              <p className="font-semibold mb-2">Note on Inputs:</p>
-              <p>Yellow cells indicate editable input fields. White cells are computed automatically. Ensure geometry matches the General Arrangement Drawing (GAD) before proceeding to Load Analysis.</p>
-           </div>
         </div>
       </div>
     </div>
