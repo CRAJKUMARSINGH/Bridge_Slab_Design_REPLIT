@@ -1,4 +1,16 @@
-export default function LoadAnalysisSheet() {
+import { ProjectData } from "@/pages/Workbook";
+
+interface LoadAnalysisSheetProps {
+  data: ProjectData;
+}
+
+export default function LoadAnalysisSheet({ data }: LoadAnalysisSheetProps) {
+  
+  // Reactive Calculations
+  const slabLoad = 1.0 * 1.0 * (data.depth/1000) * 25;
+  const wcLoad = 1.0 * 1.0 * (data.wearingCoat/1000) * 22;
+  const totalLoad = slabLoad + wcLoad; // Simplified for demo (ignoring kerb distribution)
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -31,10 +43,10 @@ export default function LoadAnalysisSheet() {
               <td className="p-3 border-b border-r font-sans">Self Weight of Slab</td>
               <td className="p-3 border-b border-r bg-muted/10 text-center">1.00</td>
               <td className="p-3 border-b border-r bg-muted/10 text-center">1.00</td>
-              <td className="p-3 border-b border-r bg-yellow-50 text-center font-bold">0.650</td>
+              <td className="p-3 border-b border-r bg-yellow-50 text-center font-bold">{(data.depth/1000).toFixed(3)}</td>
               <td className="p-3 border-b border-r bg-muted/10 text-center">1</td>
               <td className="p-3 border-b border-r bg-muted/10 text-center">25.00</td>
-              <td className="p-3 border-b text-right font-bold">16.250</td>
+              <td className="p-3 border-b text-right font-bold">{slabLoad.toFixed(3)}</td>
             </tr>
 
             {/* Wearing Coat */}
@@ -46,10 +58,10 @@ export default function LoadAnalysisSheet() {
               <td className="p-3 border-b border-r font-sans">Asphalt Concrete</td>
               <td className="p-3 border-b border-r bg-muted/10 text-center">1.00</td>
               <td className="p-3 border-b border-r bg-muted/10 text-center">1.00</td>
-              <td className="p-3 border-b border-r bg-yellow-50 text-center font-bold">0.080</td>
+              <td className="p-3 border-b border-r bg-yellow-50 text-center font-bold">{(data.wearingCoat/1000).toFixed(3)}</td>
               <td className="p-3 border-b border-r bg-muted/10 text-center">1</td>
               <td className="p-3 border-b border-r bg-muted/10 text-center">22.00</td>
-              <td className="p-3 border-b text-right font-bold">1.760</td>
+              <td className="p-3 border-b text-right font-bold">{wcLoad.toFixed(3)}</td>
             </tr>
 
             {/* Kerbs & Parapets */}
@@ -66,16 +78,6 @@ export default function LoadAnalysisSheet() {
               <td className="p-3 border-b border-r bg-muted/10 text-center">25.00</td>
               <td className="p-3 border-b text-right font-bold">9.000</td>
             </tr>
-            <tr className="hover:bg-muted/5">
-              <td className="p-3 border-b border-r text-center text-muted-foreground">4</td>
-              <td className="p-3 border-b border-r font-sans">Railing Post (Distributed)</td>
-              <td className="p-3 border-b border-r bg-muted/10 text-center">-</td>
-              <td className="p-3 border-b border-r bg-muted/10 text-center">-</td>
-              <td className="p-3 border-b border-r bg-muted/10 text-center">-</td>
-              <td className="p-3 border-b border-r bg-muted/10 text-center">-</td>
-              <td className="p-3 border-b border-r bg-muted/10 text-center">-</td>
-              <td className="p-3 border-b text-right font-bold">0.450</td>
-            </tr>
             
             <tr className="bg-muted/20 font-bold">
               <td className="p-3 border-r border-t text-center"></td>
@@ -85,27 +87,10 @@ export default function LoadAnalysisSheet() {
               <td className="p-3 border-r border-t"></td>
               <td className="p-3 border-r border-t"></td>
               <td className="p-3 border-r border-t"></td>
-              <td className="p-3 border-t text-right text-base">27.460 kN/m</td>
+              <td className="p-3 border-t text-right text-base">{(totalLoad + 9.0).toFixed(3)} kN/m</td>
             </tr>
           </tbody>
         </table>
-      </div>
-
-      <div className="grid grid-cols-2 gap-8">
-         <div className="border p-4 rounded-sm space-y-2">
-            <h4 className="font-semibold text-sm uppercase">Computation Logic</h4>
-            <p className="text-xs text-muted-foreground">
-              Loads are calculated per meter run of the slab width. Kerb and railing loads are calculated separately and may be distributed depending on the design method selected (Courbon's vs Effective Width Method).
-            </p>
-         </div>
-         
-         <div className="border p-4 rounded-sm bg-yellow-50/50 border-yellow-100 space-y-2">
-            <h4 className="font-semibold text-sm uppercase text-yellow-800">Pending Verifications</h4>
-            <ul className="text-xs text-yellow-700 list-disc pl-4 space-y-1">
-               <li>Confirm wearing coat density (Asphalt vs Concrete)</li>
-               <li>Check if railing load includes pipe fixtures</li>
-            </ul>
-         </div>
       </div>
     </div>
   );
