@@ -27,7 +27,7 @@ function addCompactTable(doc: jsPDF, headers: string[], rows: (string | number)[
 
   let x = MARGIN;
   headers.forEach((header, i) => {
-    doc.text(header, x + 0.5, y + lineHeight / 2, { maxWidth: colWidths[i] - 1 });
+    doc.text(String(header || ""), x + 0.5, y + lineHeight / 2, { maxWidth: colWidths[i] - 1 });
     x += colWidths[i];
   });
   y += lineHeight;
@@ -47,7 +47,7 @@ function addCompactTable(doc: jsPDF, headers: string[], rows: (string | number)[
     }
     x = MARGIN;
     row.forEach((cell, i) => {
-      doc.text(String(cell || ""), x + 0.5, y, { maxWidth: colWidths[i] - 1 });
+      doc.text(String(cell ?? ""), x + 0.5, y, { maxWidth: colWidths[i] - 1 });
       x += colWidths[i];
     });
     y += lineHeight;
@@ -91,7 +91,6 @@ export async function generatePDF(project: Project, design: DesignOutput, input?
       ["Afflux", design.hydraulics.afflux.toFixed(3), "m"],
       ["Design WL", design.hydraulics.designWaterLevel.toFixed(2), "m"],
       ["Froude Number", design.hydraulics.froudeNumber.toFixed(3), ""],
-      ["Cross-Section Area", design.hydraulics.crossSectionalArea.toFixed(2), "m²"],
     ]},
     { name: "AFFLUX (96 POINTS)", rows: Array.from({length: 96}, (_, i) => {
       const v = design.hydraulics.velocity * Math.sqrt(0.6 + (i/96)*0.8);
@@ -102,7 +101,6 @@ export async function generatePDF(project: Project, design: DesignOutput, input?
     { name: "PIER DESIGN", rows: [
       ["Width", design.pier.width.toFixed(2), "m"],
       ["Length", design.pier.length.toFixed(2), "m"],
-      ["Depth", design.pier.depth.toFixed(2), "m"],
       ["Number", design.pier.numberOfPiers, "nos"],
       ["Spacing", design.pier.spacing.toFixed(2), "m"],
       ["Sliding FOS", design.pier.slidingFOS.toFixed(2), design.pier.slidingFOS >= 1.5 ? "✓ SAFE" : "✗"],
@@ -123,17 +121,13 @@ export async function generatePDF(project: Project, design: DesignOutput, input?
     ])},
     { name: "SLAB DESIGN", rows: [
       ["Thickness", design.slab.thickness.toFixed(0), "mm"],
-      ["Design Load", (design.slab.designLoad || 0).toFixed(2), "kN/m²"],
-      ["Long Moment", (design.slab.longitudinalMoment || 0).toFixed(1), "kN.m/m"],
-      ["Trans Moment", (design.slab.transverseMoment || 0).toFixed(1), "kN.m/m"],
-      ["Shear Force", (design.slab.shearForce || 0).toFixed(1), "kN/m"],
+      ["Main Steel", design.slab.mainSteelMain.toFixed(2), "kg/m"],
+      ["Distribution Steel", design.slab.mainSteelDistribution.toFixed(2), "kg/m"],
+      ["Slab Concrete", design.slab.slabConcrete.toFixed(2), "m³"],
     ]},
     { name: "QUANTITIES", rows: [
       ["Total Concrete", (design.quantities.totalConcrete || 0).toFixed(2), "m³"],
       ["Total Steel", (design.quantities.totalSteel || 0).toFixed(2), "tonnes"],
-      ["Slab Concrete", (design.quantities.slabConcrete || 0).toFixed(2), "m³"],
-      ["Pier Concrete", (design.quantities.pierConcrete || 0).toFixed(2), "m³"],
-      ["Abutment Concrete", (design.quantities.abutmentConcrete || 0).toFixed(2), "m³"],
       ["Formwork", (design.quantities.formwork || 0).toFixed(2), "m²"],
     ]},
   ];
