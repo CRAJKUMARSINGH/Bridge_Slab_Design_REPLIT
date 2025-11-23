@@ -21,7 +21,7 @@ export default function Home() {
         </header>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer group border-l-4 border-l-primary">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer group border-l-4 border-l-primary" onClick={() => window.location.href = '/workbook'}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Calculator className="h-5 w-5 text-primary" />
@@ -40,21 +40,21 @@ export default function Home() {
                   <span className="font-medium font-mono">7.5m</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Loading:</span>
-                  <span className="font-medium">IRC Class AA</span>
+                  <span className="text-muted-foreground">Status:</span>
+                  <span className="font-medium text-green-600">Vetting Ready</span>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="bg-muted/50 border-dashed flex flex-col items-center justify-center text-center p-6 h-full hover:bg-muted/80 transition-colors">
+          <Card className="bg-muted/50 border-dashed flex flex-col items-center justify-center text-center p-6 h-full hover:bg-muted/80 transition-colors" onClick={() => window.location.href = '/workbook'}>
              <div className="p-4 rounded-full bg-background mb-4">
                <Ruler className="h-8 w-8 text-muted-foreground" />
              </div>
-             <h3 className="font-semibold">Start from Template</h3>
-             <p className="text-sm text-muted-foreground mt-1">Use standard PWD templates for quick estimation</p>
-             <Link href="/design">
-               <Button variant="link" className="mt-2">Select Template &rarr;</Button>
+             <h3 className="font-semibold">Full Design Workbook</h3>
+             <p className="text-sm text-muted-foreground mt-1">Access all 44 calculation sheets and matrices</p>
+             <Link href="/workbook">
+               <Button variant="link" className="mt-2">Open Workbook &rarr;</Button>
              </Link>
           </Card>
         </div>
