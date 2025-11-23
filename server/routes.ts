@@ -2,7 +2,7 @@ import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema } from "@shared/schema";
-import { generateDesignReport } from "./export";
+import { generateExcelReport } from "./excel-export";
 import { generatePDF } from "./pdf-export";
 import { parseExcelForDesignInput } from "./excel-parser";
 import { generateCompleteDesign } from "./design-engine";
@@ -29,11 +29,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Auto-generate complete design from input
       const designOutput = generateCompleteDesign(designInput);
 
-      // Return generated design
+      // Create project in database with design data
+      const project = await storage.createProject({
+        name: `Bridge Design - Span ${designInput.span}m`,
+        location: "Extracted from Excel",
+        district: "Auto-designed",
+        engineer: "Auto-Design System",
+        designData: {
+          input: designInput,
+          output: designOutput,
+        } as any,
+      });
+
+      // Return generated design with project ID
       res.json({
         success: true,
-        projectName: `Bridge Design - Span ${designInput.span}m`,
-        location: "Extracted from Excel",
+        projectId: project.id,
+        projectName: project.name,
+        location: project.location,
         designInput,
         designOutput,
       });
@@ -43,7 +56,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Excel Export route
+  // Excel Export route (44-sheet comprehensive report)
   app.get("/api/projects/:id/export", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -53,9 +66,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Project not found" });
       }
       
-      const buffer = await generateDesignReport(project);
+      const designData = project.designData as any;
+      const buffer = await generateExcelReport(
+        designData.input,
+        designData.output,
+        project.name || "Bridge Design"
+      );
       res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_report.xlsx"`);
+      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_44sheet_report.xlsx"`);
       res.send(buffer);
     } catch (error) {
       console.error("Error exporting project:", error);
@@ -63,7 +81,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // PDF Export route
+  // PDF Export route (100+ page vetting report)
   app.get("/api/projects/:id/export-pdf", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -73,7 +91,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Project not found" });
       }
       
-      const buffer = await generatePDF(project);
+      const designData = project.designData as any;
+      const buffer = await generatePDF(project, designData.output);
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_vetting_report.pdf"`);
       res.send(buffer);
