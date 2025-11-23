@@ -226,8 +226,8 @@ export default function WorkbookLayout() {
            </div>
            <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2 bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs font-mono">
-                <span>L={projectData.span}m</span>
-                <span>fck=M{projectData.fck}</span>
+                <span>L={(projectData?.span || 6)}m</span>
+                <span>fck=M{projectData?.fck || 25}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div>Auto-Calc: ON</div>
