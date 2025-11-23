@@ -352,8 +352,8 @@ export async function generateExcelReport(input: DesignInput, design: DesignOutp
       ["Longitudinal Moment (Mx)", design.slab.longitudinalMoment.toFixed(1), "kN.m/m"],
       ["Transverse Moment (My)", design.slab.transverseMoment.toFixed(1), "kN.m/m"],
       ["Shear Force", design.slab.shearForce.toFixed(1), "kN/m"],
-      ["Main Steel Area Required", design.slab.mainSteel.requiredArea.toFixed(0), "mm²/m"],
-      ["Main Steel Area Provided", design.slab.mainSteel.area.toFixed(0), "mm²/m"],
+      ["Main Steel Area Required", design.slab.mainSteel.requiredArea ? design.slab.mainSteel.requiredArea.toFixed(0) : "TBD", "mm²/m"],
+      ["Main Steel Area Provided", design.slab.mainSteel.area ? design.slab.mainSteel.area.toFixed(0) : "TBD", "mm²/m"],
       ["Distribution Steel Area", design.slab.distributionSteel.area.toFixed(0), "mm²/m"],
     ];
 
@@ -391,7 +391,7 @@ export async function generateExcelReport(input: DesignInput, design: DesignOutp
     row += 1;
 
     const slabReinf = [
-      ["Main Steel (Bottom)", `Ø${design.slab.mainSteel.diameter}`, `${design.slab.mainSteel.spacing}mm c/c`, `${design.slab.mainSteel.area.toFixed(0)} mm²/m`, `${design.slab.mainSteel.quantity}`],
+      ["Main Steel (Bottom)", `Ø${design.slab.mainSteel.diameter}`, design.slab.mainSteel.spacing ? `${design.slab.mainSteel.spacing}mm c/c` : "TBD", design.slab.mainSteel.area ? `${design.slab.mainSteel.area.toFixed(0)} mm²/m` : "TBD", design.slab.mainSteel.quantity || "TBD"],
       ["Distribution Steel", `Ø${design.slab.distributionSteel.diameter}`, `${design.slab.distributionSteel.spacing}mm c/c`, `${design.slab.distributionSteel.area.toFixed(0)} mm²/m`, `${design.slab.distributionSteel.quantity}`],
     ];
 
