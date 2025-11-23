@@ -2,9 +2,30 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema } from "@shared/schema";
+import { generateDesignReport } from "./export";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Export route
+  app.get("/api/projects/:id/export", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      
+      const buffer = await generateDesignReport(project);
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_report.xlsx"`);
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error exporting project:", error);
+      res.status(500).json({ error: "Failed to export project" });
+    }
+  });
+
   // Project management routes
   app.get("/api/projects", async (req, res) => {
     try {

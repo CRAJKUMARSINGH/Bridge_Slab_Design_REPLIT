@@ -8,9 +8,10 @@ import LiveLoadSheet from "../components/workbook/sheets/LiveLoadSheet";
 import StructuralAnalysisSheet from "../components/workbook/sheets/StructuralAnalysisSheet";
 import DesignSheet from "../components/workbook/sheets/DesignSheet";
 import DefaultSheet from "../components/workbook/sheets/DefaultSheet";
-import { getProject, updateProject } from "@/lib/api";
+import { getProject, updateProject, exportProjectAsExcel } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Download } from "lucide-react";
+import { toast } from "sonner";
 
 // Initial Engineering State
 const INITIAL_PROJECT_DATA = {
@@ -78,6 +79,16 @@ export default function WorkbookLayout() {
   const handleManualSave = () => {
     if (projectId) {
       saveMutation.mutate(projectData);
+    }
+  };
+
+  const handleExport = async () => {
+    if (!projectId || !project) return;
+    try {
+      await exportProjectAsExcel(projectId, project.name);
+      toast.success("Report exported successfully!");
+    } catch (error) {
+      toast.error("Failed to export report");
     }
   };
 
@@ -161,6 +172,16 @@ export default function WorkbookLayout() {
                 {saveMutation.isPending && (
                   <span className="text-blue-600">Saving...</span>
                 )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExport}
+                  data-testid="button-export"
+                  title="Export 44-sheet vetting report"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Report
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"

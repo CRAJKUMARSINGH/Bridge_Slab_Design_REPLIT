@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, FileText } from "lucide-react";
+import { Plus, Trash2, FileText, Download } from "lucide-react";
 import { format } from "date-fns";
+import { exportProjectAsExcel } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function Projects() {
   const [, setLocation] = useLocation();
@@ -44,6 +46,15 @@ export default function Projects() {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
   });
+
+  const handleExport = async (id: number, name: string) => {
+    try {
+      await exportProjectAsExcel(id, name);
+      toast.success(`${name} exported successfully!`);
+    } catch (error) {
+      toast.error("Failed to export project");
+    }
+  };
 
   const handleCreate = () => {
     if (!newProject.name.trim()) return;
@@ -169,7 +180,7 @@ export default function Projects() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle
-                        className="text-lg mb-1 hover:text-blue-600"
+                        className="text-lg mb-1 hover:text-blue-600 cursor-pointer"
                         onClick={() => setLocation(`/workbook/${project.id}`)}
                         data-testid={`link-project-${project.id}`}
                       >
@@ -181,19 +192,33 @@ export default function Projects() {
                         </CardDescription>
                       )}
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (confirm("Delete this project?")) {
-                          deleteMutation.mutate(project.id);
-                        }
-                      }}
-                      data-testid={`button-delete-${project.id}`}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleExport(project.id, project.name);
+                        }}
+                        data-testid={`button-export-${project.id}`}
+                        title="Export as Excel report"
+                      >
+                        <Download className="h-4 w-4 text-blue-600" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm("Delete this project?")) {
+                            deleteMutation.mutate(project.id);
+                          }
+                        }}
+                        data-testid={`button-delete-${project.id}`}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
