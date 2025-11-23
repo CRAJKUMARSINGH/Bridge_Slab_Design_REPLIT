@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { insertProjectSchema } from "@shared/schema";
 import { generateExcelReport } from "./excel-export";
 import { generatePDF } from "./pdf-export";
-import { parseExcelForDesignInput, parseComprehensiveWorkbook } from "./excel-parser";
+import { parseExcelForDesignInput } from "./excel-parser";
 import { generateCompleteDesign } from "./design-engine";
 import multer from "multer";
 
@@ -19,9 +19,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No file uploaded" });
       }
 
-      // Try to parse as comprehensive workbook first
-      const comprehensiveData = parseComprehensiveWorkbook(req.file.buffer);
-      
       // Parse Excel to extract design parameters
       const designInput = parseExcelForDesignInput(req.file.buffer);
       
@@ -34,14 +31,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create project in database with design data
       const project = await storage.createProject({
-        name: comprehensiveData?.projectInfo.name || `Bridge Design - Span ${designInput.span}m`,
-        location: comprehensiveData?.projectInfo.location || "Extracted from Excel",
+        name: `Bridge Design - Span ${designInput.span}m`,
+        location: "Extracted from Excel",
         district: "Auto-designed",
-        engineer: comprehensiveData?.projectInfo.engineer || "Auto-Design System",
+        engineer: "Auto-Design System",
         designData: {
           input: designInput,
           output: designOutput,
-          workbookData: comprehensiveData, // Store all workbook sheets
         } as any,
       });
 
@@ -53,7 +49,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         location: project.location,
         designInput,
         designOutput,
-        workbookSheets: comprehensiveData?.allSheets ? Object.keys(comprehensiveData.allSheets).length : 0,
       });
     } catch (error) {
       console.error("Error uploading Excel:", error);
