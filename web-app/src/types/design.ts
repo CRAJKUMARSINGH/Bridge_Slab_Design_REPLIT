@@ -167,6 +167,7 @@ export interface FootingDesign {
   settlementLimit: number;       // mm - 50mm typical
 
   status: 'SAFE' | 'WARNING' | 'CRITICAL';
+  remarks: string;
 }
 
 // ============================================

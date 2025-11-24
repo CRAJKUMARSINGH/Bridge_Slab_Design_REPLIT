@@ -1,0 +1,766 @@
+{
+  "HYDRAULICS": {
+    "totalFormulas": 31,
+    "sampleFormulas": {
+      "A2": {
+        "formula": "'afflux calculation'!A2:H2",
+        "value": "Name Of Work :- Construction of Submersible Bridge on ON KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM",
+        "row": 2,
+        "col": "A"
+      },
+      "C6": {
+        "formula": "IF(B6>$F$4,0,$F$4-B6)",
+        "value": 0,
+        "row": 6,
+        "col": "C"
+      },
+      "C7": {
+        "formula": "IF(B7>$F$4,0,$F$4-B7)",
+        "value": 0,
+        "row": 7,
+        "col": "C"
+      },
+      "D7": {
+        "formula": "(A7-A6)",
+        "value": 10,
+        "row": 7,
+        "col": "D"
+      },
+      "E7": {
+        "formula": "(C7+C6)/2",
+        "value": 0,
+        "row": 7,
+        "col": "E"
+      },
+      "F7": {
+        "formula": "D7*E7",
+        "value": 0,
+        "row": 7,
+        "col": "F"
+      },
+      "G7": {
+        "formula": "(D7^2+(C6-C7)^2)^0.5",
+        "value": 10,
+        "row": 7,
+        "col": "G"
+      },
+      "C8": {
+        "formula": "IF(B8>$F$4,0,$F$4-B8)",
+        "value": 2.4099999999999966,
+        "row": 8,
+        "col": "C"
+      },
+      "D8": {
+        "formula": "(A8-A7)",
+        "value": 10,
+        "row": 8,
+        "col": "D"
+      },
+      "E8": {
+        "formula": "(C8+C7)/2",
+        "value": 1.2049999999999983,
+        "row": 8,
+        "col": "E"
+      },
+      "F8": {
+        "formula": "D8*E8",
+        "value": 12.049999999999983,
+        "row": 8,
+        "col": "F"
+      },
+      "G8": {
+        "formula": "(D8^2+(C7-C8)^2)^0.5",
+        "value": 10.28630643136787,
+        "row": 8,
+        "col": "G"
+      },
+      "C9": {
+        "formula": "IF(B9>$F$4,0,$F$4-B9)",
+        "value": 3.010000000000005,
+        "row": 9,
+        "col": "C"
+      },
+      "D9": {
+        "formula": "(A9-A8)",
+        "value": 10,
+        "row": 9,
+        "col": "D"
+      },
+      "E9": {
+        "formula": "(C9+C8)/2",
+        "value": 2.710000000000001,
+        "row": 9,
+        "col": "E"
+      },
+      "F9": {
+        "formula": "D9*E9",
+        "value": 27.10000000000001,
+        "row": 9,
+        "col": "F"
+      },
+      "G9": {
+        "formula": "(D9^2+(C8-C9)^2)^0.5",
+        "value": 10.017983829094556,
+        "row": 9,
+        "col": "G"
+      },
+      "C10": {
+        "formula": "IF(B10>$F$4,0,$F$4-B10)",
+        "value": 3.3900000000000006,
+        "row": 10,
+        "col": "C"
+      },
+      "D10": {
+        "formula": "(A10-A9)",
+        "value": 10,
+        "row": 10,
+        "col": "D"
+      },
+      "E10": {
+        "formula": "(C10+C9)/2",
+        "value": 3.200000000000003,
+        "row": 10,
+        "col": "E"
+      },
+      "F10": {
+        "formula": "D10*E10",
+        "value": 32.00000000000003,
+        "row": 10,
+        "col": "F"
+      },
+      "G10": {
+        "formula": "(D10^2+(C9-C10)^2)^0.5",
+        "value": 10.007217395460138,
+        "row": 10,
+        "col": "G"
+      },
+      "C11": {
+        "formula": "IF(B11>$F$4,0,$F$4-B11)",
+        "value": 3.730000000000004,
+        "row": 11,
+        "col": "C"
+      },
+      "D11": {
+        "formula": "(A11-A10)",
+        "value": 10,
+        "row": 11,
+        "col": "D"
+      },
+      "E11": {
+        "formula": "(C11+C10)/2",
+        "value": 3.5600000000000023,
+        "row": 11,
+        "col": "E"
+      },
+      "F11": {
+        "formula": "D11*E11",
+        "value": 35.60000000000002,
+        "row": 11,
+        "col": "F"
+      },
+      "G11": {
+        "formula": "(D11^2+(C10-C11)^2)^0.5",
+        "value": 10.005778330544805,
+        "row": 11,
+        "col": "G"
+      },
+      "C12": {
+        "formula": "IF(B12>$F$4,0,$F$4-B12)",
+        "value": 2.640000000000015,
+        "row": 12,
+        "col": "C"
+      },
+      "D12": {
+        "formula": "(A12-A11)",
+        "value": 10,
+        "row": 12,
+        "col": "D"
+      },
+      "E12": {
+        "formula": "(C12+C11)/2",
+        "value": 3.1850000000000094,
+        "row": 12,
+        "col": "E"
+      },
+      "F12": {
+        "formula": "D12*E12",
+        "value": 31.850000000000094,
+        "row": 12,
+        "col": "F"
+      }
+    }
+  },
+  "STABILITY CHECK FOR PIER": {
+    "totalFormulas": 31,
+    "sampleFormulas": {
+      "A2": {
+        "formula": "'abstract of stresses'!A2:N2",
+        "value": "Name Of Work :- Construction of Submersible Bridge on ON KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM",
+        "row": 2,
+        "col": "A"
+      },
+      "A6": {
+        "formula": "A5+1",
+        "value": 2,
+        "row": 6,
+        "col": "A"
+      },
+      "E6": {
+        "formula": "E5+1.2",
+        "value": 8.799999999999999,
+        "row": 6,
+        "col": "E"
+      },
+      "A7": {
+        "formula": "A6+1",
+        "value": 3,
+        "row": 7,
+        "col": "A"
+      },
+      "A8": {
+        "formula": "A7+1",
+        "value": 4,
+        "row": 8,
+        "col": "A"
+      },
+      "E8": {
+        "formula": "HYDRAULICS!F4",
+        "value": 100.6,
+        "row": 8,
+        "col": "E"
+      },
+      "A9": {
+        "formula": "A8+1",
+        "value": 5,
+        "row": 9,
+        "col": "A"
+      },
+      "A10": {
+        "formula": "A9+1",
+        "value": 6,
+        "row": 10,
+        "col": "A"
+      },
+      "A11": {
+        "formula": "A10+1",
+        "value": 7,
+        "row": 11,
+        "col": "A"
+      },
+      "A12": {
+        "formula": "A11+1",
+        "value": 8,
+        "row": 12,
+        "col": "A"
+      },
+      "A13": {
+        "formula": "A12+1",
+        "value": 9,
+        "row": 13,
+        "col": "A"
+      },
+      "E13": {
+        "formula": "HYDRAULICS!C35",
+        "value": 899.9299344694022,
+        "row": 13,
+        "col": "E"
+      },
+      "A14": {
+        "formula": "A13+1",
+        "value": 10,
+        "row": 14,
+        "col": "A"
+      },
+      "G14": {
+        "formula": "HYDRAULICS!C33",
+        "value": 960,
+        "row": 14,
+        "col": "G"
+      },
+      "A15": {
+        "formula": "A14+1",
+        "value": 11,
+        "row": 15,
+        "col": "A"
+      },
+      "E15": {
+        "formula": "HYDRAULICS!C34",
+        "value": 1.8354679471127884,
+        "row": 15,
+        "col": "E"
+      },
+      "A16": {
+        "formula": "A15+1",
+        "value": 12,
+        "row": 16,
+        "col": "A"
+      },
+      "E16": {
+        "formula": "HYDRAULICS!E43",
+        "value": 96.46999999999998,
+        "row": 16,
+        "col": "E"
+      },
+      "A17": {
+        "formula": "A16+1",
+        "value": 13,
+        "row": 17,
+        "col": "A"
+      },
+      "G17": {
+        "formula": "E17*10",
+        "value": 200,
+        "row": 17,
+        "col": "G"
+      },
+      "A18": {
+        "formula": "A17+1",
+        "value": 14,
+        "row": 18,
+        "col": "A"
+      },
+      "E18": {
+        "formula": "HYDRAULICS!E45",
+        "value": 93.46999999999998,
+        "row": 18,
+        "col": "E"
+      },
+      "A19": {
+        "formula": "A18+1",
+        "value": 15,
+        "row": 19,
+        "col": "A"
+      },
+      "A20": {
+        "formula": "A19+1",
+        "value": 16,
+        "row": 20,
+        "col": "A"
+      },
+      "E20": {
+        "formula": "E18-E19",
+        "value": 91.96999999999998,
+        "row": 20,
+        "col": "E"
+      },
+      "A21": {
+        "formula": "A20+1",
+        "value": 17,
+        "row": 21,
+        "col": "A"
+      },
+      "E21": {
+        "formula": "'afflux calculation'!B50",
+        "value": 101.6,
+        "row": 21,
+        "col": "E"
+      },
+      "A22": {
+        "formula": "A21+1",
+        "value": 18,
+        "row": 22,
+        "col": "A"
+      },
+      "E22": {
+        "formula": "E21-H27-H28",
+        "value": 100.77499999999999,
+        "row": 22,
+        "col": "E"
+      },
+      "A23": {
+        "formula": "A22+1",
+        "value": 19,
+        "row": 23,
+        "col": "A"
+      },
+      "E23": {
+        "formula": "E22-E20",
+        "value": 8.805000000000007,
+        "row": 23,
+        "col": "E"
+      }
+    }
+  },
+  "TYPE1-STABILITY CHECK ABUTMENT": {
+    "totalFormulas": 31,
+    "sampleFormulas": {
+      "A2": {
+        "formula": "'TYPE1-AbutMENT Drawing'!A1:Z1",
+        "value": "Name Of Work :- Construction of Submersible Bridge on ON KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM",
+        "row": 2,
+        "col": "A"
+      },
+      "D13": {
+        "formula": "'STABILITY CHECK FOR PIER'!P46/8.4",
+        "value": 177.84689142857164,
+        "row": 13,
+        "col": "D"
+      },
+      "D14": {
+        "formula": "'STABILITY CHECK FOR PIER'!F63/8.4",
+        "value": 93.84123182207014,
+        "row": 14,
+        "col": "D"
+      },
+      "G21": {
+        "formula": "C21*E21",
+        "value": 200,
+        "row": 21,
+        "col": "G"
+      },
+      "C23": {
+        "formula": "G21",
+        "value": 200,
+        "row": 23,
+        "col": "C"
+      },
+      "G23": {
+        "formula": "C23/E23",
+        "value": 100,
+        "row": 23,
+        "col": "G"
+      },
+      "C24": {
+        "formula": "G23",
+        "value": 100,
+        "row": 24,
+        "col": "C"
+      },
+      "E24": {
+        "formula": "F4",
+        "value": 8.4,
+        "row": 24,
+        "col": "E"
+      },
+      "G24": {
+        "formula": "ROUNDUP(C24/E24,2)",
+        "value": 11.91,
+        "row": 24,
+        "col": "G"
+      },
+      "C28": {
+        "formula": "11.7*10^-6",
+        "value": 0.000011699999999999998,
+        "row": 28,
+        "col": "C"
+      },
+      "C29": {
+        "formula": "D26",
+        "value": 17,
+        "row": 29,
+        "col": "C"
+      },
+      "E29": {
+        "formula": "C28",
+        "value": 0.000011699999999999998,
+        "row": 29,
+        "col": "E"
+      },
+      "G29": {
+        "formula": "C29*E29",
+        "value": 0.00019889999999999996,
+        "row": 29,
+        "col": "G"
+      },
+      "C30": {
+        "formula": "2*10^-4",
+        "value": 0.0002,
+        "row": 30,
+        "col": "C"
+      },
+      "C31": {
+        "formula": "G29",
+        "value": 0.00019889999999999996,
+        "row": 31,
+        "col": "C"
+      },
+      "E31": {
+        "formula": "C30",
+        "value": 0.0002,
+        "row": 31,
+        "col": "E"
+      },
+      "G31": {
+        "formula": "E31+C31",
+        "value": 0.0003989,
+        "row": 31,
+        "col": "G"
+      },
+      "C32": {
+        "formula": "G31",
+        "value": 0.0003989,
+        "row": 32,
+        "col": "C"
+      },
+      "E32": {
+        "formula": "'STABILITY CHECK FOR PIER'!D27*1000",
+        "value": 8799.999999999998,
+        "row": 32,
+        "col": "E"
+      },
+      "G32": {
+        "formula": "C32*E32/2",
+        "value": 1.7551599999999996,
+        "row": 32,
+        "col": "G"
+      },
+      "E33": {
+        "formula": "ROUNDUP(5700*(30^0.5),2)",
+        "value": 31220.19,
+        "row": 33,
+        "col": "E"
+      },
+      "C34": {
+        "formula": "G31",
+        "value": 0.0003989,
+        "row": 34,
+        "col": "C"
+      },
+      "E34": {
+        "formula": "E33",
+        "value": 31220.19,
+        "row": 34,
+        "col": "E"
+      },
+      "G34": {
+        "formula": "G31*E33",
+        "value": 12.453733791,
+        "row": 34,
+        "col": "G"
+      },
+      "C35": {
+        "formula": "G34",
+        "value": 12.453733791,
+        "row": 35,
+        "col": "C"
+      },
+      "E35": {
+        "formula": "'STABILITY CHECK FOR PIER'!H27*1000",
+        "value": 750,
+        "row": 35,
+        "col": "E"
+      },
+      "G35": {
+        "formula": "C35*E35",
+        "value": 9340.300343249999,
+        "row": 35,
+        "col": "G"
+      },
+      "G36": {
+        "formula": "G35/1000",
+        "value": 9.340300343249998,
+        "row": 36,
+        "col": "G"
+      },
+      "E39": {
+        "formula": "200*(1.2+0.975)/(11.1*15)",
+        "value": 2.612612612612612,
+        "row": 39,
+        "col": "E"
+      },
+      "G52": {
+        "formula": "F8",
+        "value": 35,
+        "row": 52,
+        "col": "G"
+      },
+      "C53": {
+        "formula": "F10",
+        "value": 17.5,
+        "row": 53,
+        "col": "C"
+      }
+    }
+  },
+  "CROSS SECTION": {
+    "totalFormulas": 31,
+    "sampleFormulas": {
+      "A2": {
+        "formula": "'Deck Anchorage'!A2",
+        "value": "Name Of Work :- Construction of Submersible Bridge on ON KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM",
+        "row": 2,
+        "col": "A"
+      },
+      "F4": {
+        "formula": "HYDRAULICS!F4",
+        "value": 100.6,
+        "row": 4,
+        "col": "F"
+      },
+      "C6": {
+        "formula": "IF(B6>$F$4,0,$F$4-B6)",
+        "value": 0,
+        "row": 6,
+        "col": "C"
+      },
+      "C7": {
+        "formula": "IF(B7>$F$4,0,$F$4-B7)",
+        "value": 0,
+        "row": 7,
+        "col": "C"
+      },
+      "D7": {
+        "formula": "(A7-A6)",
+        "value": 10,
+        "row": 7,
+        "col": "D"
+      },
+      "E7": {
+        "formula": "(C7+C6)/2",
+        "value": 0,
+        "row": 7,
+        "col": "E"
+      },
+      "F7": {
+        "formula": "D7*E7",
+        "value": 0,
+        "row": 7,
+        "col": "F"
+      },
+      "G7": {
+        "formula": "(D7^2+(C6-C7)^2)^0.5",
+        "value": 10,
+        "row": 7,
+        "col": "G"
+      },
+      "C8": {
+        "formula": "IF(B8>$F$4,0,$F$4-B8)",
+        "value": 2.4099999999999966,
+        "row": 8,
+        "col": "C"
+      },
+      "D8": {
+        "formula": "(A8-A7)",
+        "value": 10,
+        "row": 8,
+        "col": "D"
+      },
+      "E8": {
+        "formula": "(C8+C7)/2",
+        "value": 1.2049999999999983,
+        "row": 8,
+        "col": "E"
+      },
+      "F8": {
+        "formula": "D8*E8",
+        "value": 12.049999999999983,
+        "row": 8,
+        "col": "F"
+      },
+      "G8": {
+        "formula": "(D8^2+(C7-C8)^2)^0.5",
+        "value": 10.28630643136787,
+        "row": 8,
+        "col": "G"
+      },
+      "C9": {
+        "formula": "IF(B9>$F$4,0,$F$4-B9)",
+        "value": 3.010000000000005,
+        "row": 9,
+        "col": "C"
+      },
+      "D9": {
+        "formula": "(A9-A8)",
+        "value": 10,
+        "row": 9,
+        "col": "D"
+      },
+      "E9": {
+        "formula": "(C9+C8)/2",
+        "value": 2.710000000000001,
+        "row": 9,
+        "col": "E"
+      },
+      "F9": {
+        "formula": "D9*E9",
+        "value": 27.10000000000001,
+        "row": 9,
+        "col": "F"
+      },
+      "G9": {
+        "formula": "(D9^2+(C8-C9)^2)^0.5",
+        "value": 10.017983829094556,
+        "row": 9,
+        "col": "G"
+      },
+      "C10": {
+        "formula": "IF(B10>$F$4,0,$F$4-B10)",
+        "value": 3.3900000000000006,
+        "row": 10,
+        "col": "C"
+      },
+      "D10": {
+        "formula": "(A10-A9)",
+        "value": 10,
+        "row": 10,
+        "col": "D"
+      },
+      "E10": {
+        "formula": "(C10+C9)/2",
+        "value": 3.200000000000003,
+        "row": 10,
+        "col": "E"
+      },
+      "F10": {
+        "formula": "D10*E10",
+        "value": 32.00000000000003,
+        "row": 10,
+        "col": "F"
+      },
+      "G10": {
+        "formula": "(D10^2+(C9-C10)^2)^0.5",
+        "value": 10.007217395460138,
+        "row": 10,
+        "col": "G"
+      },
+      "C11": {
+        "formula": "IF(B11>$F$4,0,$F$4-B11)",
+        "value": 3.730000000000004,
+        "row": 11,
+        "col": "C"
+      },
+      "D11": {
+        "formula": "(A11-A10)",
+        "value": 10,
+        "row": 11,
+        "col": "D"
+      },
+      "E11": {
+        "formula": "(C11+C10)/2",
+        "value": 3.5600000000000023,
+        "row": 11,
+        "col": "E"
+      },
+      "F11": {
+        "formula": "D11*E11",
+        "value": 35.60000000000002,
+        "row": 11,
+        "col": "F"
+      },
+      "G11": {
+        "formula": "(D11^2+(C10-C11)^2)^0.5",
+        "value": 10.005778330544805,
+        "row": 11,
+        "col": "G"
+      },
+      "C12": {
+        "formula": "IF(B12>$F$4,0,$F$4-B12)",
+        "value": 2.640000000000015,
+        "row": 12,
+        "col": "C"
+      },
+      "D12": {
+        "formula": "(A12-A11)",
+        "value": 10,
+        "row": 12,
+        "col": "D"
+      },
+      "E12": {
+        "formula": "(C12+C11)/2",
+        "value": 3.1850000000000094,
+        "row": 12,
+        "col": "E"
+      }
+    }
+  }
+}
