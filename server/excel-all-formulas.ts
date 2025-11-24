@@ -45,7 +45,7 @@ export function createHydraulicDesignFormulas(
   ws.getCell(row, 1).value = "Flow Depth";
   ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.floodLevel}-INPUTS!${INPUT_CELLS.INPUTS.bedLevel}` };
   ws.getCell(row, 3).value = "m";
-  ws.getCell(row, 2).numberFormat = "0.000";
+  ws.getCell(row, 2).numFmt = "0.000";
   row++;
 
   ws.getCell(row, 1).value = "Manning's Coefficient (n)";
@@ -67,7 +67,7 @@ export function createHydraulicDesignFormulas(
   ws.getCell(row, 1).value = "Calculated Velocity";
   ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.discharge}/(INPUTS!${INPUT_CELLS.INPUTS.width}*B${flowDepthRow})` };
   ws.getCell(row, 3).value = "m/s";
-  ws.getCell(row, 2).numberFormat = "0.000";
+  ws.getCell(row, 2).numFmt = "0.000";
   row += 2;
 
   // AFFLUX CALCULATION
@@ -88,7 +88,7 @@ export function createHydraulicDesignFormulas(
   ws.getCell(row, 1).value = "Calculated Afflux";
   ws.getCell(row, 2).value = { formula: `=(B${velocityRow}^2)/(17.9*SQRT(B${mFactorRow}))` };
   ws.getCell(row, 3).value = "m";
-  ws.getCell(row, 2).numberFormat = "0.0000";
+  ws.getCell(row, 2).numFmt = "0.0000";
   row += 2;
 
   // DESIGN WATER LEVEL
@@ -112,7 +112,7 @@ export function createHydraulicDesignFormulas(
   ws.getCell(row, 3).value = "m MSL";
   ws.getCell(row, 1).font = { bold: true };
   ws.getCell(row, 2).font = { bold: true };
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row += 2;
 
   // FROUDE NUMBER
@@ -123,7 +123,7 @@ export function createHydraulicDesignFormulas(
   ws.getCell(row, 1).value = "Froude Number";
   ws.getCell(row, 2).value = { formula: `=B${velocityRow}/SQRT(9.81*B${flowDepthRow})` };
   ws.getCell(row, 3).value = "";
-  ws.getCell(row, 2).numberFormat = "0.000";
+  ws.getCell(row, 2).numFmt = "0.000";
   row++;
 
   ws.getCell(row, 1).value = "Flow Type";
@@ -187,14 +187,14 @@ export function createPierDesignFormulas(
   ws.getCell(row, 1).value = "Hydrostatic Force (F_h = 0.5×γ×h²×W×N)";
   ws.getCell(row, 2).value = { formula: `=0.5*9.81*B${flowDepthRow}^2*B${pierWidthRow}*B${numPiersRow}` };
   ws.getCell(row, 3).value = "kN";
-  ws.getCell(row, 2).numberFormat = "0";
+  ws.getCell(row, 2).numFmt = "0";
   row++;
 
   const dragForceRow = row;
   ws.getCell(row, 1).value = "Drag Force (F_d = 0.5×ρ×v²×Cd×A×N)";
   ws.getCell(row, 2).value = { formula: `=0.5*1.025*(INPUTS!${INPUT_CELLS.INPUTS.discharge}/(INPUTS!${INPUT_CELLS.INPUTS.width}*B${flowDepthRow}))^2*1.1*B${pierWidthRow}*B${flowDepthRow}*B${numPiersRow}` };
   ws.getCell(row, 3).value = "kN";
-  ws.getCell(row, 2).numberFormat = "0";
+  ws.getCell(row, 2).numFmt = "0";
   row++;
 
   const totalHForceRow = row;
@@ -216,19 +216,19 @@ export function createPierDesignFormulas(
   ws.getCell(row, 1).value = "Sliding Safety Factor (>1.5)";
   ws.getCell(row, 2).value = { formula: `=(${pierWeight}*0.5)/B${totalHForceRow}` };
   ws.getCell(row, 3).value = "REQ >1.5";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row++;
 
   ws.getCell(row, 1).value = "Overturning Safety Factor (>1.8)";
   ws.getCell(row, 2).value = { formula: `=(${pierWeight}*(B${pierLengthRow}/2))/(B${totalHForceRow}*(B${pierDepthRow}/2))` };
   ws.getCell(row, 3).value = "REQ >1.8";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row++;
 
   ws.getCell(row, 1).value = "Bearing Safety Factor (>2.5)";
   ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.soilBearingCapacity}/((${pierWeight})/(B${pierWidthRow}*B${pierLengthRow}))` };
   ws.getCell(row, 3).value = "REQ >2.5";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row += 2;
 
   ws.getCell(row, 1).value = "✓ All FOS values recalculate from input parameters";
@@ -256,14 +256,14 @@ export function createAbutmentDesignFormulas(
   ws.getCell(row, 1).value = "Abutment Height";
   ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.floodLevel}-INPUTS!${INPUT_CELLS.INPUTS.bedLevel}+2.5` };
   ws.getCell(row, 3).value = "m";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row++;
 
   const abutWidthRow = row;
   ws.getCell(row, 1).value = "Abutment Width";
   ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.width}/2+1.0` };
   ws.getCell(row, 3).value = "m";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row += 2;
 
   // EARTH PRESSURE
@@ -286,14 +286,14 @@ export function createAbutmentDesignFormulas(
   ws.getCell(row, 1).value = "Ka (Active Earth Pressure Coeff)";
   ws.getCell(row, 2).value = { formula: `=(1-SIN(RADIANS(B${frictionRow})))/(1+SIN(RADIANS(B${frictionRow})))` };
   ws.getCell(row, 3).value = "";
-  ws.getCell(row, 2).numberFormat = "0.000";
+  ws.getCell(row, 2).numFmt = "0.000";
   const kaRow = row;
   row += 2;
 
   ws.getCell(row, 1).value = "Active Earth Pressure (Pa)";
   ws.getCell(row, 2).value = { formula: `=0.5*B${soilWeightRow}*B${abutHeightRow}^2*B${kaRow}` };
   ws.getCell(row, 3).value = "kN";
-  ws.getCell(row, 2).numberFormat = "0";
+  ws.getCell(row, 2).numFmt = "0";
   const activeEPRow = row;
   row += 2;
 
@@ -302,7 +302,7 @@ export function createAbutmentDesignFormulas(
   ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
   row += 2;
 
-  const abutConcrete = (design.abutment?.concrete || 0) || 0;
+  const abutConcrete = (design.abutment?.abutmentConcrete || 0) || 0;
   const abutWeight = abutConcrete * 25;
 
   ws.getCell(row, 1).value = "Abutment Self-Weight";
@@ -314,19 +314,19 @@ export function createAbutmentDesignFormulas(
   ws.getCell(row, 1).value = "Sliding Safety Factor (>1.5)";
   ws.getCell(row, 2).value = { formula: `=(B${abutWeightRow}*0.5)/B${activeEPRow}` };
   ws.getCell(row, 3).value = "REQ >1.5";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row++;
 
   ws.getCell(row, 1).value = "Overturning Safety Factor (>1.8)";
   ws.getCell(row, 2).value = { formula: `=(B${abutWeightRow}*(B${abutWidthRow}/2))/(B${activeEPRow}*(B${abutHeightRow}/3))` };
   ws.getCell(row, 3).value = "REQ >1.8";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row++;
 
   ws.getCell(row, 1).value = "Bearing Safety Factor (>2.5)";
   ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.soilBearingCapacity}/((B${abutWeightRow})/(B${abutWidthRow}*2.0))` };
   ws.getCell(row, 3).value = "REQ >2.5";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
 }
 
 /**
@@ -373,7 +373,7 @@ export function createSlabDesignFormulas(
   ws.getCell(row, 1).value = "Self-Weight (Concrete)";
   ws.getCell(row, 2).value = { formula: `=B${slabThicknessRow}*25` };
   ws.getCell(row, 3).value = "kN/m²";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row++;
 
   const liveLoadRow = row;
@@ -386,7 +386,7 @@ export function createSlabDesignFormulas(
   ws.getCell(row, 1).value = "Design Load (1.5DL + 1.75LL)";
   ws.getCell(row, 2).value = { formula: `=1.5*B${slabWeightRow}+1.75*B${liveLoadRow}` };
   ws.getCell(row, 3).value = "kN/m²";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   row += 2;
 
   // MOMENTS (PIGEAUD ANALYSIS)
@@ -397,20 +397,20 @@ export function createSlabDesignFormulas(
   ws.getCell(row, 1).value = "Aspect Ratio (L/B)";
   ws.getCell(row, 2).value = { formula: `=B${slabLengthRow}/B${slabWidthRow}` };
   ws.getCell(row, 3).value = "";
-  ws.getCell(row, 2).numberFormat = "0.000";
+  ws.getCell(row, 2).numFmt = "0.000";
   const aspectRow = row;
   row += 2;
 
   ws.getCell(row, 1).value = "Moment at Mid-Span (Longitudinal)";
   ws.getCell(row, 2).value = { formula: `=(B${designLoadRow}*B${slabLengthRow}^2)/12` };
   ws.getCell(row, 3).value = "kN-m/m";
-  ws.getCell(row, 2).numberFormat = "0.0";
+  ws.getCell(row, 2).numFmt = "0.0";
   row++;
 
   ws.getCell(row, 1).value = "Moment at Mid-Width (Transverse)";
   ws.getCell(row, 2).value = { formula: `=(B${designLoadRow}*B${slabWidthRow}^2)/12` };
   ws.getCell(row, 3).value = "kN-m/m";
-  ws.getCell(row, 2).numberFormat = "0.0";
+  ws.getCell(row, 2).numFmt = "0.0";
   row++;
 
   ws.getCell(row, 1).value = "✓ All moments recalculate from design loads and geometry";
@@ -463,7 +463,7 @@ export function createFootingDesignFormulas(
   ws.getCell(row, 1).value = "Concrete Volume";
   ws.getCell(row, 2).value = { formula: `=B${footingWidthRow}*B${footingLengthRow}*B${footingThicknessRow}` };
   ws.getCell(row, 3).value = "m³";
-  ws.getCell(row, 2).numberFormat = "0.00";
+  ws.getCell(row, 2).numFmt = "0.00";
   const concreteVolumeRow = row;
   row += 2;
 
@@ -474,14 +474,14 @@ export function createFootingDesignFormulas(
   ws.getCell(row, 1).value = "Safe Bearing Capacity";
   ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.soilBearingCapacity}*0.8` };
   ws.getCell(row, 3).value = "kPa";
-  ws.getCell(row, 2).numberFormat = "0";
+  ws.getCell(row, 2).numFmt = "0";
   const sbcRow = row;
   row++;
 
   ws.getCell(row, 1).value = "Allowable Bearing Pressure";
   ws.getCell(row, 2).value = { formula: `=B${sbcRow}/1.5` };
   ws.getCell(row, 3).value = "kPa";
-  ws.getCell(row, 2).numberFormat = "0";
+  ws.getCell(row, 2).numFmt = "0";
   row++;
 
   ws.getCell(row, 1).value = "✓ All calculations update with input parameters";
@@ -507,24 +507,24 @@ export function createLoadCasesFormulas(
   row++;
 
   // Create first 10 cases as examples with formulas, rest as data
-  (design.pier.loadCases || []).slice(0, 70).forEach((lc, idx) => {
+  (design.pier.loadCases || []).slice(0, 70).forEach((lc: any, idx) => {
     ws.getCell(row, 1).value = idx + 1;
     ws.getCell(row, 2).value = lc.description;
-    ws.getCell(row, 3).value = lc.discharge || design.pier.numberOfPiers * 500;
+    ws.getCell(row, 3).value = lc.resultantHorizontal ? lc.resultantHorizontal / 10 : design.pier.numberOfPiers * 500;
     ws.getCell(row, 4).value = (((idx + 1) / 70) * 100).toFixed(1);
-    ws.getCell(row, 5).value = lc.velocity || 2.5;
-    ws.getCell(row, 6).value = lc.hydrostaticForce || 1000;
-    ws.getCell(row, 7).value = lc.dragForce || 200;
-    ws.getCell(row, 8).value = (lc.hydrostaticForce || 1000) + (lc.dragForce || 200);
+    ws.getCell(row, 5).value = (lc.resultantVertical || 2500) / 1000;
+    ws.getCell(row, 6).value = (lc.resultantHorizontal || 1000);
+    ws.getCell(row, 7).value = (lc.resultantHorizontal || 1000) * 0.2;
+    ws.getCell(row, 8).value = (lc.resultantHorizontal || 1000) * 1.2;
     ws.getCell(row, 9).value = lc.slidingFOS || 2.0;
     ws.getCell(row, 10).value = lc.slidingFOS > 1.5 ? "SAFE" : "CHECK";
     
     // Format
-    ws.getCell(row, 5).numberFormat = "0.000";
-    ws.getCell(row, 6).numberFormat = "0";
-    ws.getCell(row, 7).numberFormat = "0";
-    ws.getCell(row, 8).numberFormat = "0";
-    ws.getCell(row, 9).numberFormat = "0.00";
+    ws.getCell(row, 5).numFmt = "0.000";
+    ws.getCell(row, 6).numFmt = "0";
+    ws.getCell(row, 7).numFmt = "0";
+    ws.getCell(row, 8).numFmt = "0";
+    ws.getCell(row, 9).numFmt = "0.00";
     
     row++;
   });

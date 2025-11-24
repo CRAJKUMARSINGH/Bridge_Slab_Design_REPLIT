@@ -51,15 +51,14 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
 
   // ==================== SHEET 1: COVER PAGE ====================
   {
-    const ws = workbook.addWorksheet("COVER PAGE", { pageSetup: { paperSize: 1 } });
-    ws.pageSetup.orientation = "portrait";
+    const ws = workbook.addWorksheet("COVER PAGE");
     applyColumnWidths(ws, "COVER PAGE", 8);
     let row = 5;
 
     // Title
     ws.getCell(row, 1).value = "SUBMERSIBLE SLAB BRIDGE";
     ws.getCell(row, 1).font = { bold: true, size: 28, color: COLORS.PRIMARY };
-    ws.getCell(row, 1).alignment = { horizontal: "center", vertical: "center" };
+    ws.getCell(row, 1).alignment = { horizontal: "center", vertical: "middle" };
     ws.mergeCells(`A${row}:H${row}`);
     row += 2;
 
@@ -77,31 +76,35 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     ws.mergeCells(`A${row}:H${row}`);
     row += 5;
 
-    // Project Details - with formatting
+    // Project Details
     const detailRows = [
-      ["Project Name", projectName, ""],
-      ["Design Span", input.span, "m"],
-      ["Bridge Width", input.width, "m"],
-      ["Design Discharge", input.discharge, "m³/s"],
-      ["Flood Level", input.floodLevel, "m MSL"],
-      ["Bed Level", (input.bedLevel || 96.47), "m MSL"]
+      ["Project Name", projectName],
+      ["Design Span", `${input.span}`],
+      ["Bridge Width", `${input.width}`],
+      ["Design Discharge", `${input.discharge}`],
+      ["Flood Level", `${input.floodLevel}`],
+      ["Bed Level", `${input.bedLevel || 96.47}`]
     ];
 
-    detailRows.forEach(([label, value, unit]) => {
-      row = addCalcRow(ws, row, label, value, unit);
+    detailRows.forEach(([label, value]) => {
+      ws.getCell(row, 1).value = label;
+      ws.getCell(row, 2).value = value;
+      row++;
     });
 
     row += 2;
 
     // Design Data
     const designData = [
-      ["Concrete Grade", `M${input.fck}`, ""],
-      ["Steel Grade", `Fe${input.fy}`, ""],
-      ["SBC", input.soilBearingCapacity, "kPa"]
+      ["Concrete Grade", `M${input.fck}`],
+      ["Steel Grade", `Fe${input.fy}`],
+      ["SBC", `${input.soilBearingCapacity}`]
     ];
 
-    designData.forEach(([label, value, unit]) => {
-      row = addCalcRow(ws, row, label, value, unit);
+    designData.forEach(([label, value]) => {
+      ws.getCell(row, 1).value = label;
+      ws.getCell(row, 2).value = value;
+      row++;
     });
 
     row += 3;
@@ -909,7 +912,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FF365070" } };
     row += 2;
 
-    const dwl = design.hydraulics?.designWaterLevel ?? (input.bedLevel + 4.2);
+    const dwl = design.hydraulics?.designWaterLevel ?? ((input.bedLevel || 96.47) + 4.2);
     const pierSchematic = `PIER ELEVATION:
         ┌─────────────────┐  Design Water Level (DWL) = ${dwl.toFixed(2)}m
         │                 │  
