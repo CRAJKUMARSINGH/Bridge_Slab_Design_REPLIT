@@ -303,130 +303,13 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   }
 
   // ==================== SHEETS 3-11: HYDRAULICS ====================
-  // Sheet 3: Hydraulic Design - COMPREHENSIVE
+  // Sheet 3: Hydraulic Design - WITH LIVE EXCEL FORMULAS
   {
     const ws = workbook.addWorksheet("HYDRAULIC DESIGN");
     applyColumnWidths(ws, "HYDRAULIC DESIGN", 8);
     applyRowHeights(ws, "HYDRAULIC DESIGN", 100);
-    let row = 1;
-    styleHeader(ws, row, "COMPREHENSIVE HYDRAULIC ANALYSIS & DESIGN");
-    row += 2;
-
-    // SECTION 1: DISCHARGE COMPUTATION
-    ws.getCell(row, 1).value = "HYDRAULIC CALCULATION - COMPUTATION OF DISCHARGE";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Design Discharge (Q)", input.discharge, "m³/s");
-    row = addCalcRow(ws, row, "Flood Level (HFL)", input.floodLevel, "m MSL");
-    row = addCalcRow(ws, row, "Bed Level", (input.bedLevel || 96.47), "m MSL");
-    row = addCalcRow(ws, row, "Flow Depth", (input.floodLevel - (input.bedLevel || 96.47)).toFixed(3), "m");
-    row = addCalcRow(ws, row, "Manning's Coefficient (n)", "0.035", "(concrete)");
-    row = addCalcRow(ws, row, "Bed Slope (S)", input.bedSlope, "m/m");
-    row += 1;
-
-    ws.getCell(row, 2).value = "Velocity Calculation (Manning's Formula)";
-    ws.getCell(row, 3).value = "V = (1/n) × D^(2/3) × S^(1/2)";
-    row++;
-    row = addCalcRow(ws, row, "Calculated Velocity", design.hydraulics.velocity.toFixed(3), "m/s");
-    row++;
-
-    // SECTION 2: LINEAR WATER WAY CALCULATION
-    ws.getCell(row, 1).value = "LINEAR WATER WAY CALCULATION";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const waterWayWidth = input.width || 8;
-    const contraction = input.width * 0.15; // 15% contraction
-    row = addCalcRow(ws, row, "Bridge Width", waterWayWidth, "m");
-    row = addCalcRow(ws, row, "Linear Waterway Required", input.width, "m");
-    row = addCalcRow(ws, row, "Contraction Loss Factor", "0.15", "%");
-    row = addCalcRow(ws, row, "Effective Linear Waterway", (waterWayWidth - contraction).toFixed(2), "m");
-    row++;
-
-    // SECTION 3: SCOUR DEPTH CALCULATION
-    ws.getCell(row, 1).value = "SCOUR DEPTH CALCULATION (As per IS: 6802-1992)";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const pierWidth = design.pier?.width || 1.5;
-    const scourfactor = 1.34;
-    const scourDepth = scourfactor * Math.pow(input.discharge / (Math.sqrt(9.81 * pierWidth)), 0.33);
-    row = addCalcRow(ws, row, "Pier Width", pierWidth.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Scour Factor", "1.34", "(Clause 703.2.1)");
-    row = addCalcRow(ws, row, "Calculated Scour Depth", scourDepth.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Design Scour Depth", (scourDepth * 1.1).toFixed(2), "m (1.1x)");
-    row++;
-
-    // SECTION 4: AREA OBSTRUCTION CALCULATIONS
-    ws.getCell(row, 1).value = "COMPUTATION OF AREA OBSTRUCTED";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const deckAreaObstructed = input.width * 0.08;
-    const pierAreaObstructed = (design.pier?.numberOfPiers || 3) * pierWidth * (input.floodLevel - (input.bedLevel || 96.47));
-    const abutmentAreaObstructed = (design.abutment?.width || 2) * 2 * (input.floodLevel - (input.bedLevel || 96.47));
-    
-    row = addCalcRow(ws, row, "Area obstructed by Deck Slab", deckAreaObstructed.toFixed(2), "m²");
-    row = addCalcRow(ws, row, "Area obstructed by Piers", pierAreaObstructed.toFixed(2), "m²");
-    row = addCalcRow(ws, row, "Area obstructed by Abutments", abutmentAreaObstructed.toFixed(2), "m²");
-    row++;
-
-    // SECTION 5: AFFLUX CALCULATION
-    ws.getCell(row, 1).value = "AFFLUX CALCULATION (Molensworth's Formula)";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Lacey's Silt Factor (m)", (design.hydraulics?.laceysSiltFactor || 0.78).toFixed(3), "");
-    ws.getCell(row, 2).value = "Afflux Formula";
-    ws.getCell(row, 3).value = "a = V² / (17.9 × √m)";
-    row++;
-    const afflux = design.hydraulics?.afflux ?? input.hf ?? 0.45;
-    row = addCalcRow(ws, row, "Calculated Afflux", afflux.toFixed(4), "m");
-    row++;
-
-    // SECTION 6: DESIGN WATER LEVEL
-    ws.getCell(row, 1).value = "DESIGN WATER LEVEL CALCULATION";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF27AE60" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const hfl = input.maxWaterLevel ?? input.designWaterLevel ?? 105;
-    const dwlCalc = design.hydraulics?.designWaterLevel ?? hfl;
-    row = addCalcRow(ws, row, "Highest Flood Level (HFL)", hfl.toFixed(2), "m MSL");
-    row = addCalcRow(ws, row, "Plus: Afflux", afflux.toFixed(4), "m");
-    row = addCalcRow(ws, row, "DESIGN WATER LEVEL", dwlCalc.toFixed(2), "m MSL");
-    row++;
-
-    // SECTION 7: FLOW CHARACTERISTICS
-    ws.getCell(row, 1).value = "FLOW CHARACTERISTICS";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const froudeNumber = design.hydraulics?.froudeNumber ?? 0.85;
-    const velocity = design.hydraulics?.velocity ?? 1.8;
-    row = addCalcRow(ws, row, "Froude Number", froudeNumber.toFixed(3), "");
-    row = addCalcRow(ws, row, "Flow Type", froudeNumber < 1 ? "SUBCRITICAL (Fr < 1)" : "SUPERCRITICAL (Fr > 1)", "");
-    row = addCalcRow(ws, row, "Velocity Check", velocity.toFixed(2), "m/s (< 2.5 OK)");
-    row++;
-
-    // FINAL VERIFICATION
-    ws.getCell(row, 1).value = "DESIGN VERIFICATION";
-    ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FF27AE60" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row++;
-    ws.getCell(row, 1).value = "✓ Hydraulic calculations complete and verified";
-    ws.getCell(row, 1).font = { color: { argb: "FF27AE60" } };
-    row++;
+    createHydraulicDesignFormulas(ws, input, design);
   }
-
-  // Sheet 4: Afflux Analysis (96 points)
   {
     const ws = workbook.addWorksheet("Afflux Analysis (96 Points)");
     applyColumnWidths(ws, "Afflux Analysis (96 Points)", 8);
@@ -528,138 +411,20 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   }
 
   // ==================== SHEETS 8-12: COMPREHENSIVE PIER DESIGN ====================
+  // Sheet: Pier Design Summary - WITH LIVE EXCEL FORMULAS
   {
     const ws = workbook.addWorksheet("PIER DESIGN SUMMARY");
     applyColumnWidths(ws, "PIER DESIGN SUMMARY", 8);
     applyRowHeights(ws, "PIER DESIGN SUMMARY", 100);
-    let row = 1;
-    styleHeader(ws, row, "COMPREHENSIVE PIER DESIGN - DETAILED CALCULATIONS");
-    row += 2;
-
-    // SECTION 1: PIER GEOMETRY
-    ws.getCell(row, 1).value = "PIER GEOMETRY & DIMENSIONS";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Number of Piers", design.pier?.numberOfPiers || 0, "nos");
-    row = addCalcRow(ws, row, "Pier Width", design.pier?.width || 0, "m");
-    row = addCalcRow(ws, row, "Pier Length", design.pier?.length || 0, "m");
-    row = addCalcRow(ws, row, "Pier Depth (to Bed)", design.pier?.depth || 0, "m");
-    row = addCalcRow(ws, row, "Pier Spacing", (design.pier?.spacing || 0).toFixed(2), "m");
-    row++;
-
-    // SECTION 2: FOOTING
-    ws.getCell(row, 1).value = "FOOTING DESIGN";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Footing Width", design.pier.baseWidth, "m");
-    row = addCalcRow(ws, row, "Footing Length", design.pier.baseLength, "m");
-    row = addCalcRow(ws, row, "Footing Thickness", "1.0", "m");
-    row = addCalcRow(ws, row, "Footing Depth", (design.pier.depth + 1.5).toFixed(2), "m");
-    row++;
-
-    // SECTION 3: MATERIAL & LOADS
-    ws.getCell(row, 1).value = "MATERIAL & LOADING";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Concrete Grade", `M${input.fck}`, "");
-    row = addCalcRow(ws, row, "Steel Grade", `Fe${input.fy}`, "");
-    row = addCalcRow(ws, row, "SBC Available", input.soilBearingCapacity, "kPa");
-    row++;
-
-    // SECTION 4: WATER FORCES
-    ws.getCell(row, 1).value = "HYDRAULIC FORCES ON PIER";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const flowDepth = input.floodLevel - (input.bedLevel || 96.47);
-    const hydroForce = 0.5 * 9.81 * flowDepth * flowDepth * (design.pier?.width || 1.5);
-    
-    row = addCalcRow(ws, row, "Flow Depth", flowDepth.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Hydrostatic Force", (design.pier?.hydrostaticForce || 0).toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Drag Force", (design.pier?.dragForce || 0).toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Total Horizontal Force", (design.pier?.totalHorizontalForce || 0).toFixed(0), "kN");
-    row++;
-
-    // SECTION 5: STABILITY CHECKS
-    ws.getCell(row, 1).value = "STABILITY VERIFICATION";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Sliding Safety Factor", (design.pier?.slidingFOS || 1.5).toFixed(2), "Req: >1.5 ✓");
-    row = addCalcRow(ws, row, "Overturning Safety Factor", (design.pier?.overturningFOS || 1.8).toFixed(2), "Req: >1.8 ✓");
-    row = addCalcRow(ws, row, "Bearing Safety Factor", (design.pier?.bearingFOS || 2.5).toFixed(2), "Req: >2.5 ✓");
-    row++;
-
-    // SECTION 6: CONCRETE VOLUMES
-    ws.getCell(row, 1).value = "MATERIAL QUANTITIES";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Pier Concrete", (design.pier?.pierConcrete || 0).toFixed(2), "m³");
-    row = addCalcRow(ws, row, "Base Concrete", (design.pier?.baseConcrete || 0).toFixed(2), "m³");
-    row = addCalcRow(ws, row, "Total Pier + Base", ((design.pier?.pierConcrete || 0) + (design.pier?.baseConcrete || 0)).toFixed(2), "m³");
-    row++;
-
-    // SECTION 7: REINFORCEMENT
-    ws.getCell(row, 1).value = "REINFORCEMENT SCHEDULE";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Main Steel Diameter", `${design.pier.mainSteel.diameter}`, "mm");
-    row = addCalcRow(ws, row, "Main Steel Spacing", `${design.pier.mainSteel.spacing}`, "mm c/c");
-    row = addCalcRow(ws, row, "Main Steel Qty", design.pier.mainSteel.quantity, "bars");
-    row = addCalcRow(ws, row, "Link Steel Diameter", `${design.pier.linkSteel.diameter}`, "mm");
-    row = addCalcRow(ws, row, "Link Steel Spacing", `${design.pier.linkSteel.spacing}`, "mm c/c");
-    row++;
-
-    // FINAL STATUS
-    ws.getCell(row, 1).value = "DESIGN STATUS";
-    ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FF27AE60" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row++;
-    ws.getCell(row, 1).value = "✓ ALL PIER DESIGNS VERIFIED & SAFE - IRC:6-2016 COMPLIANT";
-    ws.getCell(row, 1).font = { color: { argb: "FF27AE60" } };
+    createPierDesignFormulas(ws, input, design);
   }
 
-  // Sheet: Pier Load Cases (70)
+  // Sheet: Pier Load Cases (70) - WITH LIVE EXCEL FORMULAS
   {
     const ws = workbook.addWorksheet("Pier Load Cases (70)");
     applyColumnWidths(ws, "Pier Load Cases (70)", 8);
     applyRowHeights(ws, "Pier Load Cases (70)", 100);
-    ws.columns = Array(9).fill({ width: 13 });
-    let row = 1;
-    styleHeader(ws, row, "PIER - LOAD CASE ANALYSIS (70 CASES)");
-    row += 2;
-
-    const headers = ["Case", "Description", "DL", "LL", "WL", "S-FOS", "O-FOS", "B-FOS", "Status"];
-    headers.forEach((h, i) => {
-      ws.getCell(row, i + 1).value = h;
-      ws.getCell(row, i + 1).font = { bold: true };
-    });
-    row++;
-
-    (design.pier.loadCases || []).slice(0, 70).forEach(lc => {
-      ws.getCell(row, 1).value = lc.caseNumber;
-      ws.getCell(row, 2).value = lc.description;
-      ws.getCell(row, 3).value = lc.deadLoadFactor.toFixed(2);
-      ws.getCell(row, 4).value = lc.liveLoadFactor.toFixed(2);
-      ws.getCell(row, 5).value = lc.windLoadFactor.toFixed(2);
-      ws.getCell(row, 6).value = lc.slidingFOS.toFixed(2);
-      ws.getCell(row, 7).value = lc.overturningFOS.toFixed(2);
-      ws.getCell(row, 8).value = lc.bearingFOS.toFixed(2);
-      ws.getCell(row, 9).value = lc.status;
-      row++;
-    });
+    createLoadCasesFormulas(ws, design);
   }
 
   // Sheet: Pier Load Cases - Data Reference & Linkage (52 rows linked to source)
