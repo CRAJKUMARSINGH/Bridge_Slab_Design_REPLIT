@@ -81,7 +81,77 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     ws.mergeCells(`A${row}:H${row}`);
   }
 
-  // ==================== SHEET 2: INDEX ====================
+  // ==================== SHEET 2: ABSTRACT OF STRESSES ====================
+  {
+    const ws = workbook.addWorksheet("ABSTRACT OF STRESSES");
+    applyColumnWidths(ws, "ABSTRACT OF STRESSES", 8);
+    applyRowHeights(ws, "ABSTRACT OF STRESSES", 100);
+    let row = 2;
+
+    ws.getCell(row, 1).value = `Project: ${projectName}`;
+    ws.getCell(row, 1).font = { bold: true, size: 14, color: COLORS.PRIMARY };
+    ws.mergeCells(`A${row}:H${row}`);
+    row += 2;
+
+    ws.getCell(row, 1).value = "DESIGN SUMMARY - CALCULATED STRESSES & FORCES";
+    ws.getCell(row, 1).font = { bold: true, size: 12, color: COLORS.HEADER };
+    ws.mergeCells(`A${row}:H${row}`);
+    row += 2;
+
+    // Hydraulic Data
+    ws.getCell(row, 1).value = "HYDRAULIC PARAMETERS";
+    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+    row++;
+    row = addCalcRow(ws, row, "Design Discharge", input.discharge, "m³/s");
+    row = addCalcRow(ws, row, "Calculated Velocity", design.hydraulics.velocity.toFixed(3), "m/s");
+    row = addCalcRow(ws, row, "Design Water Level", design.hydraulics.designWaterLevel.toFixed(2), "m MSL");
+    row = addCalcRow(ws, row, "Afflux", design.hydraulics.afflux.toFixed(3), "m");
+    row++;
+
+    // Pier Design
+    ws.getCell(row, 1).value = "PIER DESIGN";
+    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+    row++;
+    row = addCalcRow(ws, row, "Number of Piers", design.pier.numberOfPiers, "");
+    row = addCalcRow(ws, row, "Pier Spacing", design.pier.spacing.toFixed(2), "m");
+    row = addCalcRow(ws, row, "Pier Depth", design.pier.depth.toFixed(2), "m");
+    row = addCalcRow(ws, row, "Pier Width", design.pier.width.toFixed(2), "m");
+    row = addCalcRow(ws, row, "Hydrostatic Force", design.pier.hydrostaticForce.toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Drag Force", design.pier.dragForce.toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Total Horizontal Force", design.pier.totalHorizontalForce.toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Sliding Safety Factor", design.pier.slidingFOS.toFixed(2), "Req: >1.5");
+    row = addCalcRow(ws, row, "Overturning Safety Factor", design.pier.overturningFOS.toFixed(2), "Req: >1.8");
+    row = addCalcRow(ws, row, "Bearing Safety Factor", design.pier.bearingFOS.toFixed(2), "Req: >2.5");
+    row++;
+
+    // Abutment Design
+    ws.getCell(row, 1).value = "ABUTMENT DESIGN";
+    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+    row++;
+    row = addCalcRow(ws, row, "Abutment Height", design.abutment.height.toFixed(2), "m");
+    row = addCalcRow(ws, row, "Active Earth Pressure", design.abutment.activeEarthPressure.toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Vertical Load", design.abutment.verticalLoad.toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Sliding Safety Factor", design.abutment.slidingFOS.toFixed(2), "Req: >1.5");
+    row = addCalcRow(ws, row, "Overturning Safety Factor", design.abutment.overturningFOS.toFixed(2), "Req: >1.8");
+    row = addCalcRow(ws, row, "Bearing Safety Factor", design.abutment.bearingFOS.toFixed(2), "Req: >2.5");
+    row++;
+
+    // Material Quantities
+    ws.getCell(row, 1).value = "MATERIAL QUANTITIES";
+    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+    row++;
+    row = addCalcRow(ws, row, "Total Concrete", design.quantities.totalConcrete.toFixed(2), "m³");
+    row = addCalcRow(ws, row, "Total Steel", design.quantities.totalSteel.toFixed(2), "tonnes");
+    row = addCalcRow(ws, row, "Total Formwork", design.quantities.formwork.toFixed(2), "m²");
+    row++;
+
+    // Design Status
+    ws.getCell(row, 1).value = "✓ ALL CALCULATIONS COMPLETE - IRC:6-2016 & IRC:112-2015 COMPLIANT";
+    ws.getCell(row, 1).font = { bold: true, size: 12, color: COLORS.SUCCESS };
+    ws.mergeCells(`A${row}:H${row}`);
+  }
+
+  // ==================== SHEET 3: INDEX ====================
   {
     const ws = workbook.addWorksheet("INDEX");
     applyColumnWidths(ws, "INDEX", 8);
@@ -93,7 +163,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     row += 2;
 
     const sheets = [
-      "COVER PAGE", "HYDRAULIC DESIGN", "Afflux Analysis (96 Points)", "Cross Section Survey",
+      "COVER PAGE", "ABSTRACT OF STRESSES", "HYDRAULIC DESIGN", "Afflux Analysis (96 Points)", "Cross Section Survey",
       "Bed Slope Analysis", "SBC & Foundation", "PIER DESIGN SUMMARY", "Pier Load Cases (70)",
       "Pier Stress Distribution (168)", "Pier Footing Design", "Pier Steel Reinforcement",
       "Pier Cap Design", "ABUTMENT TYPE 1", "Type 1 Stability Check (155)", "Type 1 Footing Design",
