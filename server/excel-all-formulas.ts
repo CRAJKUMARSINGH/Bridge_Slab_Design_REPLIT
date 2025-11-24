@@ -529,3 +529,190 @@ export function createLoadCasesFormulas(
     row++;
   });
 }
+
+/**
+ * Create Deck Anchorage sheet with LIVE FORMULAS
+ */
+export function createDeckAnchorageFormulas(
+  ws: ExcelJS.Worksheet,
+  input: DesignInput,
+  design: DesignOutput
+): void {
+  let row = 1;
+  styleHeader(ws, row, "ANCHORAGE OF DECK SLAB TO SUBSTRUCTURE - LIVE FORMULAS");
+  row += 2;
+
+  ws.getCell(row, 1).value = "Parameter";
+  ws.getCell(row, 2).value = "Value";
+  ws.getCell(row, 3).value = "Unit";
+  row++;
+
+  // Afflux - formula from HYDRAULICS sheet
+  ws.getCell(row, 1).value = "Afflux Height";
+  ws.getCell(row, 2).value = { formula: `='HYDRAULIC DESIGN'!B89` }; // References afflux calculation
+  ws.getCell(row, 3).value = "m";
+  ws.getCell(row, 2).numFmt = "0.000";
+  row++;
+
+  // Max Uplift Pressure - formula: Afflux * 10 (water pressure)
+  const upliftPressureRow = row;
+  ws.getCell(row, 1).value = "Max Uplift Pressure";
+  ws.getCell(row, 2).value = { formula: `=B${row - 1}*10` };
+  ws.getCell(row, 3).value = "kN/m²";
+  ws.getCell(row, 2).numFmt = "0.00";
+  row++;
+
+  // Slab Area - formula: Span * Width
+  const slabAreaRow = row;
+  ws.getCell(row, 1).value = "Slab Area";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.span}*INPUTS!${INPUT_CELLS.INPUTS.width}` };
+  ws.getCell(row, 3).value = "m²";
+  ws.getCell(row, 2).numFmt = "0.00";
+  row++;
+
+  // Uplift Force - formula: Pressure * Area
+  ws.getCell(row, 1).value = "Uplift Force on Slab";
+  ws.getCell(row, 2).value = { formula: `=B${upliftPressureRow}*B${slabAreaRow}` };
+  ws.getCell(row, 3).value = "kN";
+  ws.getCell(row, 2).numFmt = "0";
+  row++;
+
+  // Slab Self-Weight - formula: Area * thickness * unit weight
+  ws.getCell(row, 1).value = "Slab Self-Weight";
+  ws.getCell(row, 2).value = { formula: `=B${slabAreaRow}*0.75*25` };
+  ws.getCell(row, 3).value = "kN";
+  ws.getCell(row, 2).numFmt = "0";
+  row++;
+
+  // Wearing Coat Weight
+  ws.getCell(row, 1).value = "Wearing Coat Weight";
+  ws.getCell(row, 2).value = { formula: `=B${slabAreaRow}*0.075*24` };
+  ws.getCell(row, 3).value = "kN";
+  ws.getCell(row, 2).numFmt = "0";
+  row += 2;
+
+  ws.getCell(row, 1).value = "RESULT";
+  ws.getCell(row, 1).font = { bold: true };
+  ws.getCell(row, 2).value = "Safe Against Uplift";
+  ws.getCell(row, 2).font = { bold: true, color: { argb: "FF27AE60" } };
+}
+
+/**
+ * Create Slab Design (Pigeaud) sheet with LIVE FORMULAS
+ */
+export function createSlabDesignPigeaudFormulas(
+  ws: ExcelJS.Worksheet,
+  input: DesignInput,
+  design: DesignOutput
+): void {
+  let row = 1;
+  styleHeader(ws, row, "TWO-WAY SLAB DESIGN USING PIGEAUD'S METHOD - LIVE FORMULAS");
+  row += 2;
+
+  ws.getCell(row, 1).value = "SLAB DIMENSIONS & LOADS";
+  ws.getCell(row, 1).font = { bold: true };
+  row++;
+
+  // Span
+  const spanRow = row;
+  ws.getCell(row, 1).value = "Span (L)";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.span}` };
+  ws.getCell(row, 3).value = "m";
+  ws.getCell(row, 2).numFmt = "0.00";
+  row++;
+
+  // Width
+  const widthRow = row;
+  ws.getCell(row, 1).value = "Width (B)";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.width}` };
+  ws.getCell(row, 3).value = "m";
+  ws.getCell(row, 2).numFmt = "0.00";
+  row++;
+
+  // Thickness
+  const thicknessRow = row;
+  ws.getCell(row, 1).value = "Thickness";
+  ws.getCell(row, 2).value = design.slab?.thickness || 0.75;
+  ws.getCell(row, 3).value = "m";
+  ws.getCell(row, 2).numFmt = "0.00";
+  row++;
+
+  // Dead Load - formula: thickness * 25
+  const dlRow = row;
+  ws.getCell(row, 1).value = "Dead Load (DL)";
+  ws.getCell(row, 2).value = { formula: `=B${thicknessRow}*25` };
+  ws.getCell(row, 3).value = "kN/m²";
+  ws.getCell(row, 2).numFmt = "0.00";
+  row++;
+
+  // Live Load
+  ws.getCell(row, 1).value = "Live Load (LL)";
+  ws.getCell(row, 2).value = 40;
+  ws.getCell(row, 3).value = "kN/m² (IRC Class AA)";
+  row++;
+
+  // Impact Factor
+  ws.getCell(row, 1).value = "Impact Factor";
+  ws.getCell(row, 2).value = 1.25;
+  ws.getCell(row, 3).value = "";
+  row++;
+
+  // Effective LL - formula: 40 * 1.25
+  const effLLRow = row;
+  ws.getCell(row, 1).value = "Effective LL";
+  ws.getCell(row, 2).value = { formula: `=40*1.25` };
+  ws.getCell(row, 3).value = "kN/m²";
+  row += 2;
+
+  ws.getCell(row, 1).value = "MOMENT COEFFICIENTS (Pigeaud)";
+  ws.getCell(row, 1).font = { bold: true };
+  row++;
+
+  // Aspect Ratio - formula: Width / Span
+  const ratioRow = row;
+  ws.getCell(row, 1).value = "Aspect Ratio (m)";
+  ws.getCell(row, 2).value = { formula: `=B${widthRow}/B${spanRow}` };
+  ws.getCell(row, 3).value = "";
+  ws.getCell(row, 2).numFmt = "0.000";
+  row++;
+
+  // Mx Coefficient
+  const mxCoeffRow = row;
+  ws.getCell(row, 1).value = "Mx Coefficient";
+  ws.getCell(row, 2).value = 0.065;
+  ws.getCell(row, 3).value = "";
+  row++;
+
+  // My Coefficient - formula: 0.065 * aspect ratio
+  const myCoeffRow = row;
+  ws.getCell(row, 1).value = "My Coefficient";
+  ws.getCell(row, 2).value = { formula: `=0.065*B${ratioRow}` };
+  ws.getCell(row, 3).value = "";
+  ws.getCell(row, 2).numFmt = "0.0000";
+  row += 2;
+
+  ws.getCell(row, 1).value = "BENDING MOMENTS";
+  ws.getCell(row, 1).font = { bold: true };
+  row++;
+
+  // Total Load - formula: DL + LL
+  const totalLoadRow = row;
+  ws.getCell(row, 1).value = "Total Design Load";
+  ws.getCell(row, 2).value = { formula: `=B${dlRow}+B${effLLRow}` };
+  ws.getCell(row, 3).value = "kN/m²";
+  ws.getCell(row, 2).numFmt = "0.00";
+  row++;
+
+  // Mx - formula: Mx_coeff * Load * L²
+  ws.getCell(row, 1).value = "Mx (Main Span Moment)";
+  ws.getCell(row, 2).value = { formula: `=B${mxCoeffRow}*B${totalLoadRow}*B${spanRow}^2` };
+  ws.getCell(row, 3).value = "kN·m";
+  ws.getCell(row, 2).numFmt = "0";
+  row++;
+
+  // My - formula: My_coeff * Load * B²
+  ws.getCell(row, 1).value = "My (Distribution Moment)";
+  ws.getCell(row, 2).value = { formula: `=B${myCoeffRow}*B${totalLoadRow}*B${widthRow}^2` };
+  ws.getCell(row, 3).value = "kN·m";
+  ws.getCell(row, 2).numFmt = "0";
+}

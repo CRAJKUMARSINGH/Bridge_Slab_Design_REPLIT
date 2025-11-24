@@ -36,7 +36,9 @@ import {
   createLoadCasesFormulas,
   createAbutmentDesignFormulas,
   createSlabDesignFormulas,
-  createFootingDesignFormulas
+  createFootingDesignFormulas,
+  createDeckAnchorageFormulas,
+  createSlabDesignPigeaudFormulas
 } from "./excel-all-formulas";
 
 // Initialize formatting system
@@ -1835,22 +1837,7 @@ All designs are IRC COMPLIANT and SAFE.`;
     const ws = workbook.addWorksheet("Deck Anchorage Analysis");
     applyColumnWidths(ws, "Deck Anchorage Analysis", 8);
     applyRowHeights(ws, "Deck Anchorage Analysis", 100);
-    let row = 1;
-    styleHeader(ws, row, "ANCHORAGE OF DECK SLAB TO SUBSTRUCTURE");
-    row += 2;
-
-    ws.getCell(row, 2).value = "Parameter"; ws.getCell(row, 3).value = "Value"; ws.getCell(row, 4).value = "Unit";
-    row++;
-    row = addCalcRow(ws, row, "Afflux Height", design.hydraulics.afflux.toFixed(3), "m");
-    row = addCalcRow(ws, row, "Max Uplift Pressure", (design.hydraulics.afflux * 10).toFixed(2), "kN/m²");
-    row = addCalcRow(ws, row, "Slab Area", (input.span * input.width).toFixed(2), "m²");
-    row = addCalcRow(ws, row, "Uplift Force on Slab", ((design.hydraulics.afflux * 10) * input.span * input.width).toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Slab Self-Weight", ((input.span * input.width * 0.75 * 25)).toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Wearing Coat Weight", ((input.span * input.width * 0.075 * 24)).toFixed(0), "kN");
-    row += 1;
-    ws.getCell(row, 2).value = "RESULT";
-    ws.getCell(row, 3).value = "Safe Against Uplift";
-    ws.getCell(row, 3).font = { bold: true, color: { argb: "FF27AE60" } };
+    createDeckAnchorageFormulas(ws, input, design);
   }
 
   // ==================== SHEET 45: SLAB DESIGN PIGEAUD ====================
@@ -1858,40 +1845,7 @@ All designs are IRC COMPLIANT and SAFE.`;
     const ws = workbook.addWorksheet("Slab Design (Pigeaud Method)");
     applyColumnWidths(ws, "Slab Design (Pigeaud Method)", 8);
     applyRowHeights(ws, "Slab Design (Pigeaud Method)", 100);
-    let row = 1;
-    styleHeader(ws, row, "TWO-WAY SLAB DESIGN USING PIGEAUD'S METHOD");
-    row += 2;
-
-    ws.getCell(row, 1).value = "SLAB DIMENSIONS & LOADS";
-    ws.getCell(row, 1).font = { bold: true };
-    row++;
-    row = addCalcRow(ws, row, "Span (L)", input.span, "m");
-    row = addCalcRow(ws, row, "Width (B)", input.width, "m");
-    row = addCalcRow(ws, row, "Thickness", design.slab.thickness, "m");
-    row = addCalcRow(ws, row, "Dead Load (DL)", (design.slab.thickness * 25).toFixed(2), "kN/m²");
-    row = addCalcRow(ws, row, "Live Load (LL)", "40", "kN/m² (IRC Class AA)");
-    row = addCalcRow(ws, row, "Impact Factor", "1.25", "");
-    row = addCalcRow(ws, row, "Effective LL", "50", "kN/m²");
-    row += 1;
-
-    ws.getCell(row, 1).value = "MOMENT COEFFICIENTS (Pigeaud)";
-    ws.getCell(row, 1).font = { bold: true };
-    row++;
-    const lx = input.span; const ly = input.width;
-    const m_ratio = ly / lx;
-    const mx_coeff = 0.065; const my_coeff = 0.065 * m_ratio;
-    row = addCalcRow(ws, row, "Mx Coefficient", mx_coeff.toFixed(4), "");
-    row = addCalcRow(ws, row, "My Coefficient", my_coeff.toFixed(4), "");
-    row += 1;
-
-    ws.getCell(row, 1).value = "BENDING MOMENTS";
-    ws.getCell(row, 1).font = { bold: true };
-    row++;
-    const totalLoad = (design.slab.thickness * 25) + 50;
-    const mx = mx_coeff * totalLoad * lx * lx;
-    const my = my_coeff * totalLoad * ly * ly;
-    row = addCalcRow(ws, row, "Mx (Main)", mx.toFixed(0), "kN·m");
-    row = addCalcRow(ws, row, "My (Distribution)", my.toFixed(0), "kN·m");
+    createSlabDesignPigeaudFormulas(ws, input, design);
   }
 
   // ==================== SHEET 46: CANTILEVER ABUTMENT ====================
