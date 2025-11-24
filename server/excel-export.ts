@@ -12,12 +12,34 @@ import {
   applyRowHeights,
   loadSourceMetadata
 } from "./excel-formatting";
+import {
+  addInputsSheet,
+  addFormulaRow,
+  addValueRow,
+  flowDepthFormula,
+  velocityFormula,
+  affluxFormula,
+  designWaterLevelFormula,
+  froudeNumberFormula,
+  numberOfPiersFormula,
+  pierSpacingFormula,
+  hydrostaticForceFormula,
+  dragForceFormula,
+  totalHorizontalForceFormula,
+  pierConcreteVolumeFormula,
+  slidingFOSFormula,
+  INPUT_CELLS
+} from "./excel-formulas";
 
 // Initialize formatting system
 loadSourceMetadata();
 
 export async function generateCompleteExcelReport(input: DesignInput, design: DesignOutput, projectName: string): Promise<Buffer> {
   const workbook = new ExcelJS.Workbook();
+
+  // ==================== SHEET 0: INPUTS (Hidden) ====================
+  // This sheet contains all input parameters that other sheets reference with formulas
+  addInputsSheet(workbook, input);
 
   // ==================== SHEET 1: COVER PAGE ====================
   {
