@@ -21,56 +21,42 @@ export async function generateCompleteWorkbookFromTemplate(
     throw new Error(`Template file not found: ${templatePath}`);
   }
 
-  // Read template workbook with all formulas preserved
-  const template = XLSX.readFile(templatePath, { cellFormula: true, cellStyles: true });
+  // Read template with XLSX (preserves formulas for older .xls format)
+  const template = XLSX.readFile(templatePath, { cellFormula: true });
 
-  // Get or create INPUTS sheet
-  let inputsSheet = template.Sheets['INPUTS'];
-  if (!inputsSheet) {
-    inputsSheet = {};
-    template.Sheets['INPUTS'] = inputsSheet;
-    if (!template.SheetNames.includes('INPUTS')) {
-      template.SheetNames.unshift('INPUTS');
-    }
+  // Get or create INPUTS sheet - insert at beginning
+  if (!template.Sheets['INPUTS']) {
+    template.Sheets['INPUTS'] = {};
+    template.SheetNames.unshift('INPUTS');
   }
-
-  // Update INPUTS sheet with design parameters
-  // These match the INPUT_CELLS structure
-  inputsSheet['B3'] = { v: input.span, t: 'n', f: undefined }; // Design Span
-  inputsSheet['B4'] = { v: input.width, t: 'n', f: undefined }; // Bridge Width
-  inputsSheet['B5'] = { v: input.discharge, t: 'n', f: undefined }; // Design Discharge
-  inputsSheet['B6'] = { v: input.floodLevel, t: 'n', f: undefined }; // Flood Level
-  inputsSheet['B7'] = { v: input.bedLevel ?? 0, t: 'n', f: undefined }; // Bed Level
-  inputsSheet['B8'] = { v: input.fck, t: 'n', f: undefined }; // Concrete Grade
-  inputsSheet['B9'] = { v: input.fy, t: 'n', f: undefined }; // Steel Grade
-  inputsSheet['B10'] = { v: input.soilBearingCapacity, t: 'n', f: undefined }; // SBC
-  inputsSheet['B11'] = { v: input.bedSlope, t: 'n', f: undefined }; // Bed Slope
-  inputsSheet['B12'] = { v: input.numberOfLanes, t: 'n', f: undefined }; // Number of Lanes
-
-  // Add labels for reference
-  inputsSheet['A3'] = { v: 'Design Span' };
-  inputsSheet['A4'] = { v: 'Bridge Width' };
-  inputsSheet['A5'] = { v: 'Design Discharge' };
-  inputsSheet['A6'] = { v: 'Flood Level' };
-  inputsSheet['A7'] = { v: 'Bed Level' };
-  inputsSheet['A8'] = { v: 'Concrete Grade (fck)' };
-  inputsSheet['A9'] = { v: 'Steel Grade (fy)' };
-  inputsSheet['A10'] = { v: 'Soil Bearing Capacity' };
-  inputsSheet['A11'] = { v: 'Bed Slope' };
-  inputsSheet['A12'] = { v: 'Number of Lanes' };
-
-  // Hide INPUTS sheet (keep it but hidden)
-  const inputsSheetIndex = template.SheetNames.indexOf('INPUTS');
-  if (!template.Workbook) template.Workbook = {};
-  if (!template.Workbook.Sheets) template.Workbook.Sheets = [];
   
-  const inputsSheetObj = template.Workbook.Sheets[inputsSheetIndex];
-  if (inputsSheetObj) {
-    inputsSheetObj.Hidden = true;
-  }
+  const inputsSheet = template.Sheets['INPUTS'];
 
-  // Convert to buffer
-  return XLSX.write(template, { type: 'buffer', bookType: 'xlsx' });
+  // Update INPUTS sheet with design parameters and labels
+  const inputData = [
+    ['A3', 'B3', 'Design Span', input.span],
+    ['A4', 'B4', 'Bridge Width', input.width],
+    ['A5', 'B5', 'Design Discharge', input.discharge],
+    ['A6', 'B6', 'Flood Level', input.floodLevel],
+    ['A7', 'B7', 'Bed Level', input.bedLevel ?? 0],
+    ['A8', 'B8', 'Concrete Grade (fck)', input.fck],
+    ['A9', 'B9', 'Steel Grade (fy)', input.fy],
+    ['A10', 'B10', 'Soil Bearing Capacity', input.soilBearingCapacity],
+    ['A11', 'B11', 'Bed Slope', input.bedSlope],
+    ['A12', 'B12', 'Number of Lanes', input.numberOfLanes],
+  ];
+
+  inputData.forEach(([labelCell, valueCell, label, value]) => {
+    inputsSheet[labelCell] = { v: label, t: 's' };
+    inputsSheet[valueCell] = { v: value, t: typeof value === 'string' ? 's' : 'n' };
+  });
+
+  // Set range for INPUTS sheet
+  inputsSheet['!ref'] = 'A1:B12';
+
+  // Convert to buffer using XLSX
+  const buffer = XLSX.write(template, { type: 'buffer', bookType: 'xlsx' });
+  return buffer;
 }
 
 export { generateCompleteWorkbookFromTemplate as generateExcelReport };
