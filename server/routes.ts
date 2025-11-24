@@ -5,6 +5,7 @@ import { insertProjectSchema } from "@shared/schema";
 import { generateCompleteExcelReport } from "./excel-export";
 import { generateCompleteWorkbookFromTemplate } from "./excel-template-export";
 import { generatePDF } from "./pdf-export";
+import { generateHTMLDesignReport } from "./design-report";
 import { parseExcelForDesignInput } from "./excel-parser";
 import { generateCompleteDesign } from "./design-engine";
 import multer from "multer";
@@ -104,6 +105,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error exporting Excel:", error);
       res.status(500).json({ error: "Failed to export Excel" });
+    }
+  });
+
+  // HTML Design Report (detailed engineering documentation)
+  app.get("/api/projects/:id/report/html", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      
+      const designData = project.designData as any;
+      if (!designData || !designData.input || !designData.output) {
+        return res.status(400).json({ error: "Project does not have design data" });
+      }
+      
+      const html = generateHTMLDesignReport(
+        designData.input,
+        designData.output,
+        project.name || "Bridge Design Report"
+      );
+      
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.send(html);
+    } catch (error) {
+      console.error("Error generating HTML report:", error);
+      res.status(500).json({ error: "Failed to generate report" });
     }
   });
 
