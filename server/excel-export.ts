@@ -139,28 +139,28 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     ws.getCell(row, 1).value = "PIER DESIGN";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     row++;
-    row = addCalcRow(ws, row, "Number of Piers", design.pier.numberOfPiers, "");
-    row = addCalcRow(ws, row, "Pier Spacing", design.pier.spacing.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Pier Depth", design.pier.depth.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Pier Width", design.pier.width.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Hydrostatic Force", design.pier.hydrostaticForce.toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Drag Force", design.pier.dragForce.toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Total Horizontal Force", design.pier.totalHorizontalForce.toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Sliding Safety Factor", design.pier.slidingFOS.toFixed(2), "Req: >1.5");
-    row = addCalcRow(ws, row, "Overturning Safety Factor", design.pier.overturningFOS.toFixed(2), "Req: >1.8");
-    row = addCalcRow(ws, row, "Bearing Safety Factor", design.pier.bearingFOS.toFixed(2), "Req: >2.5");
+    row = addCalcRow(ws, row, "Number of Piers", design.pier.numberOfPiers || 0, "");
+    row = addCalcRow(ws, row, "Pier Spacing", (design.pier.spacing || 0).toFixed(2), "m");
+    row = addCalcRow(ws, row, "Pier Depth", (design.pier.depth || 0).toFixed(2), "m");
+    row = addCalcRow(ws, row, "Pier Width", (design.pier.width || 0).toFixed(2), "m");
+    row = addCalcRow(ws, row, "Hydrostatic Force", (design.pier.hydrostaticForce || 0).toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Drag Force", (design.pier.dragForce || 0).toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Total Horizontal Force", (design.pier.totalHorizontalForce || 0).toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Sliding Safety Factor", (design.pier.slidingFOS || 0).toFixed(2), "Req: >1.5");
+    row = addCalcRow(ws, row, "Overturning Safety Factor", (design.pier.overturningFOS || 0).toFixed(2), "Req: >1.8");
+    row = addCalcRow(ws, row, "Bearing Safety Factor", (design.pier.bearingFOS || 0).toFixed(2), "Req: >2.5");
     row++;
 
     // Abutment Design
     ws.getCell(row, 1).value = "ABUTMENT DESIGN";
     ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
     row++;
-    row = addCalcRow(ws, row, "Abutment Height", design.abutment.height.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Active Earth Pressure", design.abutment.activeEarthPressure.toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Vertical Load", design.abutment.verticalLoad.toFixed(0), "kN");
-    row = addCalcRow(ws, row, "Sliding Safety Factor", design.abutment.slidingFOS.toFixed(2), "Req: >1.5");
-    row = addCalcRow(ws, row, "Overturning Safety Factor", design.abutment.overturningFOS.toFixed(2), "Req: >1.8");
-    row = addCalcRow(ws, row, "Bearing Safety Factor", design.abutment.bearingFOS.toFixed(2), "Req: >2.5");
+    row = addCalcRow(ws, row, "Abutment Height", (design.abutment.height || 0).toFixed(2), "m");
+    row = addCalcRow(ws, row, "Active Earth Pressure", (design.abutment.activeEarthPressure || 0).toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Vertical Load", (design.abutment.verticalLoad || 0).toFixed(0), "kN");
+    row = addCalcRow(ws, row, "Sliding Safety Factor", (design.abutment.slidingFOS || 0).toFixed(2), "Req: >1.5");
+    row = addCalcRow(ws, row, "Overturning Safety Factor", (design.abutment.overturningFOS || 0).toFixed(2), "Req: >1.8");
+    row = addCalcRow(ws, row, "Bearing Safety Factor", (design.abutment.bearingFOS || 0).toFixed(2), "Req: >2.5");
     row++;
 
     // Material Quantities
