@@ -33,7 +33,10 @@ import {
 import {
   createHydraulicDesignFormulas,
   createPierDesignFormulas,
-  createLoadCasesFormulas
+  createLoadCasesFormulas,
+  createAbutmentDesignFormulas,
+  createSlabDesignFormulas,
+  createFootingDesignFormulas
 } from "./excel-all-formulas";
 
 // Initialize formatting system
@@ -542,33 +545,12 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     });
   }
 
-  // Sheet: Pier Footing Design
+  // Sheet: Pier Footing Design - WITH LIVE FORMULAS
   {
     const ws = workbook.addWorksheet("Pier Footing Design");
     applyColumnWidths(ws, "Pier Footing Design", 8);
     applyRowHeights(ws, "Pier Footing Design", 100);
-    let row = 1;
-    styleHeader(ws, row, "PIER FOOTING - DESIGN CALCULATIONS");
-    row += 2;
-
-    row = addCalcRow(ws, row, "Footing Width", design.pier.baseWidth, "m");
-    row = addCalcRow(ws, row, "Footing Length", design.pier.baseLength, "m");
-    row = addCalcRow(ws, row, "Footing Thickness", "1.0", "m");
-    row++;
-
-    row = addCalcRow(ws, row, "Soil Bearing Capacity", input.soilBearingCapacity, "kPa");
-    row = addCalcRow(ws, row, "Safe Bearing Pressure", (input.soilBearingCapacity * 0.8).toFixed(0), "kPa");
-    row++;
-
-    row = addCalcRow(ws, row, "Concrete Grade", `M${input.fck}`, "");
-    row = addCalcRow(ws, row, "Concrete Volume", design.pier.baseConcrete.toFixed(2), "m³");
-    row++;
-
-    row = addCalcRow(ws, row, "Bending Moment", (design.pier.hydrostaticForce * 2).toFixed(0), "kN-m");
-    row = addCalcRow(ws, row, "Shear Force", design.pier.hydrostaticForce.toFixed(0), "kN");
-    row++;
-
-    row = addCalcRow(ws, row, "Check Status", "SAFE", "");
+    createFootingDesignFormulas(ws, input, design);
   }
 
   // Sheet: Pier Steel Reinforcement
@@ -620,93 +602,12 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
     row = addCalcRow(ws, row, "Link Steel", "8 mm @ 250 mm", "c/c");
   }
 
-  // ==================== SHEETS 13-21: COMPREHENSIVE TYPE 1 ABUTMENT ====================
+  // ==================== SHEETS 13-21: COMPREHENSIVE TYPE 1 ABUTMENT - WITH LIVE FORMULAS ====================
   {
     const ws = workbook.addWorksheet("ABUTMENT TYPE 1");
     applyColumnWidths(ws, "ABUTMENT TYPE 1", 8);
     applyRowHeights(ws, "ABUTMENT TYPE 1", 100);
-    let row = 1;
-    styleHeader(ws, row, "COMPREHENSIVE TYPE 1 ABUTMENT DESIGN - DETAILED CALCULATIONS");
-    row += 2;
-
-    // SECTION 1: ABUTMENT GEOMETRY
-    ws.getCell(row, 1).value = "ABUTMENT GEOMETRY & DIMENSIONS";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Abutment Height (to cap)", design.abutment.height.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Stem Width (face)", design.abutment.width.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Base Width (footing)", design.abutment.baseWidth.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Wing Wall Height", design.abutment.wingWallHeight.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Wing Wall Thickness", design.abutment.wingWallThickness.toFixed(2), "m");
-    row++;
-
-    // SECTION 2: SOIL & LOADS
-    ws.getCell(row, 1).value = "SOIL PARAMETERS & LOADING";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const backfillHeight = design.abutment.height - 1.5;
-    const unitWeightBackfill = 18; // kN/m³
-    const activeEarthPressure = 0.33 * unitWeightBackfill * Math.pow(backfillHeight, 2);
-    
-    row = addCalcRow(ws, row, "Backfill Height", backfillHeight.toFixed(2), "m");
-    row = addCalcRow(ws, row, "Unit Weight (Backfill)", unitWeightBackfill, "kN/m³");
-    row = addCalcRow(ws, row, "Coefficient (Ka)", "0.33", "(Rankine's)");
-    row = addCalcRow(ws, row, "Active Earth Pressure", design.abutment.activeEarthPressure.toFixed(0), "kN");
-    row = addCalcRow(ws, row, "SBC Available", input.soilBearingCapacity, "kPa");
-    row++;
-
-    // SECTION 3: VERTICAL LOADS
-    ws.getCell(row, 1).value = "VERTICAL LOAD CALCULATION";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const bridgeDL = (input.width * input.span * 25).toFixed(0); // slab self-weight
-    const bridgeLL = (input.width * input.span * 70).toFixed(0); // live load
-    const abutmentDL = ((design.abutment.abutmentConcrete + design.abutment.baseConcrete + design.abutment.wingWallConcrete) * 25).toFixed(0);
-    
-    row = addCalcRow(ws, row, "Bridge DL (slab + deck)", bridgeDL, "kN");
-    row = addCalcRow(ws, row, "Bridge LL", bridgeLL, "kN");
-    row = addCalcRow(ws, row, "Abutment Self Weight", abutmentDL, "kN");
-    row = addCalcRow(ws, row, "Total Vertical Load", design.abutment.verticalLoad.toFixed(0), "kN");
-    row++;
-
-    // SECTION 4: STABILITY CHECKS
-    ws.getCell(row, 1).value = "STABILITY ANALYSIS";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Friction Coefficient (µ)", "0.50", "(hard rock)");
-    row = addCalcRow(ws, row, "Sliding Safety Factor", design.abutment.slidingFOS.toFixed(2), "Req: >1.5 ✓");
-    row = addCalcRow(ws, row, "Overturning Moment Arm", "1.2", "m");
-    row = addCalcRow(ws, row, "Overturning Safety Factor", design.abutment.overturningFOS.toFixed(2), "Req: >1.8 ✓");
-    row = addCalcRow(ws, row, "Bearing Safety Factor", design.abutment.bearingFOS.toFixed(2), "Req: >2.5 ✓");
-    row++;
-
-    // SECTION 5: MATERIAL QUANTITIES
-    ws.getCell(row, 1).value = "MATERIAL QUANTITIES";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Abutment Concrete", design.abutment.abutmentConcrete.toFixed(2), "m³");
-    row = addCalcRow(ws, row, "Base Footing Concrete", design.abutment.baseConcrete.toFixed(2), "m³");
-    row = addCalcRow(ws, row, "Wing Wall Concrete", design.abutment.wingWallConcrete.toFixed(2), "m³");
-    row = addCalcRow(ws, row, "Total Concrete", (design.abutment.abutmentConcrete + design.abutment.baseConcrete + design.abutment.wingWallConcrete).toFixed(2), "m³");
-    row++;
-
-    // FINAL STATUS
-    ws.getCell(row, 1).value = "DESIGN STATUS";
-    ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FF27AE60" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row++;
-    ws.getCell(row, 1).value = "✓ TYPE 1 ABUTMENT DESIGN VERIFIED & SAFE - IRC:6-2016 COMPLIANT";
-    ws.getCell(row, 1).font = { color: { argb: "FF27AE60" } };
+    createAbutmentDesignFormulas(ws, input, design);
   }
 
   // Type 1 Stability Check (155 cases)
@@ -1444,109 +1345,12 @@ SLAB STRESS CHECK:
     }
   }
 
-  // ==================== SHEETS 31-35: SLAB DESIGN ====================
+  // ==================== SHEETS 31-35: SLAB DESIGN - WITH LIVE FORMULAS ====================
   {
     const ws = workbook.addWorksheet("SLAB DESIGN (Pigeaud)");
     applyColumnWidths(ws, "SLAB DESIGN (Pigeaud)", 8);
     applyRowHeights(ws, "SLAB DESIGN (Pigeaud)", 100);
-    let row = 1;
-    styleHeader(ws, row, "COMPREHENSIVE SLAB DESIGN - PIGEAUD'S MOMENT COEFFICIENT METHOD");
-    row += 2;
-
-    // SECTION 1: SLAB GEOMETRY
-    ws.getCell(row, 1).value = "SLAB GEOMETRY & PARAMETERS";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Effective Span (Lx)", input.span, "m");
-    row = addCalcRow(ws, row, "Effective Width (Ly)", input.width, "m");
-    row = addCalcRow(ws, row, "Aspect Ratio (Lx/Ly)", (input.span / input.width).toFixed(2), "");
-    row = addCalcRow(ws, row, "Slab Thickness", design.slab.thickness, "m");
-    row++;
-
-    // SECTION 2: LOADING
-    ws.getCell(row, 1).value = "LOADING ANALYSIS";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const slabSelfWeight = (design.slab.thickness * 25).toFixed(2);
-    row = addCalcRow(ws, row, "Self Weight (slab)", slabSelfWeight, "kN/m²");
-    row = addCalcRow(ws, row, "Wearing Coat", "2", "kN/m²");
-    row = addCalcRow(ws, row, "Total Dead Load", (parseFloat(slabSelfWeight) + 2).toFixed(2), "kN/m²");
-    row = addCalcRow(ws, row, "Live Load (IRC AA)", "70", "kN/m²");
-    row = addCalcRow(ws, row, "Impact Factor", "1.25", "");
-    row = addCalcRow(ws, row, "Design LL with Impact", "87.5", "kN/m²");
-    row++;
-
-    // SECTION 3: PIGEAUD'S COEFFICIENT METHOD
-    ws.getCell(row, 1).value = "PIGEAUD'S MOMENT COEFFICIENTS";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const aspectRatio = input.span / input.width;
-    const m1 = (0.045 + 0.015 * aspectRatio).toFixed(4);
-    const m2 = (0.030 + 0.008 * aspectRatio).toFixed(4);
-    row = addCalcRow(ws, row, "Coeff. m1 (Longer Span)", m1, "");
-    row = addCalcRow(ws, row, "Coeff. m2 (Shorter Span)", m2, "");
-    row++;
-
-    // SECTION 4: MOMENT CALCULATION
-    ws.getCell(row, 1).value = "BENDING MOMENT CALCULATION";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const deadLoadMoment = (parseFloat(slabSelfWeight) + 2) * Math.pow(input.span, 2) * parseFloat(m1) / 10;
-    const liveLoadMoment = 87.5 * Math.pow(input.span, 2) * parseFloat(m1) / 10;
-    const totalMoment = deadLoadMoment + liveLoadMoment;
-    
-    row = addCalcRow(ws, row, "DL Moment (Mx)", deadLoadMoment.toFixed(0), "kN-m");
-    row = addCalcRow(ws, row, "LL Moment (Mx)", liveLoadMoment.toFixed(0), "kN-m");
-    row = addCalcRow(ws, row, "Total Design Moment", totalMoment.toFixed(0), "kN-m");
-    row++;
-
-    // SECTION 5: SHEAR FORCE
-    ws.getCell(row, 1).value = "SHEAR FORCE CALCULATION";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    const designShear = (parseFloat(slabSelfWeight) + 2 + 87.5) * input.span / 2;
-    row = addCalcRow(ws, row, "Design Shear Force", designShear.toFixed(0), "kN");
-    row++;
-
-    // SECTION 6: REINFORCEMENT DESIGN
-    ws.getCell(row, 1).value = "REINFORCEMENT DESIGN (Both Directions)";
-    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Concrete Grade", `M${input.fck}`, "");
-    row = addCalcRow(ws, row, "Steel Grade", `Fe${input.fy}`, "");
-    row = addCalcRow(ws, row, "Lever Arm Factor", "0.90", "");
-    row++;
-
-    const steelAreaRequired = (totalMoment * 1000) / (design.slab.thickness * 0.87 * input.fy);
-    row = addCalcRow(ws, row, "Steel Area Required (Mx)", steelAreaRequired.toFixed(2), "cm²/m");
-    row = addCalcRow(ws, row, "Steel Area Required (My)", (steelAreaRequired * 0.6).toFixed(2), "cm²/m");
-    row++;
-
-    // SECTION 7: FINAL DESIGN
-    ws.getCell(row, 1).value = "FINAL REINFORCEMENT SCHEDULE";
-    ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FF27AE60" } };
-    ws.mergeCells(`A${row}:D${row}`);
-    row += 2;
-
-    row = addCalcRow(ws, row, "Main Steel (Mx)", "12 mm @ 150 mm c/c", "");
-    row = addCalcRow(ws, row, "Main Steel (My)", "10 mm @ 200 mm c/c", "");
-    row = addCalcRow(ws, row, "Actual Provided (Mx)", design.slab.mainSteelMain.toFixed(2), "cm²/m");
-    row = addCalcRow(ws, row, "Actual Provided (My)", design.slab.mainSteelDistribution.toFixed(2), "cm²/m");
-    row++;
-
-    row = addCalcRow(ws, row, "Status", "ADEQUATE", "✓ Design Safe");
+    createSlabDesignFormulas(ws, input, design);
   }
 
   // Slab Moments & Shears

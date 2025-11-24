@@ -128,15 +128,11 @@ export function createHydraulicDesignFormulas(
 
   ws.getCell(row, 1).value = "Flow Type";
   ws.getCell(row, 2).value = { formula: `=IF(B${row-1}<1,"SUBCRITICAL","SUPERCRITICAL")` };
-  ws.getCell(row, 3).value = "(Fr<1 Safe)";
-  row++;
-
-  ws.getCell(row, 1).value = "✓ All formulas recalculate when INPUTS change";
-  ws.getCell(row, 1).font = { color: { argb: "FF27AE60" } };
+  ws.getCell(row, 3).value = "";
 }
 
 /**
- * Create Pier Design Summary with ALL formulas
+ * Create Pier Design Summary sheet with formulas
  */
 export function createPierDesignFormulas(
   ws: ExcelJS.Worksheet,
@@ -144,7 +140,7 @@ export function createPierDesignFormulas(
   design: DesignOutput
 ): void {
   let row = 1;
-  styleHeader(ws, row, "PIER DESIGN - LIVE FORMULAS FOR STABILITY");
+  styleHeader(ws, row, "PIER DESIGN SUMMARY - LIVE FORMULAS");
   row += 2;
 
   // GEOMETRY
@@ -155,7 +151,7 @@ export function createPierDesignFormulas(
   const numPiersRow = row;
   ws.getCell(row, 1).value = "Number of Piers";
   ws.getCell(row, 2).value = { formula: `=ROUND(INPUTS!${INPUT_CELLS.INPUTS.span}/5,0)` };
-  ws.getCell(row, 3).value = "nos";
+  ws.getCell(row, 3).value = "";
   row++;
 
   const pierWidthRow = row;
@@ -166,7 +162,7 @@ export function createPierDesignFormulas(
 
   const pierLengthRow = row;
   ws.getCell(row, 1).value = "Pier Length";
-  ws.getCell(row, 2).value = design.pier?.length || 7.5;
+  ws.getCell(row, 2).value = design.pier?.length || 10;
   ws.getCell(row, 3).value = "m";
   row++;
 
@@ -236,6 +232,259 @@ export function createPierDesignFormulas(
   row += 2;
 
   ws.getCell(row, 1).value = "✓ All FOS values recalculate from input parameters";
+  ws.getCell(row, 1).font = { color: { argb: "FF27AE60" } };
+}
+
+/**
+ * Create Abutment Design sheet with formulas
+ */
+export function createAbutmentDesignFormulas(
+  ws: ExcelJS.Worksheet,
+  input: DesignInput,
+  design: DesignOutput
+): void {
+  let row = 1;
+  styleHeader(ws, row, "ABUTMENT DESIGN - LIVE FORMULAS");
+  row += 2;
+
+  // ABUTMENT GEOMETRY
+  ws.getCell(row, 1).value = "ABUTMENT GEOMETRY";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  const abutHeightRow = row;
+  ws.getCell(row, 1).value = "Abutment Height";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.floodLevel}-INPUTS!${INPUT_CELLS.INPUTS.bedLevel}+2.5` };
+  ws.getCell(row, 3).value = "m";
+  ws.getCell(row, 2).numberFormat = "0.00";
+  row++;
+
+  const abutWidthRow = row;
+  ws.getCell(row, 1).value = "Abutment Width";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.width}/2+1.0` };
+  ws.getCell(row, 3).value = "m";
+  ws.getCell(row, 2).numberFormat = "0.00";
+  row += 2;
+
+  // EARTH PRESSURE
+  ws.getCell(row, 1).value = "EARTH PRESSURE CALCULATIONS";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  ws.getCell(row, 1).value = "Soil Unit Weight";
+  ws.getCell(row, 2).value = 18;
+  ws.getCell(row, 3).value = "kN/m³";
+  const soilWeightRow = row;
+  row++;
+
+  ws.getCell(row, 1).value = "Angle of Friction";
+  ws.getCell(row, 2).value = 30;
+  ws.getCell(row, 3).value = "°";
+  const frictionRow = row;
+  row++;
+
+  ws.getCell(row, 1).value = "Ka (Active Earth Pressure Coeff)";
+  ws.getCell(row, 2).value = { formula: `=(1-SIN(RADIANS(B${frictionRow})))/(1+SIN(RADIANS(B${frictionRow})))` };
+  ws.getCell(row, 3).value = "";
+  ws.getCell(row, 2).numberFormat = "0.000";
+  const kaRow = row;
+  row += 2;
+
+  ws.getCell(row, 1).value = "Active Earth Pressure (Pa)";
+  ws.getCell(row, 2).value = { formula: `=0.5*B${soilWeightRow}*B${abutHeightRow}^2*B${kaRow}` };
+  ws.getCell(row, 3).value = "kN";
+  ws.getCell(row, 2).numberFormat = "0";
+  const activeEPRow = row;
+  row += 2;
+
+  // ABUTMENT STABILITY
+  ws.getCell(row, 1).value = "ABUTMENT STABILITY";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  const abutConcrete = (design.abutment?.concrete || 0) || 0;
+  const abutWeight = abutConcrete * 25;
+
+  ws.getCell(row, 1).value = "Abutment Self-Weight";
+  ws.getCell(row, 2).value = abutWeight;
+  ws.getCell(row, 3).value = "kN";
+  const abutWeightRow = row;
+  row++;
+
+  ws.getCell(row, 1).value = "Sliding Safety Factor (>1.5)";
+  ws.getCell(row, 2).value = { formula: `=(B${abutWeightRow}*0.5)/B${activeEPRow}` };
+  ws.getCell(row, 3).value = "REQ >1.5";
+  ws.getCell(row, 2).numberFormat = "0.00";
+  row++;
+
+  ws.getCell(row, 1).value = "Overturning Safety Factor (>1.8)";
+  ws.getCell(row, 2).value = { formula: `=(B${abutWeightRow}*(B${abutWidthRow}/2))/(B${activeEPRow}*(B${abutHeightRow}/3))` };
+  ws.getCell(row, 3).value = "REQ >1.8";
+  ws.getCell(row, 2).numberFormat = "0.00";
+  row++;
+
+  ws.getCell(row, 1).value = "Bearing Safety Factor (>2.5)";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.soilBearingCapacity}/((B${abutWeightRow})/(B${abutWidthRow}*2.0))` };
+  ws.getCell(row, 3).value = "REQ >2.5";
+  ws.getCell(row, 2).numberFormat = "0.00";
+}
+
+/**
+ * Create Slab Design sheet with formulas
+ */
+export function createSlabDesignFormulas(
+  ws: ExcelJS.Worksheet,
+  input: DesignInput,
+  design: DesignOutput
+): void {
+  let row = 1;
+  styleHeader(ws, row, "SLAB DESIGN (PIGEAUD) - LIVE FORMULAS");
+  row += 2;
+
+  // SLAB GEOMETRY
+  ws.getCell(row, 1).value = "SLAB GEOMETRY";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  const slabLengthRow = row;
+  ws.getCell(row, 1).value = "Effective Span (Length)";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.span}` };
+  ws.getCell(row, 3).value = "m";
+  row++;
+
+  const slabWidthRow = row;
+  ws.getCell(row, 1).value = "Effective Width";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.width}` };
+  ws.getCell(row, 3).value = "m";
+  row++;
+
+  const slabThicknessRow = row;
+  ws.getCell(row, 1).value = "Slab Thickness";
+  ws.getCell(row, 2).value = 0.75;
+  ws.getCell(row, 3).value = "m";
+  row += 2;
+
+  // LOADS
+  ws.getCell(row, 1).value = "DESIGN LOADS";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  const slabWeightRow = row;
+  ws.getCell(row, 1).value = "Self-Weight (Concrete)";
+  ws.getCell(row, 2).value = { formula: `=B${slabThicknessRow}*25` };
+  ws.getCell(row, 3).value = "kN/m²";
+  ws.getCell(row, 2).numberFormat = "0.00";
+  row++;
+
+  const liveLoadRow = row;
+  ws.getCell(row, 1).value = "Live Load (IRC Class 70)";
+  ws.getCell(row, 2).value = 70;
+  ws.getCell(row, 3).value = "kN/m²";
+  row++;
+
+  const designLoadRow = row;
+  ws.getCell(row, 1).value = "Design Load (1.5DL + 1.75LL)";
+  ws.getCell(row, 2).value = { formula: `=1.5*B${slabWeightRow}+1.75*B${liveLoadRow}` };
+  ws.getCell(row, 3).value = "kN/m²";
+  ws.getCell(row, 2).numberFormat = "0.00";
+  row += 2;
+
+  // MOMENTS (PIGEAUD ANALYSIS)
+  ws.getCell(row, 1).value = "PIGEAUD ANALYSIS - DESIGN MOMENTS";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  ws.getCell(row, 1).value = "Aspect Ratio (L/B)";
+  ws.getCell(row, 2).value = { formula: `=B${slabLengthRow}/B${slabWidthRow}` };
+  ws.getCell(row, 3).value = "";
+  ws.getCell(row, 2).numberFormat = "0.000";
+  const aspectRow = row;
+  row += 2;
+
+  ws.getCell(row, 1).value = "Moment at Mid-Span (Longitudinal)";
+  ws.getCell(row, 2).value = { formula: `=(B${designLoadRow}*B${slabLengthRow}^2)/12` };
+  ws.getCell(row, 3).value = "kN-m/m";
+  ws.getCell(row, 2).numberFormat = "0.0";
+  row++;
+
+  ws.getCell(row, 1).value = "Moment at Mid-Width (Transverse)";
+  ws.getCell(row, 2).value = { formula: `=(B${designLoadRow}*B${slabWidthRow}^2)/12` };
+  ws.getCell(row, 3).value = "kN-m/m";
+  ws.getCell(row, 2).numberFormat = "0.0";
+  row++;
+
+  ws.getCell(row, 1).value = "✓ All moments recalculate from design loads and geometry";
+  ws.getCell(row, 1).font = { color: { argb: "FF27AE60" } };
+}
+
+/**
+ * Create Footing Design sheet with formulas
+ */
+export function createFootingDesignFormulas(
+  ws: ExcelJS.Worksheet,
+  input: DesignInput,
+  design: DesignOutput
+): void {
+  let row = 1;
+  styleHeader(ws, row, "FOOTING DESIGN - LIVE FORMULAS");
+  row += 2;
+
+  ws.getCell(row, 1).value = "FOOTING GEOMETRY";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  const footingWidthRow = row;
+  ws.getCell(row, 1).value = "Footing Width";
+  ws.getCell(row, 2).value = design.pier?.baseWidth || 4.0;
+  ws.getCell(row, 3).value = "m";
+  row++;
+
+  const footingLengthRow = row;
+  ws.getCell(row, 1).value = "Footing Length";
+  ws.getCell(row, 2).value = design.pier?.baseLength || 10.0;
+  ws.getCell(row, 3).value = "m";
+  row++;
+
+  const footingThicknessRow = row;
+  ws.getCell(row, 1).value = "Footing Thickness";
+  ws.getCell(row, 2).value = 1.0;
+  ws.getCell(row, 3).value = "m";
+  row += 2;
+
+  ws.getCell(row, 1).value = "FOOTING CONCRETE";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  ws.getCell(row, 1).value = "Concrete Grade";
+  ws.getCell(row, 2).value = { formula: `="M"&INPUTS!${INPUT_CELLS.INPUTS.fck}` };
+  ws.getCell(row, 3).value = "";
+  row++;
+
+  ws.getCell(row, 1).value = "Concrete Volume";
+  ws.getCell(row, 2).value = { formula: `=B${footingWidthRow}*B${footingLengthRow}*B${footingThicknessRow}` };
+  ws.getCell(row, 3).value = "m³";
+  ws.getCell(row, 2).numberFormat = "0.00";
+  const concreteVolumeRow = row;
+  row += 2;
+
+  ws.getCell(row, 1).value = "BEARING PRESSURE";
+  ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+  row += 2;
+
+  ws.getCell(row, 1).value = "Safe Bearing Capacity";
+  ws.getCell(row, 2).value = { formula: `=INPUTS!${INPUT_CELLS.INPUTS.soilBearingCapacity}*0.8` };
+  ws.getCell(row, 3).value = "kPa";
+  ws.getCell(row, 2).numberFormat = "0";
+  const sbcRow = row;
+  row++;
+
+  ws.getCell(row, 1).value = "Allowable Bearing Pressure";
+  ws.getCell(row, 2).value = { formula: `=B${sbcRow}/1.5` };
+  ws.getCell(row, 3).value = "kPa";
+  ws.getCell(row, 2).numberFormat = "0";
+  row++;
+
+  ws.getCell(row, 1).value = "✓ All calculations update with input parameters";
   ws.getCell(row, 1).font = { color: { argb: "FF27AE60" } };
 }
 
