@@ -30,6 +30,11 @@ import {
   slidingFOSFormula,
   INPUT_CELLS
 } from "./excel-formulas";
+import {
+  createHydraulicDesignFormulas,
+  createPierDesignFormulas,
+  createLoadCasesFormulas
+} from "./excel-all-formulas";
 
 // Initialize formatting system
 loadSourceMetadata();
