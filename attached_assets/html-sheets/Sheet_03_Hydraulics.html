@@ -2,125 +2,250 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hydraulics</title>
+  <title>Sheet 3: Hydraulics - Detailed Calculations</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 15mm; line-height: 1.6; color: #333; font-size: 11px; }
-    h1 { color: #365070; font-size: 14px; border-bottom: 3px solid #365070; padding: 8px 0; margin: 15px 0 10px 0; }
-    h2 { color: #555; font-size: 12px; margin: 12px 0 8px 0; font-weight: bold; }
-    .section { margin: 15px 0; padding: 10px; border-left: 3px solid #e0e0e0; }
-    .calculation { background: #f9f9f9; padding: 8px; margin: 8px 0; border-radius: 3px; font-size: 10px; }
-    .formula { background: #e8f0f7; padding: 6px; margin: 6px 0; font-family: monospace; color: #365070; font-weight: bold; }
-    .step { margin: 5px 0; padding: 4px; }
-    .step-title { font-weight: bold; color: #365070; }
-    .input { color: #2c5aa0; }
-    .output { color: #d9534f; font-weight: bold; }
-    table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 9px; }
-    td, th { border: 1px solid #ccc; padding: 4px; text-align: left; }
-    th { background: #e8f0f7; color: #365070; }
-    .meta { font-size: 9px; color: #999; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; }
-    .status { background: #d4edda; color: #155724; padding: 8px; margin: 10px 0; border-radius: 3px; }
-    .full-content { font-size: 10px; margin: 10px 0; }
+    body { font-family: Arial; margin: 20px; line-height: 1.6; font-size: 10px; color: #333; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+    td, th { border: 1px solid #000; padding: 5px 8px; text-align: left; }
+    th { background: #e0e0e0; font-weight: bold; }
+    .calc { background: #f9f9f9; padding: 8px; margin: 8px 0; }
+    .bold { font-weight: bold; }
+    .red { color: #d9534f; font-weight: bold; }
+    h1 { font-size: 12px; margin-top: 10px; margin-bottom: 5px; }
+    h2 { font-size: 11px; margin-top: 15px; margin-bottom: 5px; }
+    .header { background: #e0e0e0; padding: 8px; margin: 10px 0; font-weight: bold; }
   </style>
 </head>
 <body>
-  <p style="text-align:right;font-size:8px;color:#999">Sheet 3/49 | Hydraulics</p>
-  <h1>HYDRAULICS</h1>
-  <div class="section">
-<h2>1. COMPUTATION OF DISCHARGE (Area Velocity Method)</h2>
-<p style="color: #666; font-size: 10px;">Reference: Article-5 of IRC SP-13</p>
 
-<div class="calculation">
-  <div class="step-title">Formula:</div>
-  <div class="formula">Q = A × V</div>
-  <div style="margin-top: 5px;">Where:</div>
-  <div class="step"><span class="input">A</span> = Cross-sectional area = <strong>490.30 m²</strong></div>
-  <div class="step"><span class="input">V</span> = Velocity = <strong>1.84 m/sec</strong></div>
-</div>
+<p><b>Sheet 3/49</b></p>
+<p><b>DESIGN OF SUBMERSIBLE BRIDGE</b></p>
+<p>Name Of Work :- Construction of Submersible Bridge on ON KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM</p>
 
-<div class="calculation">
-  <div class="step-title">Velocity Calculation:</div>
-  <div class="formula">V = (1/n) × (A/P)^(2/3) × √S</div>
-  <div class="step"><span class="input">n</span> = <strong>0.033</strong></div>
-  <div class="step"><span class="input">P</span> = <strong>190.71 m</strong></div>
-  <div class="step"><span class="input">S</span> = <strong>1/960</strong></div>
-  <div class="step" style="margin-top: 8px;"><strong>Result:</strong> <span class="output">V = 1.84 m/sec</span></div>
-</div>
+<h1>HYDRAULIC CALCULATION</h1>
 
-<div class="calculation">
-  <div class="step-title">Discharge Calculation:</div>
-  <div class="step">Q = 490.30 × 1.84 = <span class="output">902.15 Cumecs</span></div>
-</div>
+<div class="header">1. COMPUTATION OF DISCHARGE</div>
+<p>Flood calculation by Area Velocity Method (As per Article- 5 of IRC SP-13)</p>
+
+<p><b>Q</b> = <b>A x V</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Where</b></p>
 
 <table>
-  <tr><th>Parameter</th><th>Value</th><th>Unit</th></tr>
-  <tr><td>Cross-sectional Area (A)</td><td>490.30</td><td>m²</td></tr>
-  <tr><td>Perimeter (P)</td><td>190.71</td><td>m</td></tr>
-  <tr><td>Bed Slope (S)</td><td>1 in 960</td><td>-</td></tr>
-  <tr><td>Rugosity Coefficient (n)</td><td>0.033</td><td>-</td></tr>
-  <tr><td>Velocity (V)</td><td>1.84</td><td>m/sec</td></tr>
-  <tr><td>Design Discharge (Q)</td><td>902.15</td><td>Cumecs</td></tr>
+  <tr><td><b>A</b></td><td>= 490.30 m2</td><td><b>A =</b> Cross sectional area in m2</td></tr>
+  <tr><td><b>P</b></td><td>= 190.71 m</td><td><b>P =</b> Perimeter calculated in m</td></tr>
+  <tr><td><b>S</b></td><td>= 1 IN 960</td><td><b>S =</b> Slope as per drain LS taken at Proposal site</td></tr>
+  <tr><td><b>n</b></td><td>= 0.033</td><td><b>n =</b> Rugosity coefficient (As per IRC SP-13)</td></tr>
+  <tr><td><b>V</b></td><td>= I/nx (A/P) 2/3 x(S) 1/2</td><td><b>V =</b> Velocity in m/sec.</td></tr>
 </table>
+
+<div class="calc">
+  <b>Velocity Calculation:</b><br>
+  V = (1/n) × (A/P)^(2/3) × √S<br>
+  V = (1/0.033) × (490.30/190.71)^(2/3) × √(1/960)<br>
+  V = 30.303 × (2.571)^(2/3) × 0.03227<br>
+  V = 30.303 × 1.884 × 0.03227<br>
+  <span class="red">V = 1.84 m/sec.</span>
 </div>
 
-<div class="section">
-<h2>2. LINEAR WATERWAY & AFFLUX CALCULATION</h2>
-
-<div class="calculation">
-  <div class="step-title">Regime Surface Width:</div>
-  <div class="formula">L = 4.8 × √Q = 4.8 × √902.15 = <span class="output">144.18 m</span></div>
+<div class="calc">
+  <b>Discharge Calculation:</b><br>
+  Q = A × V<br>
+  Q = 490.30 × 1.84<br>
+  <span class="red">Q = 902.15 Cumecs</span>
 </div>
 
-<div class="calculation">
-  <div class="step-title">Design Waterway:</div>
-  <div class="step">Adopted: 12 spans × 8m each = <strong>96 m</strong></div>
+<hr>
+
+<div class="header">2. LINEAR WATER WAY CALCULATION</div>
+<p>Regime Surface width of the stream is given by :-</p>
+
+<div class="calc">
+  <b>L</b> = 4.8 (Q)^(1/2)<br>
+  L = 4.8 × √902.15<br>
+  L = 4.8 × 30.036<br>
+  <span class="red">L = 144.18 m</span>
 </div>
 
-<h2>3. AFFLUX CALCULATION (Molesworth Formula)</h2>
+<p>Looking to the built up Urban area constraints adopt <b>12 Spans of 8 M each.</b></p>
+<p>This will cause contraction and afflux. Calculation is done for the same to fix deck level.</p>
 
-<div class="calculation">
-  <div class="step-title">Formula:</div>
-  <div class="formula">h = ((V²/17.85) + 0.0152) × (A²/a² - 1)</div>
+<div class="calc">
+  Effective linear water way proposed = 12 × 8 = <b>96 M</b><br>
+  Total = <b>96 M</b>
 </div>
 
-<div class="calculation">
-  <div class="step-title">OBSTRUCTED AREAS:</div>
-  <div class="step"><strong>Deck Slab:</strong> 94.80 × 0.83 = 78.68 m²</div>
-  <div class="step"><strong>Piers (11 × 1.2 × 4.0):</strong> 52.80 m²</div>
-  <div class="step"><strong>Abutments (2 × 0.575 × 4.0):</strong> 4.60 m²</div>
-  <div class="step"><strong>Total Obstruction:</strong> 136.08 m²</div>
-</div>
+<hr>
 
-<div class="calculation">
-  <div class="step-title">FLOW AREA:</div>
-  <div class="step">Unobstructed: A = 474.00 m²</div>
-  <div class="step">Obstructed: a = 474.00 - 136.08 = 337.92 m²</div>
-</div>
+<div class="header">3. SCOUR DEPTH CALCULATION</div>
+<p>(As per clause no. 703.2.2.1 of IRC : 78.1983)</p>
 
-<div class="calculation">
-  <div class="step-title">AFFLUX CALCULATION:</div>
-  <div class="step">Step 1: V²/17.85 = 1.84²/17.85 = 0.1897</div>
-  <div class="step">Step 2: V²/17.85 + 0.0152 = 0.2049</div>
-  <div class="step">Step 3: A²/a² = 474²/337.92² = 1.9677</div>
-  <div class="step">Step 4: A²/a² - 1 = 0.9677</div>
-  <div class="step">Step 5: h = 0.2049 × 0.9677 = <span class="output">0.23 m</span></div>
-</div>
+<p><b>dsm</b> = <b>1.34 x (Db2 /Ksf)  1/3</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Where</b></p>
 
 <table>
-  <tr><th>Parameter</th><th>Value</th><th>Unit</th></tr>
-  <tr><td>HFL (Existing)</td><td>100.600</td><td>m</td></tr>
-  <tr><td>Afflux Calculation</td><td>0.23</td><td>m</td></tr>
-  <tr><td>Afflux Flood Level (HFL + h)</td><td>100.830</td><td>m</td></tr>
-  <tr><td>Top of Deck Slab</td><td>101.600</td><td>m</td></tr>
-  <tr><td>Freeboard (Deck - Afflux Level)</td><td>0.770</td><td>m</td></tr>
+  <tr><td><b>Db</b></td><td>= The discharge in Cumecs per meter width</td></tr>
+  <tr><td><b>Ksf</b></td><td>= the silt factor = 1.5</td></tr>
 </table>
 
-<div class="status">
-  <strong>✓ RESULT: DESIGN ACCEPTABLE</strong><br>
-  Deck level is 0.77 m above afflux flood level. No hindrance to traffic during floods.
+<div class="calc">
+  <b>Effective linear waterway calculation:</b><br>
+  = Width of waterway - Obstructed width of piers<br>
+  = 94.80 - (11 × 1.2)<br>
+  = 94.80 - 13.20<br>
+  <span class="red">= 81.60 m</span>
 </div>
+
+<div class="calc">
+  <b>Discharge per meter width (Db):</b><br>
+  Db = Q / Effective waterway<br>
+  Db = 902.15 / 81.60<br>
+  <span class="red">Db = 11.06 Cumecs per metre width</span>
 </div>
-  <div class="meta">
-    ✓ Complete step-by-step design calculations for vetting agency verification
-  </div>
+
+<div class="calc">
+  <b>Scour Depth (dsm):</b><br>
+  dsm = 1.34 × (Db² / Ksf)^(1/3)<br>
+  dsm = 1.34 × (11.06² / 1.5)^(1/3)<br>
+  dsm = 1.34 × (122.32 / 1.5)^(1/3)<br>
+  dsm = 1.34 × (81.55)^(1/3)<br>
+  dsm = 1.34 × 4.34<br>
+  <span class="red">dsm = 5.82 m</span>
+</div>
+
+<p>As per Clause No. 703-2-3-1 of IRC 78-1983 considering Scour at the pier two times of calculated scour depth below the highest flood level. But hard rock is available in foundation so the foundation will be anchored in the rock as per IRC guidelines.</p>
+
+<hr>
+
+<div class="header">4. AFFLUX CALCULATION</div>
+<p>As per IS: 7784 (Part -I) 1975</p>
+
+<h2>Molesworth Formula for Afflux</h2>
+
+<p><b>Afflux h = ((V2/17.85) +0.0152)x(A2/a2-1)</b></p>
+
+<p><b>Where,</b></p>
+<table>
+  <tr><td><b>h</b></td><td>= afflux in m,</td></tr>
+  <tr><td><b>v</b></td><td>= Velocity in the unobstructed stream in m/s,</td></tr>
+  <tr><td><b>A</b></td><td>= the unobstructed sectional area of the river in m2</td></tr>
+  <tr><td><b>a</b></td><td>= the obstructed sectional area of the river at the cross drainage work in m2.</td></tr>
+</table>
+
+<p style="margin-top: 10px;">As per Annexure- 1</p>
+<p>Unobstructed Area of Flow after Bridge Construction = 94.800 × 5.00 = <b>474 m2</b></p>
+<p><b>A</b> = 490.30 m2</p>
+<p><b>V</b> = 1.84 m/sec.</p>
+
+<h2>Computation of Area obstructed by Deck Slab</h2>
+
+<table>
+  <tr><td><b>HFL :</b></td><td>100.600 m</td></tr>
+  <tr><td><b>Top Level of Deck slab :</b></td><td>101.600 m</td></tr>
+  <tr><td><b>Thickness of Slab and Wearing Coat</b></td><td>0.830 m</td></tr>
+  <tr><td><b>Length Of Slab</b></td><td>94.800 m</td></tr>
+  <tr><td><b>Height of Obstruction</b></td><td>0.830 m</td></tr>
+</table>
+
+<div class="calc">
+  Area obstructed by deck slab = 94.800 × 0.83<br>
+  <span class="red">= 78.68 m2</span>
+</div>
+
+<h2>Computation of Area obstructed by Piers</h2>
+
+<table>
+  <tr><td><b>HFL :</b></td><td>100.600 m</td></tr>
+  <tr><td><b>Soffit of Deck slab :</b></td><td>100.770 m</td></tr>
+  <tr><td><b>Average river bed level :</b></td><td>96.600 m</td></tr>
+  <tr><td><b>Nos. of pier :</b></td><td>11</td></tr>
+  <tr><td><b>Height of Obstruction</b></td><td>100.600 - 96.600 = 4.000 m</td></tr>
+</table>
+
+<div class="calc">
+  Area obstructed by one pier = 1.2 × 4.00<br>
+  <span class="red">= 4.8 m2</span><br>
+  <br>
+  For 11 Nos. of piers = 11 × 4.8<br>
+  <span class="red">A1 = 52.80 m2</span>
+</div>
+
+<h2>Computation of Area obstructed by Abutments</h2>
+
+<table>
+  <tr><td><b>Average ground level :</b></td><td>96.600 m</td></tr>
+  <tr><td><b>Height of Obstruction</b></td><td>100.600 - 96.600 = 4.000 m</td></tr>
+</table>
+
+<div class="calc">
+  Area obstructed by one Abutment : A2 = (0.40+0.75)/2 × 4.00<br>
+  <span class="red">= 2.30 m2</span><br>
+  <br>
+  For two Abutments = 2 × 2.30<br>
+  <span class="red">= 4.60 m2</span>
+</div>
+
+<h2>Total Area of Obstruction</h2>
+
+<div class="calc">
+  Total area of obstruction = A0 + A1 + A2<br>
+  = 78.68 + 52.80 + 4.60<br>
+  <span class="red">= 136.08 m2</span>
+</div>
+
+<h2>Actual Area of Flow</h2>
+
+<div class="calc">
+  Actual Area of flow a = 474.000 - 136.08<br>
+  <span class="red">= 337.92 m2</span>
+</div>
+
+<h2>Afflux Calculation (Step-by-step)</h2>
+
+<div class="calc">
+  <b>Step 1: Calculate V²/17.85</b><br>
+  V² = (1.84)² = 3.3856<br>
+  V²/17.85 = 3.3856 / 17.85 = 0.1897<br>
+  <br>
+  <b>Step 2: Add constant</b><br>
+  (V²/17.85) + 0.0152 = 0.1897 + 0.0152 = <span class="red">0.2049</span><br>
+  <br>
+  <b>Step 3: Calculate A²/a²</b><br>
+  A² = (474)² = 224,676<br>
+  a² = (337.92)² = 114,189<br>
+  A²/a² = 224,676 / 114,189 = <span class="red">1.9677</span><br>
+  <br>
+  <b>Step 4: Calculate A²/a² - 1</b><br>
+  A²/a² - 1 = 1.9677 - 1 = <span class="red">0.9677</span><br>
+  <br>
+  <b>Step 5: Final Afflux Calculation</b><br>
+  h = 0.2049 × 0.9677<br>
+  <span class="red">h = 0.23 m</span>
+</div>
+
+<h2>Obstructed Velocity</h2>
+
+<div class="calc">
+  V = Q / a<br>
+  V = 902.15 / 337.92<br>
+  <span class="red">= 2.67 m/sec</span><br>
+  <br>
+  However we consider design velocity = <span class="red">2.67 m/sec.</span>
+</div>
+
+<hr>
+
+<h1>FINAL VERIFICATION & RESULTS</h1>
+
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr><td>Afflux flood level</td><td><span class="red">100.830 M</span></td></tr>
+  <tr><td>Top of deck slab</td><td><span class="red">101.600 M</span></td></tr>
+  <tr><td>Difference (Freeboard)</td><td><span class="red">0.770 M</span></td></tr>
+</table>
+
+<div class="calc" style="background: #d4edda; margin-top: 15px; padding: 10px;">
+  <b>This is well above the Afflux flood level.</b><br>
+  Though it is not a high level bridge; there shall be <b>no hindrance to traffic during high floods.</b><br>
+  <b style="color: green;">Hence OK.</b>
+</div>
+
 </body>
 </html>
