@@ -172,19 +172,19 @@ export function InputForm({ onSubmit, isLoading = false }: InputFormProps) {
 
           {/* Number of Lanes */}
           <div>
-            <label htmlFor="numberOfLanes" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="lanes" className="block text-sm font-medium text-gray-700">
               Number of Lanes <span className="text-red-500">*</span>
             </label>
             <input
-              id="numberOfLanes"
+              id="lanes"
               type="number"
               step="1"
-              {...register('numberOfLanes', { valueAsNumber: true })}
+              {...register('lanes', { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-              data-testid="input-numberOfLanes"
+              data-testid="input-lanes"
             />
-            {errors.numberOfLanes && (
-              <p className="text-red-500 text-sm mt-1">{errors.numberOfLanes.message}</p>
+            {errors.lanes && (
+              <p className="text-red-500 text-sm mt-1">{errors.lanes.message}</p>
             )}
           </div>
         </div>
@@ -240,22 +240,22 @@ export function InputForm({ onSubmit, isLoading = false }: InputFormProps) {
 
           {/* Soil Bearing Capacity */}
           <div>
-            <label htmlFor="soilBearingCapacity" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="sbcSoil" className="block text-sm font-medium text-gray-700">
               Soil Bearing Capacity (SBC) <span className="text-red-500">*</span>
             </label>
             <div className="flex items-center mt-1">
               <input
-                id="soilBearingCapacity"
+                id="sbcSoil"
                 type="number"
                 step="10"
-                {...register('soilBearingCapacity', { valueAsNumber: true })}
+                {...register('sbcSoil', { valueAsNumber: true })}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
-                data-testid="input-soilBearingCapacity"
+                data-testid="input-sbcSoil"
               />
               <span className="ml-2 text-gray-600 text-sm">kPa</span>
             </div>
-            {errors.soilBearingCapacity && (
-              <p className="text-red-500 text-sm mt-1">{errors.soilBearingCapacity.message}</p>
+            {errors.sbcSoil && (
+              <p className="text-red-500 text-sm mt-1">{errors.sbcSoil.message}</p>
             )}
           </div>
         </div>

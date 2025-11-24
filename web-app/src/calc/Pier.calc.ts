@@ -169,13 +169,13 @@ export function calculateBearingFOS(
   pierWeight: number,
   baseLength: number,
   baseWidth: number,
-  soilBearingCapacity: number
+  sbcSoil: number
 ): number {
   const baseArea = baseLength * baseWidth;
   if (baseArea === 0) return 0;
   
   const appliedPressure = pierWeight / baseArea; // Convert to kPa
-  const safeBearingCapacity = soilBearingCapacity * 0.8; // Safety factor applied
+  const safeBearingCapacity = sbcSoil * 0.8; // Safety factor applied
   
   if (appliedPressure === 0) return 999;
   return safeBearingCapacity / appliedPressure;
@@ -257,10 +257,10 @@ export function calculatePierDesign(
   
   const slidingFOS = calculateSlidingFOS(pierWeight, totalHorizontalForce);
   const overturnFOS = calculateOverturnFOS(pierWeight, totalHorizontalForce, dims.baseLength, hydraulics.flowDepth);
-  const bearingFOS = calculateBearingFOS(pierWeight, dims.baseLength, dims.baseWidth, inputs.soilBearingCapacity);
+  const bearingFOS = calculateBearingFOS(pierWeight, dims.baseLength, dims.baseWidth, inputs.sbcSoil);
   
   const { status, remarks } = determinePierStatus(slidingFOS, overturnFOS, bearingFOS);
-  const pierSteel = calculateSteelQuantity(inputs.fck, inputs.fy);
+  const pierSteel = calculateSteelQuantity(inputs.fck!, inputs.fy!);
   
   return {
     numberOfPiers,

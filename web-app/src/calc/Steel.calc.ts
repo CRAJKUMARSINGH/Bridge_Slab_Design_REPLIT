@@ -153,17 +153,17 @@ export function calculateSteelDesign(
   const width = 1500; // mm - typical pier width
   
   // Main reinforcement
-  const mainArea = calculateMainReinforcementArea(bendingMoment, effectiveDepth, inputs.fy);
+  const mainArea = calculateMainReinforcementArea(bendingMoment, effectiveDepth, inputs.fy!);
   const mainNumberOfBars = calculateNumberOfBars(mainArea, 20); // 20mm bars
   const mainSpacing = calculateBarSpacing(width, mainNumberOfBars, 20);
   const mainQuantity = calculateTotalSteelQuantity(mainNumberOfBars, 20, 3000, 0);
   
   // Shear reinforcement
-  const shear = calculateShearReinforcement(shearForce, effectiveDepth, width, inputs.fy);
+  const shear = calculateShearReinforcement(shearForce, effectiveDepth, width, inputs.fy!);
   
   return {
     pierId: pierNumber,
-    steelGrade: inputs.fy,
+    steelGrade: inputs.fy!,
     mainBars: {
       diameter: 20,
       spacing: Math.round(mainSpacing),

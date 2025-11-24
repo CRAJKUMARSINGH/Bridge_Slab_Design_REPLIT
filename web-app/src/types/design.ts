@@ -17,12 +17,16 @@ export interface DesignInput {
   // Geometric Parameters
   span: number;             // m - Clear span length
   width: number;            // m - Deck width including footpaths
-  numberOfLanes: number;    // - Traffic lanes for loading
+  lanes: number;            // - Traffic lanes for loading
 
-  // Material Parameters
-  fck: number;              // N/mm² - Concrete strength
-  fy: number;               // N/mm² - Steel yield strength
-  soilBearingCapacity: number; // kPa - Safe bearing capacity
+  // Material Parameters (accepts either grades or numeric values)
+  concreteGrade: 'M20' | 'M25' | 'M30' | 'M35' | 'M40';  // Concrete grade
+  steelGrade: 'Fe415' | 'Fe500';                         // Steel grade
+  sbcSoil: number;          // kPa - Safe bearing capacity
+
+  // Derived (computed internally)
+  fck?: number;             // N/mm² - Concrete strength (optional, computed if needed)
+  fy?: number;              // N/mm² - Steel yield strength (optional, computed if needed)
 
   // Optional
   loadClass?: string;       // e.g., "70R" for Class 70 tracked vehicle

@@ -11,11 +11,11 @@ import { FACTORS_OF_SAFETY, DEFLECTION_LIMITS } from '../utils/constants';
  */
 export function calculateFootingDimensions(
   pierWeight: number,
-  soilBearingCapacity: number
+  sbcSoil: number
 ): { length: number; width: number; depth: number } {
   
   // Required area = Weight / Safe Bearing Capacity
-  const requiredArea = (pierWeight * 1000) / (soilBearingCapacity * 0.8); // 0.8 safety factor
+  const requiredArea = (pierWeight * 1000) / (sbcSoil * 0.8); // 0.8 safety factor
   
   // Assume square footing
   const sideLength = Math.sqrt(requiredArea);
@@ -47,10 +47,10 @@ export function calculateAppliedPressure(
  * Calculate safe bearing capacity with safety factors
  */
 export function calculateSafeBearingCapacity(
-  soilBearingCapacity: number,
+  sbcSoil: number,
   safetyFactor: number = 0.8
 ): number {
-  return soilBearingCapacity * safetyFactor;
+  return sbcSoil * safetyFactor;
 }
 
 /**
@@ -70,12 +70,12 @@ export function calculateFootingBearingFOS(
  */
 export function calculateSettlement(
   appliedPressure: number,
-  soilBearingCapacity: number,
+  sbcSoil: number,
   footingDepth: number
 ): number {
-  if (soilBearingCapacity === 0) return 0;
+  if (sbcSoil === 0) return 0;
   
-  const stressFactor = appliedPressure / soilBearingCapacity;
+  const stressFactor = appliedPressure / sbcSoil;
   const settlement = stressFactor * footingDepth * 100; // mm
   
   return Math.min(settlement, 150); // Cap at 150mm
@@ -134,11 +134,11 @@ export function calculateFootingDesign(
   pierWeight: number
 ): FootingDesign {
   
-  const dims = calculateFootingDimensions(pierWeight, inputs.soilBearingCapacity);
+  const dims = calculateFootingDimensions(pierWeight, inputs.sbcSoil);
   const appliedPressure = calculateAppliedPressure(pierWeight, dims.length, dims.width);
-  const safeBearingCapacity = calculateSafeBearingCapacity(inputs.soilBearingCapacity);
+  const safeBearingCapacity = calculateSafeBearingCapacity(inputs.sbcSoil);
   const bearingFOS = calculateFootingBearingFOS(safeBearingCapacity, appliedPressure);
-  const settlement = calculateSettlement(appliedPressure, inputs.soilBearingCapacity, dims.depth);
+  const settlement = calculateSettlement(appliedPressure, inputs.sbcSoil, dims.depth);
   const materials = calculateFootingMaterials(dims.length, dims.width, dims.depth);
   
   const { status, remarks } = validateFootingDesign(bearingFOS, settlement);

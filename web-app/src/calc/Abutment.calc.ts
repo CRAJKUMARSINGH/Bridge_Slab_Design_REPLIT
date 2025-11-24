@@ -156,13 +156,13 @@ export function calculateAbutmentBearingFOS(
   abutmentWeight: number,
   baseLength: number,
   baseWidth: number,
-  soilBearingCapacity: number
+  sbcSoil: number
 ): number {
   const baseArea = baseLength * baseWidth;
   if (baseArea === 0) return 0;
   
   const appliedPressure = abutmentWeight / baseArea;
-  const safeBearingCapacity = soilBearingCapacity * 0.8;
+  const safeBearingCapacity = sbcSoil * 0.8;
   
   if (appliedPressure === 0) return 999;
   return safeBearingCapacity / appliedPressure;
@@ -245,7 +245,7 @@ export function calculateAbutmentType1(
   
   const slidingFOS = calculateAbutmentSlidingFOS(weight, activeEarthPressure, passiveEarthPressure);
   const overturnFOS = calculateAbutmentOverturnFOS(weight, activeEarthPressure, baseLength, height);
-  const bearingFOS = calculateAbutmentBearingFOS(weight, baseLength, baseWidth, inputs.soilBearingCapacity);
+  const bearingFOS = calculateAbutmentBearingFOS(weight, baseLength, baseWidth, inputs.sbcSoil);
   
   const { status, remarks } = determineAbutmentStatus(slidingFOS, overturnFOS, bearingFOS);
   const materials = calculateAbutmentMaterials(height, baseWidth, baseLength, wingWallLength);
