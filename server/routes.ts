@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema } from "@shared/schema";
 import { generateCompleteExcelReport } from "./excel-export";
+import { generateCompleteWorkbookFromTemplate } from "./excel-template-export";
 import { generatePDF } from "./pdf-export";
 import { parseExcelForDesignInput } from "./excel-parser";
 import { generateCompleteDesign } from "./design-engine";
@@ -81,7 +82,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Excel Export route alias (/api/projects/:id/export/excel)
+  // Excel Export route with template (46 sheets, 2,336 live formulas)
   app.get("/api/projects/:id/export/excel", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -92,13 +93,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const designData = project.designData as any;
-      const buffer = await generateCompleteExcelReport(
+      const buffer = await generateCompleteWorkbookFromTemplate(
         designData.input,
         designData.output,
         project.name || "Bridge Design"
       );
       res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_44sheet_report.xlsx"`);
+      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_46sheet_template.xlsx"`);
       res.send(buffer);
     } catch (error) {
       console.error("Error exporting Excel:", error);
