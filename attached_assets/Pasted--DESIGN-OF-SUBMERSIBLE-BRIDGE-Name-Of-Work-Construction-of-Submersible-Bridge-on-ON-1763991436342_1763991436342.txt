@@ -1,0 +1,89 @@
+"DESIGN OF SUBMERSIBLE BRIDGE 
+"									
+Name Of Work :- Construction of Submersible Bridge on ON KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM									
+Hydraulic Calculation									
+Computation of Discharge		1	Flood calculation by Area Velocity Method (As per Article- 5 of IRC SP-13)						
+Q	=	A x V 			Where				
+A	=	490.30	m2 			A =	Cross sectional area in m2		
+P	=	190.71	 m			P = 	Perimeter calculated in m		
+S	=	1	IN	960		S =	Slope as per drain LS taken at 		
+							Proposal site		
+n	=	0.033				n = 	Rugosity coefficient 		
+							(As per IRC SP-13)		
+V	=	I/nx (A/P) 2/3   x(S) 1/2				V =	Velocity in m/sec.		
+  	=	1.84	m/sec.						
+Q	=	902.15	Cumecs						
+Linear Water Way Calculation									
+Regime Surface width of the stream is given by :-		L	 = 	4.8 (Q)1/2					
+	=	144.18	m						
+Looking to the built up Urban area constraints adopt 		12	Spans of 		8	M each.			
+This will cause contraction and afflux. Calculation is done for the same to fix deck level.									
+Effective linear water way proposed =	12	x	8	=	96	M			
+				Total	96	M			
+Scour Depth Calculation									
+(As per  clause no. 703.2.2.1 of IRC : 78.1983)									
+dsm =	1.34x (Db2 /Ksf)  1/3				Where				
+				Db	=	The discharge in Cumecs per meter width			
+				Ksf	=	the silt factor			
+				 	=	1.5			
+Effective linear waterway	=	Width of waterway   - Obstructed width of piper							
+=	94.80	- (	11	x	1.2	)			
+=	81.60	m							
+Db	=    	902.15	/	81.60					
+	=	11.06	Cumecs per metre width						
+dsm =	5.82	m							
+As per Clause No. 703-2-3-1 of IRC 78-1983 considering Scour at the pier two times of calculated scour depth below the highest flood level. But hard rock is available in foundation so the foundation will be anchored in the rock as per IRC guidelines.									
+Afflux Calculation									
+As per IS: 7784 (Part -I) 1975 									
+Molesworth Formula for Afflux									
+Afflux h =	((V2/17.85) +0.0152)x(A2/a2-1)								
+Where,									
+h	=	afflux in m,							
+v	=	Velocity in the unobstructed stream in m/s,							
+A	=	the unobstructed sectional area of the river in m2							
+a	=	the obstructed sectional area of the river at the cross drainage work in m2.							
+As per Annexure- 1									
+Unobstructed Area of Flow after Bridge Construction =		94.800	x	5.00	=	474	m2 		
+A	=	490.30	m2 						
+V	=	1.84	m/sec.						
+Computation of Area obstructed by  Deck Slab									
+HFL : 	100.600	m							
+Top Level of Deck slab : 	101.600	m							
+Thickness of Slab and Wearing Coat	0.830	m							
+Length Of Slab	94.800	m							
+Height of Obstruction	0.830	m							
+Area obstructed by deck slab	94.800	x	0.83						
+	=	78.68	m2 						
+Computation of Area obstructed by  Piers									
+HFL : 	100.600	m							
+Soffit of Deck slab : 	100.770	m							
+Average river bed level  = 	96.600	m							
+Nos. of pier 	=	11							
+Height of Obstruction	100.600	-	96.600	=	4.000	m			
+Area obstructed by one pier  :  = 	1.2	x	4.00						
+	=	4.8	m2 						
+For 11 Nos. of piers = 	11	x	4.8						
+A1	=	52.80	m2 						
+Computation of Area obstructed by  Abutments									
+Average ground level  = 	96.600	m							
+Height of Obstruction	100.600	=	96.600	=	4.000	m			
+Area obstructed by one Abutment  : A2 = 	(0.40+0.75)/2 	x	4.00						
+	=	2.30	m2 						
+For two Abutments = 	2	x	2.30						
+	=	4.60	m2 						
+Total area of obstruction due to slab, piers and abutments A 	= 	A0 +A1 + A2							
+	=	78.68	+	52.80	+	4.60			
+	=	136.08	m2 						
+Actual Area of flow a =	474.000	-	136.08						
+	=	337.92	m2 						
+Afflux h =	0.23	m							
+Afflux flood level =	100.600	+	0.23	=	100.830	m			
+ Obstructed Velocity	V	=	Q/a	-					
+ Obstructed Velocity	=	902.15	/	337.92					
+	=	2.67	m/sec						
+However we consider design velocity 	2.67	m/sec. 							
+Afflux flood level 	=	100.830	M						
+Top of deck slab	=	101.600	M						
+This is well above the Afflux flood level.									
+Though it is not a high level bridge; there shall be no hindrance to traffic during high floods.									
+Hence OK.									
