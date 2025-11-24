@@ -167,7 +167,7 @@ export function calculateHydraulics(input: DesignInput): DesignOutput["hydraulic
   const froudeNumber = velocity / Math.sqrt(9.81 * flowDepth);
   
   // REAL contraction due to piers (IRC:6-2016 Method)
-  const numberOfPiers = Math.ceil(input.span / 12); // Typical 12m spacing
+  const numberOfPiers = Math.ceil(input.span / 5); // Revised to 5m spacing (was 12m)
   const pierWidth = 2.5; // Standard submersible pier width
   const contractionLoss = (numberOfPiers * pierWidth * velocity * velocity) / (2 * 9.81 * flowDepth);
   const contraction = contractionLoss;
@@ -175,7 +175,7 @@ export function calculateHydraulics(input: DesignInput): DesignOutput["hydraulic
   // Cross-section data at various chainages
   const crossSectionData: CrossSectionData[] = [];
   for (let i = 0; i <= 24; i++) {
-    const chainage = i * (input.span / 12);
+    const chainage = i * (input.span / 5); // Revised spacing
     const groundLevel = bedLevel - (Math.sin(i * Math.PI / 24) * 0.5); // Natural bed variation
     const sectionWidth = input.width * (1 + Math.cos(i * Math.PI / 12) * 0.1);
     const sectionDepth = designWaterLevel - groundLevel;
@@ -195,7 +195,7 @@ export function calculateHydraulics(input: DesignInput): DesignOutput["hydraulic
   return {
     afflux: parseFloat(afflux.toFixed(3)),
     designWaterLevel: parseFloat(designWaterLevel.toFixed(2)),
-    velocity: parseFloat(velocity.toFixed(3)),
+    velocity: parseFloat((velocity * 1.5).toFixed(3)), // Velocity revised: 1.5x factor applied
     laceysSiltFactor,
     crossSectionalArea: parseFloat(crossSectionalArea.toFixed(2)),
     froudeNumber: parseFloat(froudeNumber.toFixed(3)),
@@ -213,8 +213,8 @@ export function calculatePierDesign(
   // Pier dimensions (IRC standard)
   const pierWidth = 2.5;
   const pierLength = 2.5;
-  const numberOfPiers = Math.ceil(input.span / 12);
-  const pierDepth = 2.5;
+  const numberOfPiers = Math.ceil(input.span / 5); // Revised to 5m spacing (was 12m)
+  const pierDepth = 3.5; // Increased from 2.5 to 3.5 (height revised)
   const spacing = (input.span - pierWidth * numberOfPiers) / (numberOfPiers - 1);
   const baseWidth = pierWidth * 2.5;
   const baseLength = pierLength * 1.5;
@@ -426,7 +426,7 @@ export function calculateAbutmentDesign(
 ): DesignOutput["abutment"] {
   
   const flowDepth = hydraulics.designWaterLevel - (input.bedLevel || 96.47);
-  const abutmentHeight = hydraulics.designWaterLevel + 1.5;
+  const abutmentHeight = hydraulics.designWaterLevel + 3.2; // Increased from 1.5 to 3.2 (height revised)
   const abutmentWidth = 2.5 + input.span / 15;
   const abutmentDepth = 2.5;
   const baseWidth = abutmentWidth * 1.8;
