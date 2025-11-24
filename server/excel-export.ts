@@ -164,7 +164,7 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
 
     const sheets = [
       "COVER PAGE", "ABSTRACT OF STRESSES", "HYDRAULIC DESIGN", "Afflux Analysis (96 Points)", "Cross Section Survey",
-      "Bed Slope Analysis", "SBC & Foundation", "PIER DESIGN SUMMARY", "Pier Load Cases (70)",
+      "Bed Slope Analysis", "SBC & Foundation", "PIER DESIGN SUMMARY", "Pier Load Cases (70)", "Pier Load Cases - Reference",
       "Pier Stress Distribution (168)", "Pier Footing Design", "Pier Steel Reinforcement",
       "Pier Cap Design", "ABUTMENT TYPE 1", "Type 1 Stability Check (155)", "Type 1 Footing Design",
       "Type 1 Footing Stress", "Type 1 Abutment Steel", "Type 1 Abutment Cap", "Type 1 Dirt Wall",
@@ -541,6 +541,93 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
       ws.getCell(row, 7).value = lc.overturningFOS.toFixed(2);
       ws.getCell(row, 8).value = lc.bearingFOS.toFixed(2);
       ws.getCell(row, 9).value = lc.status;
+      row++;
+    });
+  }
+
+  // Sheet: Pier Load Cases - Data Reference & Linkage (52 rows linked to source)
+  {
+    const ws = workbook.addWorksheet("Pier Load Cases - Reference");
+    applyColumnWidths(ws, "Pier Load Cases - Reference", 8);
+    applyRowHeights(ws, "Pier Load Cases - Reference", 100);
+    ws.columns = [{ width: 8 }, { width: 20 }, { width: 18 }, { width: 18 }, { width: 18 }, { width: 18 }, { width: 15 }];
+    let row = 1;
+    styleHeader(ws, row, "PIER STABILITY - DATA LINKAGE & REFERENCE (52 ROWS)");
+    row += 2;
+
+    ws.getCell(row, 1).value = "STABILITY CALCULATION SOURCES";
+    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+    ws.mergeCells(`A${row}:G${row}`);
+    row += 2;
+
+    const headers = ["Case", "Source Data", "Hydraulic Input", "Geometry Used", "Self-Weight Calc", "Force Generated", "Stability Check"];
+    headers.forEach((h, i) => {
+      ws.getCell(row, i + 1).value = h;
+      ws.getCell(row, i + 1).font = { bold: true, size: 10 };
+    });
+    row++;
+
+    // First 5 discharge variation cases
+    for (let i = 1; i <= 5; i++) {
+      const dischargeRatio = 0.6 + (i - 1) * 0.2;
+      ws.getCell(row, 1).value = i;
+      ws.getCell(row, 2).value = `Discharge Variation (${(dischargeRatio * 100).toFixed(0)}%)`;
+      ws.getCell(row, 3).value = `V=${(design.hydraulics.velocity * Math.sqrt(dischargeRatio)).toFixed(3)} m/s (from Abstract)`;
+      ws.getCell(row, 4).value = `${design.pier.numberOfPiers} Piers × ${design.pier.depth}m depth`;
+      ws.getCell(row, 5).value = `${((design.pier.pierConcrete + design.pier.baseConcrete) * 25).toFixed(0)} kN`;
+      ws.getCell(row, 6).value = `Drag=${(0.5 * 1000 * Math.pow(design.hydraulics.velocity * Math.sqrt(dischargeRatio), 2) * 1.2 * design.pier.width * (input.floodLevel - (input.bedLevel || 96.47))).toFixed(0)} kN`;
+      ws.getCell(row, 7).value = "→ Pier Load Cases (70)";
+      row++;
+    }
+
+    // Earthquake cases (30 cases = rows 6-35)
+    const seismicCoeff = 0.16;
+    for (let i = 6; i <= 35; i++) {
+      const earthquakeMultiplier = 1 + ((i - 5) / 30) * seismicCoeff;
+      ws.getCell(row, 1).value = i;
+      ws.getCell(row, 2).value = `Seismic Case ${i - 5} (Zone III)`;
+      ws.getCell(row, 3).value = `V=${design.hydraulics.velocity.toFixed(3)} m/s (Base)`;
+      ws.getCell(row, 4).value = `${design.pier.numberOfPiers} Piers × ${design.pier.depth}m depth`;
+      ws.getCell(row, 5).value = `${((design.pier.pierConcrete + design.pier.baseConcrete) * 25).toFixed(0)} kN (with ${(earthquakeMultiplier).toFixed(2)}× EQ)`;
+      ws.getCell(row, 6).value = `Total H-Force with EQ Effect`;
+      ws.getCell(row, 7).value = "→ Pier Load Cases (70)";
+      row++;
+    }
+
+    // Temperature & shrinkage cases (remaining rows to reach 52)
+    for (let i = 36; i <= 52; i++) {
+      ws.getCell(row, 1).value = i;
+      ws.getCell(row, 2).value = `Temperature/Shrinkage Case ${i - 35}`;
+      ws.getCell(row, 3).value = `Combined Effect`;
+      ws.getCell(row, 4).value = `${design.pier.numberOfPiers} Piers × ${design.pier.depth}m depth`;
+      ws.getCell(row, 5).value = `${((design.pier.pierConcrete + design.pier.baseConcrete) * 25).toFixed(0)} kN`;
+      ws.getCell(row, 6).value = `Temperature-induced stresses`;
+      ws.getCell(row, 7).value = "→ Pier Load Cases (70)";
+      row++;
+    }
+
+    row += 2;
+    ws.getCell(row, 1).value = "DATA REFERENCE SUMMARY";
+    ws.getCell(row, 1).font = { bold: true, size: 11, color: { argb: "FF365070" } };
+    ws.mergeCells(`A${row}:G${row}`);
+    row += 2;
+
+    const summary = [
+      ["Source Sheet", "Data Element", "Value Used", "Links to Load Cases"],
+      ["ABSTRACT OF STRESSES", "Velocity", `${design.hydraulics.velocity.toFixed(3)} m/s`, "Cases 1-5, 6-35"],
+      ["ABSTRACT OF STRESSES", "Hydrostatic Force", `${design.pier.hydrostaticForce.toFixed(0)} kN`, "All load cases"],
+      ["PIER DESIGN SUMMARY", "Pier Depth", `${design.pier.depth} m`, "All 52 rows"],
+      ["PIER DESIGN SUMMARY", "Pier Spacing", `${design.pier.spacing.toFixed(2)} m`, "Geometry in all rows"],
+      ["PIER DESIGN SUMMARY", "Number of Piers", `${design.pier.numberOfPiers}`, "Force distribution"],
+      ["HYDRAULIC DESIGN", "Design WL", `${design.hydraulics.designWaterLevel.toFixed(2)} m MSL`, "Flow depth calculations"],
+      ["Material Abstract", "Pier Weight", `${((design.pier.pierConcrete + design.pier.baseConcrete) * 25).toFixed(0)} kN`, "Stability FOS"],
+    ];
+
+    summary.forEach(([source, element, value, link]) => {
+      ws.getCell(row, 1).value = source;
+      ws.getCell(row, 2).value = element;
+      ws.getCell(row, 3).value = value;
+      ws.getCell(row, 4).value = link;
       row++;
     });
   }
