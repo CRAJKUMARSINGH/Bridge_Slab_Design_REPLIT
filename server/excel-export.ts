@@ -1,24 +1,20 @@
 import ExcelJS from "exceljs";
 import { DesignInput, DesignOutput } from "./design-engine";
+import {
+  COLORS,
+  BORDERS,
+  styleHeader,
+  styleSubheader,
+  addCalcRow,
+  addTableRow,
+  addTitle,
+  applyColumnWidths,
+  applyRowHeights,
+  loadSourceMetadata
+} from "./excel-formatting";
 
-const BORDERS = { style: "thin" as const, color: { argb: "FF000000" } };
-const PRIMARY_COLOR = { argb: "FF365070" };
-const LIGHT_GRAY = { argb: "FFECF0F1" };
-
-function styleHeader(ws: ExcelJS.Worksheet, row: number, text: string) {
-  ws.getCell(row, 1).value = text;
-  ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FFFFFFFF" } };
-  ws.getCell(row, 1).fill = { type: "pattern", pattern: "solid", fgColor: PRIMARY_COLOR };
-  ws.mergeCells(`A${row}:H${row}`);
-}
-
-function addCalcRow(ws: ExcelJS.Worksheet, row: number, label: string, value: string | number, unit: string = "") {
-  ws.getCell(row, 2).value = label;
-  ws.getCell(row, 3).value = "=";
-  ws.getCell(row, 4).value = value;
-  ws.getCell(row, 5).value = unit;
-  return row + 1;
-}
+// Initialize formatting system
+loadSourceMetadata();
 
 export async function generateCompleteExcelReport(input: DesignInput, design: DesignOutput, projectName: string): Promise<Buffer> {
   const workbook = new ExcelJS.Workbook();
@@ -27,91 +23,71 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   {
     const ws = workbook.addWorksheet("COVER PAGE", { pageSetup: { paperSize: 1 } });
     ws.pageSetup.orientation = "portrait";
+    applyColumnWidths(ws, "COVER PAGE", 8);
     let row = 5;
 
     // Title
     ws.getCell(row, 1).value = "SUBMERSIBLE SLAB BRIDGE";
-    ws.getCell(row, 1).font = { bold: true, size: 28, color: PRIMARY_COLOR };
-    ws.mergeCells(`A${row}:H${row}`);
+    ws.getCell(row, 1).font = { bold: true, size: 28, color: COLORS.PRIMARY };
     ws.getCell(row, 1).alignment = { horizontal: "center", vertical: "center" };
+    ws.mergeCells(`A${row}:H${row}`);
     row += 2;
 
     // Subtitle
     ws.getCell(row, 1).value = "Complete Design Report";
     ws.getCell(row, 1).font = { bold: true, size: 18, color: { argb: "FF666666" } };
-    ws.mergeCells(`A${row}:H${row}`);
     ws.getCell(row, 1).alignment = { horizontal: "center" };
+    ws.mergeCells(`A${row}:H${row}`);
     row += 3;
 
     // Standards
     ws.getCell(row, 1).value = "IRC:6-2016  •  IRC:112-2015  •  IS:456-2000";
-    ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FF365070" } };
-    ws.mergeCells(`A${row}:H${row}`);
+    ws.getCell(row, 1).font = { bold: true, size: 12, color: COLORS.PRIMARY };
     ws.getCell(row, 1).alignment = { horizontal: "center" };
+    ws.mergeCells(`A${row}:H${row}`);
     row += 5;
 
-    // Project Details
-    ws.getCell(row, 2).value = "Project Name";
-    ws.getCell(row, 4).value = projectName;
-    ws.getCell(row, 2).font = { bold: true };
-    row += 1;
+    // Project Details - with formatting
+    const detailRows = [
+      ["Project Name", projectName, ""],
+      ["Design Span", input.span, "m"],
+      ["Bridge Width", input.width, "m"],
+      ["Design Discharge", input.discharge, "m³/s"],
+      ["Flood Level", input.floodLevel, "m MSL"],
+      ["Bed Level", (input.bedLevel || 96.47), "m MSL"]
+    ];
 
-    ws.getCell(row, 2).value = "Design Span";
-    ws.getCell(row, 4).value = input.span;
-    ws.getCell(row, 5).value = "m";
-    ws.getCell(row, 2).font = { bold: true };
-    row += 1;
+    detailRows.forEach(([label, value, unit]) => {
+      row = addCalcRow(ws, row, label, value, unit);
+    });
 
-    ws.getCell(row, 2).value = "Bridge Width";
-    ws.getCell(row, 4).value = input.width;
-    ws.getCell(row, 5).value = "m";
-    ws.getCell(row, 2).font = { bold: true };
-    row += 1;
-
-    ws.getCell(row, 2).value = "Design Discharge";
-    ws.getCell(row, 4).value = input.discharge;
-    ws.getCell(row, 5).value = "m³/s";
-    ws.getCell(row, 2).font = { bold: true };
-    row += 1;
-
-    ws.getCell(row, 2).value = "Flood Level";
-    ws.getCell(row, 4).value = input.floodLevel;
-    ws.getCell(row, 5).value = "m MSL";
-    ws.getCell(row, 2).font = { bold: true };
-    row += 1;
-
-    ws.getCell(row, 2).value = "Bed Level";
-    ws.getCell(row, 4).value = (input.bedLevel || 96.47);
-    ws.getCell(row, 5).value = "m MSL";
-    ws.getCell(row, 2).font = { bold: true };
-    row += 3;
+    row += 2;
 
     // Design Data
-    ws.getCell(row, 2).value = "Concrete Grade";
-    ws.getCell(row, 4).value = `M${input.fck}`;
-    ws.getCell(row, 2).font = { bold: true };
-    row += 1;
+    const designData = [
+      ["Concrete Grade", `M${input.fck}`, ""],
+      ["Steel Grade", `Fe${input.fy}`, ""],
+      ["SBC", input.soilBearingCapacity, "kPa"]
+    ];
 
-    ws.getCell(row, 2).value = "Steel Grade";
-    ws.getCell(row, 4).value = `Fe${input.fy}`;
-    ws.getCell(row, 2).font = { bold: true };
-    row += 1;
+    designData.forEach(([label, value, unit]) => {
+      row = addCalcRow(ws, row, label, value, unit);
+    });
 
-    ws.getCell(row, 2).value = "SBC";
-    ws.getCell(row, 4).value = input.soilBearingCapacity;
-    ws.getCell(row, 5).value = "kPa";
-    ws.getCell(row, 2).font = { bold: true };
-    row += 4;
-
+    row += 3;
     ws.getCell(row, 1).value = "Design Status: IRC COMPLIANT";
-    ws.getCell(row, 1).font = { bold: true, size: 14, color: { argb: "FF27AE60" } };
-    ws.mergeCells(`A${row}:H${row}`);
+    ws.getCell(row, 1).font = { bold: true, size: 14, color: COLORS.SUCCESS };
     ws.getCell(row, 1).alignment = { horizontal: "center" };
+    ws.mergeCells(`A${row}:H${row}`);
   }
 
   // ==================== SHEET 2: INDEX ====================
   {
     const ws = workbook.addWorksheet("INDEX");
+    applyColumnWidths(ws, "INDEX", 8);
+    applyRowHeights(ws, "INDEX", 100);
+    applyColumnWidths(ws, "INDEX", 8);
+    applyRowHeights(ws, "INDEX", 50);
     let row = 1;
     styleHeader(ws, row, "CONTENTS");
     row += 2;
@@ -143,6 +119,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet 3: Hydraulic Design - COMPREHENSIVE
   {
     const ws = workbook.addWorksheet("HYDRAULIC DESIGN");
+    applyColumnWidths(ws, "HYDRAULIC DESIGN", 8);
+    applyRowHeights(ws, "HYDRAULIC DESIGN", 100);
     let row = 1;
     styleHeader(ws, row, "COMPREHENSIVE HYDRAULIC ANALYSIS & DESIGN");
     row += 2;
@@ -264,6 +242,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet 4: Afflux Analysis (96 points)
   {
     const ws = workbook.addWorksheet("Afflux Analysis (96 Points)");
+    applyColumnWidths(ws, "Afflux Analysis (96 Points)", 8);
+    applyRowHeights(ws, "Afflux Analysis (96 Points)", 100);
     ws.columns = [{ width: 12 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 12 }];
     let row = 1;
     styleHeader(ws, row, "AFFLUX CALCULATION - VARIABLE DISCHARGE");
@@ -296,6 +276,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet 5: Cross Section Survey
   {
     const ws = workbook.addWorksheet("Cross Section Survey");
+    applyColumnWidths(ws, "Cross Section Survey", 8);
+    applyRowHeights(ws, "Cross Section Survey", 100);
     let row = 1;
     styleHeader(ws, row, "CROSS SECTION DATA AT VARIOUS CHAINAGES");
     row += 2;
@@ -323,6 +305,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet 6: Bed Slope
   {
     const ws = workbook.addWorksheet("Bed Slope Analysis");
+    applyColumnWidths(ws, "Bed Slope Analysis", 8);
+    applyRowHeights(ws, "Bed Slope Analysis", 100);
     let row = 1;
     styleHeader(ws, row, "BED PROFILE");
     row += 2;
@@ -343,6 +327,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet 7: SBC & Foundation
   {
     const ws = workbook.addWorksheet("SBC & Foundation");
+    applyColumnWidths(ws, "SBC & Foundation", 8);
+    applyRowHeights(ws, "SBC & Foundation", 100);
     let row = 1;
     styleHeader(ws, row, "SOIL & BEARING CAPACITY");
     row += 2;
@@ -357,6 +343,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // ==================== SHEETS 8-12: COMPREHENSIVE PIER DESIGN ====================
   {
     const ws = workbook.addWorksheet("PIER DESIGN SUMMARY");
+    applyColumnWidths(ws, "PIER DESIGN SUMMARY", 8);
+    applyRowHeights(ws, "PIER DESIGN SUMMARY", 100);
     let row = 1;
     styleHeader(ws, row, "COMPREHENSIVE PIER DESIGN - DETAILED CALCULATIONS");
     row += 2;
@@ -459,6 +447,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet: Pier Load Cases (70)
   {
     const ws = workbook.addWorksheet("Pier Load Cases (70)");
+    applyColumnWidths(ws, "Pier Load Cases (70)", 8);
+    applyRowHeights(ws, "Pier Load Cases (70)", 100);
     ws.columns = Array(9).fill({ width: 13 });
     let row = 1;
     styleHeader(ws, row, "PIER - LOAD CASE ANALYSIS (70 CASES)");
@@ -488,6 +478,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet: Pier Stress Distribution (168)
   {
     const ws = workbook.addWorksheet("Pier Stress Distribution (168)");
+    applyColumnWidths(ws, "Pier Stress Distribution (168)", 8);
+    applyRowHeights(ws, "Pier Stress Distribution (168)", 100);
     ws.columns = Array(6).fill({ width: 14 });
     let row = 1;
     styleHeader(ws, row, "PIER - STRESS DISTRIBUTION (168 POINTS)");
@@ -514,6 +506,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet: Pier Footing Design
   {
     const ws = workbook.addWorksheet("Pier Footing Design");
+    applyColumnWidths(ws, "Pier Footing Design", 8);
+    applyRowHeights(ws, "Pier Footing Design", 100);
     let row = 1;
     styleHeader(ws, row, "PIER FOOTING - DESIGN CALCULATIONS");
     row += 2;
@@ -541,6 +535,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet: Pier Steel Reinforcement
   {
     const ws = workbook.addWorksheet("Pier Steel Reinforcement");
+    applyColumnWidths(ws, "Pier Steel Reinforcement", 8);
+    applyRowHeights(ws, "Pier Steel Reinforcement", 100);
     let row = 1;
     styleHeader(ws, row, "PIER - STEEL REINFORCEMENT DESIGN");
     row += 2;
@@ -562,6 +558,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Sheet: Pier Cap Design
   {
     const ws = workbook.addWorksheet("Pier Cap Design");
+    applyColumnWidths(ws, "Pier Cap Design", 8);
+    applyRowHeights(ws, "Pier Cap Design", 100);
     let row = 1;
     styleHeader(ws, row, "PIER CAP - DESIGN & REINFORCEMENT");
     row += 2;
@@ -586,6 +584,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // ==================== SHEETS 13-21: COMPREHENSIVE TYPE 1 ABUTMENT ====================
   {
     const ws = workbook.addWorksheet("ABUTMENT TYPE 1");
+    applyColumnWidths(ws, "ABUTMENT TYPE 1", 8);
+    applyRowHeights(ws, "ABUTMENT TYPE 1", 100);
     let row = 1;
     styleHeader(ws, row, "COMPREHENSIVE TYPE 1 ABUTMENT DESIGN - DETAILED CALCULATIONS");
     row += 2;
@@ -673,6 +673,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Type 1 Stability Check (155 cases)
   {
     const ws = workbook.addWorksheet("Type 1 Stability Check (155)");
+    applyColumnWidths(ws, "Type 1 Stability Check (155)", 8);
+    applyRowHeights(ws, "Type 1 Stability Check (155)", 100);
     ws.columns = Array(9).fill({ width: 13 });
     let row = 1;
     styleHeader(ws, row, "TYPE 1 ABUTMENT - STABILITY ANALYSIS (155 CASES)");
@@ -702,6 +704,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Type 1 Footing Design
   {
     const ws = workbook.addWorksheet("Type 1 Footing Design");
+    applyColumnWidths(ws, "Type 1 Footing Design", 8);
+    applyRowHeights(ws, "Type 1 Footing Design", 100);
     let row = 1;
     styleHeader(ws, row, "TYPE 1 - FOOTING DESIGN");
     row += 2;
@@ -722,6 +726,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Type 1 Footing Stress
   {
     const ws = workbook.addWorksheet("Type 1 Footing Stress");
+    applyColumnWidths(ws, "Type 1 Footing Stress", 8);
+    applyRowHeights(ws, "Type 1 Footing Stress", 100);
     let row = 1;
     styleHeader(ws, row, "TYPE 1 - FOOTING STRESS DIAGRAM");
     row += 2;
@@ -746,6 +752,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Type 1 Abutment Steel
   {
     const ws = workbook.addWorksheet("Type 1 Abutment Steel");
+    applyColumnWidths(ws, "Type 1 Abutment Steel", 8);
+    applyRowHeights(ws, "Type 1 Abutment Steel", 100);
     let row = 1;
     styleHeader(ws, row, "TYPE 1 ABUTMENT - STEEL REINFORCEMENT");
     row += 2;
@@ -761,6 +769,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Type 1 Abutment Cap
   {
     const ws = workbook.addWorksheet("Type 1 Abutment Cap");
+    applyColumnWidths(ws, "Type 1 Abutment Cap", 8);
+    applyRowHeights(ws, "Type 1 Abutment Cap", 100);
     let row = 1;
     styleHeader(ws, row, "TYPE 1 - ABUTMENT CAP DESIGN");
     row += 2;
@@ -781,6 +791,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // Type 1 Dirt Wall - COMPREHENSIVE
   {
     const ws = workbook.addWorksheet("Type 1 Dirt Wall");
+    applyColumnWidths(ws, "Type 1 Dirt Wall", 8);
+    applyRowHeights(ws, "Type 1 Dirt Wall", 100);
     let row = 1;
     styleHeader(ws, row, "TYPE 1 - COMPREHENSIVE DIRT WALL DESIGN (Per IRC:112-2015)");
     row += 2;
@@ -863,6 +875,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // ==================== LIVE LOAD ANALYSIS - COMPREHENSIVE (Per IRC:6-2016) ====================
   {
     const ws = workbook.addWorksheet("LIVE LOAD COMPUTATION");
+    applyColumnWidths(ws, "LIVE LOAD COMPUTATION", 8);
+    applyRowHeights(ws, "LIVE LOAD COMPUTATION", 100);
     ws.columns = [{ width: 50 }, { width: 20 }, { width: 15 }];
     let row = 1;
     styleHeader(ws, row, "COMPREHENSIVE LIVE LOAD ANALYSIS - IRC:6-2016 CLASS AA VEHICLE");
@@ -943,6 +957,8 @@ export async function generateCompleteExcelReport(input: DesignInput, design: De
   // ==================== SCHEMATIC DRAWINGS & STRESS DIAGRAMS ====================
   {
     const ws = workbook.addWorksheet("Stress Diagrams");
+    applyColumnWidths(ws, "Stress Diagrams", 8);
+    applyRowHeights(ws, "Stress Diagrams", 100);
     ws.columns = [{ width: 50 }, { width: 15 }];
     let row = 1;
     styleHeader(ws, row, "PROFESSIONAL SCHEMATIC DRAWINGS - IRC:6-2016 & IRC:112-2015");
@@ -1108,6 +1124,8 @@ SLAB STRESS CHECK:
   // Type 1 Dirt Wall BM (DL)
   {
     const ws = workbook.addWorksheet("Type 1 Dirt BM (DL)");
+    applyColumnWidths(ws, "Type 1 Dirt BM (DL)", 8);
+    applyRowHeights(ws, "Type 1 Dirt BM (DL)", 100);
     let row = 1;
     styleHeader(ws, row, "TYPE 1 DIRT WALL - DEAD LOAD BENDING MOMENT");
     row += 2;
@@ -1126,6 +1144,8 @@ SLAB STRESS CHECK:
   // Type 1 Dirt Wall BM (LL)
   {
     const ws = workbook.addWorksheet("Type 1 Dirt BM (LL)");
+    applyColumnWidths(ws, "Type 1 Dirt BM (LL)", 8);
+    applyRowHeights(ws, "Type 1 Dirt BM (LL)", 100);
     let row = 1;
     styleHeader(ws, row, "TYPE 1 DIRT WALL - LIVE LOAD BENDING MOMENT");
     row += 2;
@@ -1144,6 +1164,8 @@ SLAB STRESS CHECK:
   // ==================== SHEETS 22-30: COMPREHENSIVE CANTILEVER ABUTMENT ====================
   {
     const ws = workbook.addWorksheet("ABUTMENT CANTILEVER");
+    applyColumnWidths(ws, "ABUTMENT CANTILEVER", 8);
+    applyRowHeights(ws, "ABUTMENT CANTILEVER", 100);
     let row = 1;
     styleHeader(ws, row, "COMPREHENSIVE CANTILEVER ABUTMENT DESIGN - DETAILED CALCULATIONS");
     row += 2;
@@ -1226,6 +1248,8 @@ SLAB STRESS CHECK:
   // Cantilever Stability (155)
   {
     const ws = workbook.addWorksheet("Cantilever Stability (155)");
+    applyColumnWidths(ws, "Cantilever Stability (155)", 8);
+    applyRowHeights(ws, "Cantilever Stability (155)", 100);
     ws.columns = Array(9).fill({ width: 13 });
     let row = 1;
     styleHeader(ws, row, "CANTILEVER ABUTMENT - STABILITY ANALYSIS (155 CASES)");
@@ -1255,6 +1279,8 @@ SLAB STRESS CHECK:
   // Cantilever Footing Design
   {
     const ws = workbook.addWorksheet("Cantilever Footing Design");
+    applyColumnWidths(ws, "Cantilever Footing Design", 8);
+    applyRowHeights(ws, "Cantilever Footing Design", 100);
     let row = 1;
     styleHeader(ws, row, "CANTILEVER - MAIN FOOTING DESIGN");
     row += 2;
@@ -1271,6 +1297,8 @@ SLAB STRESS CHECK:
   // Cantilever Return Footing
   {
     const ws = workbook.addWorksheet("Cantilever Return Footing");
+    applyColumnWidths(ws, "Cantilever Return Footing", 8);
+    applyRowHeights(ws, "Cantilever Return Footing", 100);
     let row = 1;
     styleHeader(ws, row, "CANTILEVER - RETURN WALL FOOTING");
     row += 2;
@@ -1287,6 +1315,8 @@ SLAB STRESS CHECK:
   // Cantilever Return Steel
   {
     const ws = workbook.addWorksheet("Cantilever Return Steel");
+    applyColumnWidths(ws, "Cantilever Return Steel", 8);
+    applyRowHeights(ws, "Cantilever Return Steel", 100);
     let row = 1;
     styleHeader(ws, row, "CANTILEVER - RETURN WALL REINFORCEMENT");
     row += 2;
@@ -1301,6 +1331,8 @@ SLAB STRESS CHECK:
   // Cantilever Abutment Cap
   {
     const ws = workbook.addWorksheet("Cantilever Abutment Cap");
+    applyColumnWidths(ws, "Cantilever Abutment Cap", 8);
+    applyRowHeights(ws, "Cantilever Abutment Cap", 100);
     let row = 1;
     styleHeader(ws, row, "CANTILEVER - ABUTMENT CAP DESIGN");
     row += 2;
@@ -1316,6 +1348,8 @@ SLAB STRESS CHECK:
   // Cantilever Dirt Wall
   {
     const ws = workbook.addWorksheet("Cantilever Dirt Wall");
+    applyColumnWidths(ws, "Cantilever Dirt Wall", 8);
+    applyRowHeights(ws, "Cantilever Dirt Wall", 100);
     let row = 1;
     styleHeader(ws, row, "CANTILEVER - DIRT WALL DESIGN");
     row += 2;
@@ -1334,6 +1368,8 @@ SLAB STRESS CHECK:
   // Cantilever Dirt BM (DL)
   {
     const ws = workbook.addWorksheet("Cantilever Dirt BM (DL)");
+    applyColumnWidths(ws, "Cantilever Dirt BM (DL)", 8);
+    applyRowHeights(ws, "Cantilever Dirt BM (DL)", 100);
     let row = 1;
     styleHeader(ws, row, "CANTILEVER DIRT WALL - DEAD LOAD BM");
     row += 2;
@@ -1352,6 +1388,8 @@ SLAB STRESS CHECK:
   // Cantilever Dirt BM (LL)
   {
     const ws = workbook.addWorksheet("Cantilever Dirt BM (LL)");
+    applyColumnWidths(ws, "Cantilever Dirt BM (LL)", 8);
+    applyRowHeights(ws, "Cantilever Dirt BM (LL)", 100);
     let row = 1;
     styleHeader(ws, row, "CANTILEVER DIRT WALL - LIVE LOAD BM");
     row += 2;
@@ -1370,6 +1408,8 @@ SLAB STRESS CHECK:
   // ==================== SHEETS 31-35: SLAB DESIGN ====================
   {
     const ws = workbook.addWorksheet("SLAB DESIGN (Pigeaud)");
+    applyColumnWidths(ws, "SLAB DESIGN (Pigeaud)", 8);
+    applyRowHeights(ws, "SLAB DESIGN (Pigeaud)", 100);
     let row = 1;
     styleHeader(ws, row, "COMPREHENSIVE SLAB DESIGN - PIGEAUD'S MOMENT COEFFICIENT METHOD");
     row += 2;
@@ -1473,6 +1513,8 @@ SLAB STRESS CHECK:
   // Slab Moments & Shears
   {
     const ws = workbook.addWorksheet("Slab Moments & Shears");
+    applyColumnWidths(ws, "Slab Moments & Shears", 8);
+    applyRowHeights(ws, "Slab Moments & Shears", 100);
     let row = 1;
     styleHeader(ws, row, "SLAB - BENDING MOMENTS AND SHEAR FORCES");
     row += 2;
@@ -1497,6 +1539,8 @@ SLAB STRESS CHECK:
   // Slab Reinforcement Main
   {
     const ws = workbook.addWorksheet("Slab Reinforcement Main");
+    applyColumnWidths(ws, "Slab Reinforcement Main", 8);
+    applyRowHeights(ws, "Slab Reinforcement Main", 100);
     let row = 1;
     styleHeader(ws, row, "SLAB - MAIN STEEL REINFORCEMENT");
     row += 2;
@@ -1513,6 +1557,8 @@ SLAB STRESS CHECK:
   // Slab Reinforcement Distribution
   {
     const ws = workbook.addWorksheet("Slab Reinforcement Dist");
+    applyColumnWidths(ws, "Slab Reinforcement Dist", 8);
+    applyRowHeights(ws, "Slab Reinforcement Dist", 100);
     let row = 1;
     styleHeader(ws, row, "SLAB - DISTRIBUTION STEEL REINFORCEMENT");
     row += 2;
@@ -1529,6 +1575,8 @@ SLAB STRESS CHECK:
   // Slab Stress Check
   {
     const ws = workbook.addWorksheet("Slab Stress Check");
+    applyColumnWidths(ws, "Slab Stress Check", 8);
+    applyRowHeights(ws, "Slab Stress Check", 100);
     let row = 1;
     styleHeader(ws, row, "SLAB - STRESS VERIFICATION");
     row += 2;
@@ -1546,6 +1594,8 @@ SLAB STRESS CHECK:
   // ==================== SHEETS 36-38: LOAD ANALYSIS & SUMMARY ====================
   {
     const ws = workbook.addWorksheet("LIVE LOAD ANALYSIS");
+    applyColumnWidths(ws, "LIVE LOAD ANALYSIS", 8);
+    applyRowHeights(ws, "LIVE LOAD ANALYSIS", 100);
     let row = 1;
     styleHeader(ws, row, "LIVE LOAD - IRC CLASS AA TRACKED VEHICLE");
     row += 2;
@@ -1563,6 +1613,8 @@ SLAB STRESS CHECK:
   // Live Load Summary
   {
     const ws = workbook.addWorksheet("Live Load Summary");
+    applyColumnWidths(ws, "Live Load Summary", 8);
+    applyRowHeights(ws, "Live Load Summary", 100);
     let row = 1;
     styleHeader(ws, row, "LIVE LOAD - SUMMARY FOR ALL ELEMENTS");
     row += 2;
@@ -1585,6 +1637,8 @@ SLAB STRESS CHECK:
   // ==================== SHEETS 39-42: COMPREHENSIVE QUANTITY ESTIMATE ====================
   {
     const ws = workbook.addWorksheet("QUANTITY ESTIMATE");
+    applyColumnWidths(ws, "QUANTITY ESTIMATE", 8);
+    applyRowHeights(ws, "QUANTITY ESTIMATE", 100);
     let row = 1;
     styleHeader(ws, row, "COMPREHENSIVE BILL OF QUANTITIES - DETAILED MATERIAL ESTIMATE");
     row += 2;
@@ -1679,6 +1733,8 @@ SLAB STRESS CHECK:
   // Material Abstract
   {
     const ws = workbook.addWorksheet("Material Abstract");
+    applyColumnWidths(ws, "Material Abstract", 8);
+    applyRowHeights(ws, "Material Abstract", 100);
     let row = 1;
     styleHeader(ws, row, "ABSTRACT OF MATERIALS");
     row += 2;
@@ -1715,6 +1771,8 @@ SLAB STRESS CHECK:
   // Rate Analysis
   {
     const ws = workbook.addWorksheet("Rate Analysis");
+    applyColumnWidths(ws, "Rate Analysis", 8);
+    applyRowHeights(ws, "Rate Analysis", 100);
     let row = 1;
     styleHeader(ws, row, "RATE ANALYSIS & COST ESTIMATE");
     row += 2;
@@ -1738,6 +1796,8 @@ SLAB STRESS CHECK:
   // Cost Estimate
   {
     const ws = workbook.addWorksheet("Cost Estimate");
+    applyColumnWidths(ws, "Cost Estimate", 8);
+    applyRowHeights(ws, "Cost Estimate", 100);
     let row = 1;
     styleHeader(ws, row, "PROJECT COST ESTIMATE");
     row += 2;
@@ -1773,6 +1833,8 @@ SLAB STRESS CHECK:
   // ==================== SHEETS 43-49: TECHNICAL & REFERENCE ====================
   {
     const ws = workbook.addWorksheet("TECHNICAL NOTES");
+    applyColumnWidths(ws, "TECHNICAL NOTES", 8);
+    applyRowHeights(ws, "TECHNICAL NOTES", 100);
     ws.columns = [{ width: 100 }];
     let row = 1;
     styleHeader(ws, row, "DESIGN NOTES AND ASSUMPTIONS");
@@ -1815,6 +1877,8 @@ Design is SAFE for all load combinations`;
   // Design Narrative
   {
     const ws = workbook.addWorksheet("Design Narrative");
+    applyColumnWidths(ws, "Design Narrative", 8);
+    applyRowHeights(ws, "Design Narrative", 100);
     ws.columns = [{ width: 100 }];
     let row = 1;
     styleHeader(ws, row, "DESIGN APPROACH AND METHODOLOGY");
@@ -1850,6 +1914,8 @@ All designs are IRC COMPLIANT and SAFE.`;
   // Bridge Measurements
   {
     const ws = workbook.addWorksheet("Bridge Measurements");
+    applyColumnWidths(ws, "Bridge Measurements", 8);
+    applyRowHeights(ws, "Bridge Measurements", 100);
     ws.columns = Array(3).fill({ width: 20 });
     let row = 1;
     styleHeader(ws, row, "BRIDGE GEOMETRY AND DIMENSIONS");
@@ -1894,6 +1960,8 @@ All designs are IRC COMPLIANT and SAFE.`;
   // IRC Standards Reference
   {
     const ws = workbook.addWorksheet("IRC Standards Reference");
+    applyColumnWidths(ws, "IRC Standards Reference", 8);
+    applyRowHeights(ws, "IRC Standards Reference", 100);
     ws.columns = [{ width: 40 }, { width: 50 }];
     let row = 1;
     styleHeader(ws, row, "APPLICABLE IRC & IS STANDARDS");
@@ -1919,6 +1987,8 @@ All designs are IRC COMPLIANT and SAFE.`;
   // ==================== SHEET 44: DECK ANCHORAGE ====================
   {
     const ws = workbook.addWorksheet("Deck Anchorage Analysis");
+    applyColumnWidths(ws, "Deck Anchorage Analysis", 8);
+    applyRowHeights(ws, "Deck Anchorage Analysis", 100);
     let row = 1;
     styleHeader(ws, row, "ANCHORAGE OF DECK SLAB TO SUBSTRUCTURE");
     row += 2;
@@ -1940,6 +2010,8 @@ All designs are IRC COMPLIANT and SAFE.`;
   // ==================== SHEET 45: SLAB DESIGN PIGEAUD ====================
   {
     const ws = workbook.addWorksheet("Slab Design (Pigeaud Method)");
+    applyColumnWidths(ws, "Slab Design (Pigeaud Method)", 8);
+    applyRowHeights(ws, "Slab Design (Pigeaud Method)", 100);
     let row = 1;
     styleHeader(ws, row, "TWO-WAY SLAB DESIGN USING PIGEAUD'S METHOD");
     row += 2;
@@ -1979,6 +2051,8 @@ All designs are IRC COMPLIANT and SAFE.`;
   // ==================== SHEET 46: CANTILEVER ABUTMENT ====================
   {
     const ws = workbook.addWorksheet("Cantilever Abutment Design");
+    applyColumnWidths(ws, "Cantilever Abutment Design", 8);
+    applyRowHeights(ws, "Cantilever Abutment Design", 100);
     let row = 1;
     styleHeader(ws, row, "CANTILEVER ABUTMENT - ALTERNATIVE CONFIGURATION");
     row += 2;
@@ -2008,6 +2082,8 @@ All designs are IRC COMPLIANT and SAFE.`;
   // ==================== SHEET 47: LIVE LOAD ANALYSIS ====================
   {
     const ws = workbook.addWorksheet("Live Load Analysis (IRC AA)");
+    applyColumnWidths(ws, "Live Load Analysis (IRC AA)", 8);
+    applyRowHeights(ws, "Live Load Analysis (IRC AA)", 100);
     let row = 1;
     styleHeader(ws, row, "LIVE LOAD COMPUTATION & DISTRIBUTION");
     row += 2;
@@ -2037,6 +2113,8 @@ All designs are IRC COMPLIANT and SAFE.`;
   // ==================== SHEET 48: MATERIAL SPECIFICATIONS ====================
   {
     const ws = workbook.addWorksheet("Material Specifications");
+    applyColumnWidths(ws, "Material Specifications", 8);
+    applyRowHeights(ws, "Material Specifications", 100);
     ws.columns = [{ width: 35 }, { width: 40 }];
     let row = 1;
     styleHeader(ws, row, "CONCRETE & STEEL SPECIFICATIONS");
@@ -2083,6 +2161,8 @@ All designs are IRC COMPLIANT and SAFE.`;
   // ==================== SHEET 49: COST ESTIMATE ====================
   {
     const ws = workbook.addWorksheet("Cost Estimate & Bill of Quantities");
+    applyColumnWidths(ws, "Cost Estimate & Bill of Quantities", 8);
+    applyRowHeights(ws, "Cost Estimate & Bill of Quantities", 100);
     ws.columns = [{ width: 30 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }];
     let row = 1;
     styleHeader(ws, row, "BILL OF QUANTITIES & COST ESTIMATE");
@@ -2122,12 +2202,14 @@ All designs are IRC COMPLIANT and SAFE.`;
     row++;
     ws.getCell(row, 1).value = "Contingency (10%)"; ws.getCell(row, 5).value = contingency.toFixed(0); ws.getCell(row, 1).font = { bold: true }; ws.getCell(row, 5).font = { bold: true };
     row++;
-    ws.getCell(row, 1).value = "TOTAL PROJECT COST"; ws.getCell(row, 5).value = total.toFixed(0); ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FFFFFFFF" } }; ws.getCell(row, 5).font = { bold: true, size: 12 }; ws.getCell(row, 5).fill = { type: "pattern", pattern: "solid", fgColor: PRIMARY_COLOR };
+    ws.getCell(row, 1).value = "TOTAL PROJECT COST"; ws.getCell(row, 5).value = total.toFixed(0); ws.getCell(row, 1).font = { bold: true, size: 12, color: { argb: "FFFFFFFF" } }; ws.getCell(row, 5).font = { bold: true, size: 12 }; ws.getCell(row, 5).fill = { type: "pattern", pattern: "solid", fgColor: COLORS.PRIMARY };
   }
 
   // Calculation Summary
   {
     const ws = workbook.addWorksheet("Calculation Summary");
+    applyColumnWidths(ws, "Calculation Summary", 8);
+    applyRowHeights(ws, "Calculation Summary", 100);
     ws.columns = [{ width: 40 }, { width: 20 }];
     let row = 1;
     styleHeader(ws, row, "DESIGN SUMMARY - KEY CALCULATIONS");
