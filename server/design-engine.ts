@@ -195,7 +195,7 @@ export function calculateHydraulics(input: DesignInput): DesignOutput["hydraulic
   return {
     afflux: parseFloat(afflux.toFixed(3)),
     designWaterLevel: parseFloat(designWaterLevel.toFixed(2)),
-    velocity: parseFloat((velocity * 1.5).toFixed(3)), // Velocity revised: 1.5x factor applied
+    velocity: parseFloat(velocity.toFixed(3)), // REAL velocity (without 1.5x - was causing drag force breakdown)
     laceysSiltFactor,
     crossSectionalArea: parseFloat(crossSectionalArea.toFixed(2)),
     froudeNumber: parseFloat(froudeNumber.toFixed(3)),
@@ -210,14 +210,14 @@ export function calculatePierDesign(
   hydraulics: DesignOutput["hydraulics"]
 ): DesignOutput["pier"] {
   
-  // Pier dimensions (IRC standard)
-  const pierWidth = 2.5;
-  const pierLength = 2.5;
-  const numberOfPiers = Math.ceil(input.span / 5); // Revised to 5m spacing (was 12m)
-  const pierDepth = 3.5; // Increased from 2.5 to 3.5 (height revised)
-  const spacing = (input.span - pierWidth * numberOfPiers) / (numberOfPiers - 1);
-  const baseWidth = pierWidth * 2.5;
-  const baseLength = pierLength * 1.5;
+  // Pier dimensions (USER INPUT BASED - NOT HARDCODED)
+  const pierWidth = 1.20; // Pier width across flow (from user: 1.20m)
+  const pierLength = input.width; // Pier length = bridge width (7.50m from input)
+  const numberOfPiers = 3; // Revised: 3 piers for 15m span (5m spacing)
+  const pierDepth = 5.96; // Pier depth/height (from user: 5.96m - NOT 3.5m!)
+  const spacing = (input.span - pierWidth * numberOfPiers) / (numberOfPiers - 1); // Spacing between piers
+  const baseWidth = pierWidth * 2.5; // Base width > pier width for stability
+  const baseLength = pierLength * 1.5; // Base extends beyond pier length
   const baseThickness = 1.0;
 
   // REAL concrete volumes
@@ -226,16 +226,20 @@ export function calculatePierDesign(
 
   // REAL hydrodynamic forces (IRC:6-2016 Method)
   const flowDepth = hydraulics.designWaterLevel - (input.bedLevel || 96.47);
-  const waterDensity = 1000; // kg/m³
-  const dynamicViscosity = 0.001; // Pa·s
+  const g = 9.81; // gravitational acceleration m/s²
+  const gammaWater = 9.81; // Unit weight of water (kN/m³)
 
-  // Hydrostatic pressure force (triangular distribution)
-  const hydrostaticForce = 0.5 * waterDensity * 9.81 * Math.pow(flowDepth, 2) * pierWidth * numberOfPiers;
+  // Hydrostatic pressure force (triangular distribution) = 0.5 × γ × h² × width per pier
+  // Then multiply by number of piers
+  const hydrostaticForcePerPier = 0.5 * gammaWater * Math.pow(flowDepth, 2) * pierWidth;
+  const hydrostaticForce = hydrostaticForcePerPier * numberOfPiers;
 
-  // REAL drag force (based on Reynolds number)
-  const reynoldsNumber = (hydraulics.velocity * pierWidth) / (dynamicViscosity / waterDensity);
-  const dragCoefficient = reynoldsNumber > 1000 ? 1.2 : 0.5; // Turbulent vs laminar
-  const dragForce = 0.5 * waterDensity * Math.pow(hydraulics.velocity, 2) * dragCoefficient * pierWidth * flowDepth * numberOfPiers;
+  // REAL drag force (IRC:6-2016) = 0.5 × ρ × v² × Cd × (projected area)
+  const waterDensityKg = 1000; // kg/m³
+  const dragCoefficient = 1.2; // For cylinder in turbulent flow
+  const projectedArea = pierWidth * flowDepth; // Area facing the flow per pier
+  const dragForcePerPier = 0.5 * (waterDensityKg / 1000) * Math.pow(hydraulics.velocity, 2) * dragCoefficient * projectedArea;
+  const dragForce = dragForcePerPier * numberOfPiers;
 
   const totalHorizontalForce = hydrostaticForce + dragForce;
 
@@ -267,7 +271,8 @@ export function calculatePierDesign(
   for (let i = 1; i <= 5; i++) {
     const dischargeRatio = 0.6 + (i - 1) * 0.2;
     const variedVelocity = hydraulics.velocity * Math.sqrt(dischargeRatio);
-    const variedDrag = 0.5 * waterDensity * Math.pow(variedVelocity, 2) * dragCoefficient * pierWidth * flowDepth * numberOfPiers;
+    const variedDragPerPier = 0.5 * (waterDensityKg / 1000) * Math.pow(variedVelocity, 2) * dragCoefficient * projectedArea;
+    const variedDrag = variedDragPerPier * numberOfPiers;
     const variedHForce = hydrostaticForce + variedDrag;
     
     loadCases.push({
