@@ -18,6 +18,7 @@ import { calculateAbutmentType1 } from './Abutment.calc';
 import { calculateSlabDesign } from './Slab.calc';
 import { calculateFootingDesign } from './Footing.calc';
 import { generateLoadCaseAnalysis } from './LoadCases.calc';
+import { getConcreteRate, getSteelRate } from '../utils/material-rates';
 
 /**
  * Calculate Bill of Quantities
@@ -46,9 +47,9 @@ export function calculateBOQ(
     abutmentSteel * numberOfAbutments +
     (footingConcrete * 0.01 * 7850) * numberOfPiers; // ~1% steel in footings
   
-  // Cost assumptions (Indian rates as of 2024)
-  const concreteRate = 8000; // Rs/m³
-  const steelRate = 60; // Rs/kg
+  // Cost assumptions (Indian rates as of 2024) - Using standard M30 concrete
+  const concreteRate = getConcreteRate('M30'); // Rs/m³
+  const steelRate = getSteelRate('Fe500'); // Rs/kg
   
   return {
     excavation: 150, // m³ - typical
