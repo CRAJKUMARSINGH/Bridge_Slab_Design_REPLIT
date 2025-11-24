@@ -1,0 +1,38 @@
+Bridge Design Report - 01_Small_Bridge_Rural_10x5m
+════════════════════════════════════════════════════════════
+
+INPUT PARAMETERS
+Discharge (m³/s),50
+Span (m),10
+Width (m),5
+Flood Level (m),102.5
+Bed Level (m),100
+Soil Bearing (kPa),200
+Lanes,2
+
+HYDRAULICS RESULTS
+Flow Depth (m),2.50
+Velocity (m/s),4.00
+Afflux (m),0.632
+Design Water Level (m),103.13
+Froude Number,0.81
+
+PIER DESIGN
+Number of Piers,2
+Status,CRITICAL
+Sliding FOS,0.47
+Overturning FOS,1.70
+
+ABUTMENT DESIGN
+Status,SAFE
+Sliding FOS,25.00
+Overturning FOS,2.70
+
+BILL OF QUANTITIES
+Total Cost,Rs NaN
+Cost per Meter,Rs NaN
+
+COMPLIANCE
+Overall Status,NON_COMPLIANT
+Critical Issues,1
+Warnings,0

@@ -1,0 +1,38 @@
+Bridge Design Report - 03_Large_Bridge_Highway_20x10m
+════════════════════════════════════════════════════════════
+
+INPUT PARAMETERS
+Discharge (m³/s),300
+Span (m),20
+Width (m),10
+Flood Level (m),110
+Bed Level (m),100
+Soil Bearing (kPa),300
+Lanes,4
+
+HYDRAULICS RESULTS
+Flow Depth (m),10.00
+Velocity (m/s),3.00
+Afflux (m),0.356
+Design Water Level (m),110.36
+Froude Number,0.30
+
+PIER DESIGN
+Number of Piers,4
+Status,CRITICAL
+Sliding FOS,0.09
+Overturning FOS,0.16
+
+ABUTMENT DESIGN
+Status,WARNING
+Sliding FOS,24.55
+Overturning FOS,0.75
+
+BILL OF QUANTITIES
+Total Cost,Rs NaN
+Cost per Meter,Rs NaN
+
+COMPLIANCE
+Overall Status,NON_COMPLIANT
+Critical Issues,1
+Warnings,1
