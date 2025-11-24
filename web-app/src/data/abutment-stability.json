@@ -1,0 +1,502 @@
+[
+  {
+    "Design of ABUTMENT": "Name Of Work :- Construction of Submersible Bridge on ON KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM",
+    "__EMPTY": null,
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": "(a) Data",
+    "__EMPTY": "Preliminary dimensions",
+    "__EMPTY_1": ": Assumed as in Fig. TYPABUT-01",
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Superstructure",
+    "__EMPTY_1": ": RCC Slab Bridge ",
+    "__EMPTY_2": "Total Width of Slab = ",
+    "__EMPTY_3": null,
+    "__EMPTY_4": 8.4,
+    "__EMPTY_5": "M",
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": null,
+    "__EMPTY_1": " overall length = 8.80 m",
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Type of abutment ",
+    "__EMPTY_1": ": Reinforced concrete",
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Loading",
+    "__EMPTY_1": ": As for National Highway",
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Back fill",
+    "__EMPTY_1": ": Gravel with angle of repose     Φ = ",
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": 35,
+    "__EMPTY_5": "o",
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": null,
+    "__EMPTY_1": "Unit weight of back fill, w = ",
+    "__EMPTY_2": null,
+    "__EMPTY_3": 18,
+    "__EMPTY_4": "kN/m3",
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": null,
+    "__EMPTY_1": "Angle of internal friction of soil on wall, z =",
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": 17.5,
+    "__EMPTY_5": "o",
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Approach slab",
+    "__EMPTY_1": ": R.C. slab 300 mm thick, adequately reinforced",
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Load from superstructure per running foot of abutment wall:",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Dead load",
+    "__EMPTY_1": "=",
+    "__EMPTY_2": 177.84689142857164,
+    "__EMPTY_3": "kN/m",
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Live load",
+    "__EMPTY_1": "=",
+    "__EMPTY_2": 93.84123182207014,
+    "__EMPTY_3": "kN/m",
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "(Refer Stability Analysis for sub structure. The above two values are obtained from the calculations for superstructure, and are taken to act over a width of 15 m).",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Bearing : Tar Paper Bearings",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": "(C) Self weight of abutment",
+    "__EMPTY": null,
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Treating the section as composed of 6   elements as shown in Fig. 1the weight of each element and moment about the point O on the front toe are computed as in Table 1",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": "(d) Longitudinal forces",
+    "__EMPTY": null,
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": "    (i) ",
+    "__EMPTY": "Force due to braking",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Force due to 70 R wheeled vehicle = ",
+    "__EMPTY_1": 0.2,
+    "__EMPTY_2": "x ",
+    "__EMPTY_3": 1000,
+    "__EMPTY_4": "= ",
+    "__EMPTY_5": 200,
+    "__EMPTY_6": "kN"
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "This force acts at 1.2 m above the road level(Clause 214.3).",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Force on   one abutment wall =",
+    "__EMPTY_1": 200,
+    "__EMPTY_2": "/",
+    "__EMPTY_3": 2,
+    "__EMPTY_4": "= ",
+    "__EMPTY_5": 100,
+    "__EMPTY_6": "kN"
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Horizontal force per m of wall =",
+    "__EMPTY_1": 100,
+    "__EMPTY_2": "/",
+    "__EMPTY_3": 8.4,
+    "__EMPTY_4": "= ",
+    "__EMPTY_5": 11.91,
+    "__EMPTY_6": "kN/ m"
+  },
+  {
+    "Design of ABUTMENT": "(ii)",
+    "__EMPTY": "Force due to temperature variation and shrinkage",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Assuming moderate climate, variation in temperature is taken as + ",
+    "__EMPTY_1": null,
+    "__EMPTY_2": 17,
+    "__EMPTY_3": "oC as per",
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Clause 218.5 of Bridge Code.",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Coefficient of Thermal expansion =",
+    "__EMPTY_1": 0.000011699999999999998,
+    "__EMPTY_2": "/oC",
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Strain due to temperature variation    = ",
+    "__EMPTY_1": 17,
+    "__EMPTY_2": "x",
+    "__EMPTY_3": 0.000011699999999999998,
+    "__EMPTY_4": "=",
+    "__EMPTY_5": 0.00019889999999999996,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "From Clause 220.3, strain due to concrete shrinkage = ",
+    "__EMPTY_1": 0.0002,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Total strain due to temperature and shrinkage = ",
+    "__EMPTY_1": 0.00019889999999999996,
+    "__EMPTY_2": "+",
+    "__EMPTY_3": 0.0002,
+    "__EMPTY_4": "=",
+    "__EMPTY_5": 0.0003989,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Horizontal deformation of deck due to temperature and shrinkage affecting one abutment = ",
+    "__EMPTY_1": 0.0003989,
+    "__EMPTY_2": "x",
+    "__EMPTY_3": 8799.999999999998,
+    "__EMPTY_4": "/2 =",
+    "__EMPTY_5": 1.7551599999999996,
+    "__EMPTY_6": "mm"
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Modulus of Elasticity Ec =",
+    "__EMPTY_1": "5000x fck1/2",
+    "__EMPTY_2": "=",
+    "__EMPTY_3": 31220.19,
+    "__EMPTY_4": "N/mm2",
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Horizontal Stress due to strain in longitudinal direction at bearing level =",
+    "__EMPTY_1": 0.0003989,
+    "__EMPTY_2": "x",
+    "__EMPTY_3": 31220.19,
+    "__EMPTY_4": "=",
+    "__EMPTY_5": 12.453733791,
+    "__EMPTY_6": "N/mm2"
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Horizontal Force due to strain in longitudinal direction at bearing level (For 1 m width of Slab) =",
+    "__EMPTY_1": 12.453733791,
+    "__EMPTY_2": "x",
+    "__EMPTY_3": 750,
+    "__EMPTY_4": "=",
+    "__EMPTY_5": 9340.300343249999,
+    "__EMPTY_6": "N/m"
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": null,
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": "=",
+    "__EMPTY_5": 9.340300343249998,
+    "__EMPTY_6": "kN/m"
+  },
+  {
+    "Design of ABUTMENT": "(iii)",
+    "__EMPTY": "Vertical reaction   due to braking",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": " ",
+    "__EMPTY": "                                                              200(1.2 + 0.975)      ",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Vertical reaction at one abutment = ---------------------- ",
+    "__EMPTY_1": null,
+    "__EMPTY_2": "=",
+    "__EMPTY_3": 2.612612612612612,
+    "__EMPTY_4": "kN/m",
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "                                                              11.10x15",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": "(d)Earth pressure",
+    "__EMPTY": null,
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Active earth  pressure P = 0.5 wh2 Ka",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "where    Ka is obtained from Equation (3.5)",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Ka = secΘ sin(Θ-Φ)/[(sin(Θ+z)1/2 +{sin(Φ+z) sin(Φ-δ)/sin(Θ-δ)}1/2]",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Where P= Total active pressure, acting at a height of 0.42 h inclined at z to the normal to the wall on the earth side",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "w = unit weight of earth fill",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "h = height of wall",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Θ = Angle subtended by the earthside wall with thw horizontal on the earth side",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "Φ = Angle of internal friction of the earthfill",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "z = angle of friction of the earthside wall with the earth",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  },
+  {
+    "Design of ABUTMENT": null,
+    "__EMPTY": "δ = Inclination of earthfill surface with the horizontal",
+    "__EMPTY_1": null,
+    "__EMPTY_2": null,
+    "__EMPTY_3": null,
+    "__EMPTY_4": null,
+    "__EMPTY_5": null,
+    "__EMPTY_6": null
+  }
+]

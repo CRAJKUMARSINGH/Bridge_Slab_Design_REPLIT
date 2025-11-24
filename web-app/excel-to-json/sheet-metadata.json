@@ -1,0 +1,292 @@
+{
+  "totalSheets": 46,
+  "totalFormulas": 2336,
+  "categories": {
+    "other": [
+      "INDEX",
+      "afflux calculation",
+      "Deck Anchorage",
+      "CROSS SECTION",
+      "Bed Slope",
+      "SBC",
+      "abstract of stresses",
+      "Footing STRESS DIAGRAM",
+      "Pier Cap LL tracked vehicle",
+      "Pier Cap",
+      "LLOAD",
+      "loadsumm ",
+      "LL-ABSTRACT",
+      "TYPE1-AbutMENT Drawing",
+      "TYPE1- Abut Footing STRESS",
+      "TYPE1-Abutment Cap",
+      "TYPE1-DIRT WALL REINFORCEMENT",
+      "TYPE1-DIRT DirectLoad_BM",
+      "TYPE1-DIRT LL_BM",
+      "INSERT C1-ABUT",
+      "C1-AbutMENT Drawing",
+      "C1-Abut Footing STRESS DIAGRAM",
+      "C1-Abutment Cap",
+      "C1-DIRT WALL REINFORCEMENT",
+      "C1-DIRT DirectLoad_BM",
+      "C1-DIRT LL_BM",
+      "INSERT ESTIMATE",
+      "General Abs. "
+    ],
+    "calculation": [
+      "INSERT- HYDRAULICS",
+      "HYDRAULICS",
+      "STABILITY CHECK FOR PIER",
+      "STEEL IN FLARED  PIER BASE ",
+      "STEEL IN PIER",
+      "FOOTING DESIGN",
+      "TYPE1-STABILITY CHECK ABUTMENT",
+      "TYPE1-ABUTMENT FOOTING DESIGN",
+      "TYPE1-STEEL IN ABUTMENT",
+      "C1-STABILITY CHECK ABUTMENT",
+      "C1-ABUTMENT FOOTING DESIGN",
+      "CAN-RETURN FOOTING DESIGN",
+      "STEEL IN CANT-ABUTMENT",
+      "STEEL IN CANT-RETURNS"
+    ],
+    "documentation": [
+      "TechNote",
+      "Tech Report",
+      "Bridge measurements"
+    ],
+    "output": [
+      "Abstract"
+    ]
+  },
+  "sheetMetadata": {
+    "INDEX": {
+      "rowCount": 27,
+      "formulaCount": 0,
+      "type": "other"
+    },
+    "INSERT- HYDRAULICS": {
+      "rowCount": 0,
+      "formulaCount": 0,
+      "type": "calculation"
+    },
+    "afflux calculation": {
+      "rowCount": 88,
+      "formulaCount": 70,
+      "type": "other"
+    },
+    "HYDRAULICS": {
+      "rowCount": 49,
+      "formulaCount": 114,
+      "type": "calculation"
+    },
+    "Deck Anchorage": {
+      "rowCount": 37,
+      "formulaCount": 45,
+      "type": "other"
+    },
+    "CROSS SECTION": {
+      "rowCount": 29,
+      "formulaCount": 105,
+      "type": "other"
+    },
+    "Bed Slope": {
+      "rowCount": 24,
+      "formulaCount": 24,
+      "type": "other"
+    },
+    "SBC": {
+      "rowCount": 78,
+      "formulaCount": 1,
+      "type": "other"
+    },
+    "STABILITY CHECK FOR PIER": {
+      "rowCount": 468,
+      "formulaCount": 838,
+      "type": "calculation"
+    },
+    "abstract of stresses": {
+      "rowCount": 16,
+      "formulaCount": 54,
+      "type": "other"
+    },
+    "STEEL IN FLARED  PIER BASE ": {
+      "rowCount": 173,
+      "formulaCount": 128,
+      "type": "calculation"
+    },
+    "STEEL IN PIER": {
+      "rowCount": 170,
+      "formulaCount": 127,
+      "type": "calculation"
+    },
+    "FOOTING DESIGN": {
+      "rowCount": 75,
+      "formulaCount": 51,
+      "type": "calculation"
+    },
+    "Footing STRESS DIAGRAM": {
+      "rowCount": 31,
+      "formulaCount": 6,
+      "type": "other"
+    },
+    "Pier Cap LL tracked vehicle": {
+      "rowCount": 94,
+      "formulaCount": 7,
+      "type": "other"
+    },
+    "Pier Cap": {
+      "rowCount": 108,
+      "formulaCount": 67,
+      "type": "other"
+    },
+    "LLOAD": {
+      "rowCount": 334,
+      "formulaCount": 228,
+      "type": "other"
+    },
+    "loadsumm ": {
+      "rowCount": 48,
+      "formulaCount": 64,
+      "type": "other"
+    },
+    "LL-ABSTRACT": {
+      "rowCount": 8,
+      "formulaCount": 6,
+      "type": "other"
+    },
+    "TYPE1-AbutMENT Drawing": {
+      "rowCount": 35,
+      "formulaCount": 23,
+      "type": "other"
+    },
+    "TYPE1-STABILITY CHECK ABUTMENT": {
+      "rowCount": 161,
+      "formulaCount": 148,
+      "type": "calculation"
+    },
+    "TYPE1-ABUTMENT FOOTING DESIGN": {
+      "rowCount": 69,
+      "formulaCount": 48,
+      "type": "calculation"
+    },
+    "TYPE1- Abut Footing STRESS": {
+      "rowCount": 31,
+      "formulaCount": 6,
+      "type": "other"
+    },
+    "TYPE1-STEEL IN ABUTMENT": {
+      "rowCount": 26,
+      "formulaCount": 7,
+      "type": "calculation"
+    },
+    "TYPE1-Abutment Cap": {
+      "rowCount": 110,
+      "formulaCount": 64,
+      "type": "other"
+    },
+    "TYPE1-DIRT WALL REINFORCEMENT": {
+      "rowCount": 50,
+      "formulaCount": 26,
+      "type": "other"
+    },
+    "TYPE1-DIRT DirectLoad_BM": {
+      "rowCount": 97,
+      "formulaCount": 6,
+      "type": "other"
+    },
+    "TYPE1-DIRT LL_BM": {
+      "rowCount": 144,
+      "formulaCount": 33,
+      "type": "other"
+    },
+    "TechNote": {
+      "rowCount": 56,
+      "formulaCount": 0,
+      "type": "documentation"
+    },
+    "INSERT C1-ABUT": {
+      "rowCount": 3,
+      "formulaCount": 0,
+      "type": "other"
+    },
+    "C1-AbutMENT Drawing": {
+      "rowCount": 35,
+      "formulaCount": 0,
+      "type": "other"
+    },
+    "C1-STABILITY CHECK ABUTMENT": {
+      "rowCount": 155,
+      "formulaCount": 0,
+      "type": "calculation"
+    },
+    "C1-ABUTMENT FOOTING DESIGN": {
+      "rowCount": 69,
+      "formulaCount": 0,
+      "type": "calculation"
+    },
+    "C1-Abut Footing STRESS DIAGRAM": {
+      "rowCount": 31,
+      "formulaCount": 1,
+      "type": "other"
+    },
+    "CAN-RETURN FOOTING DESIGN": {
+      "rowCount": 74,
+      "formulaCount": 0,
+      "type": "calculation"
+    },
+    "STEEL IN CANT-ABUTMENT": {
+      "rowCount": 113,
+      "formulaCount": 0,
+      "type": "calculation"
+    },
+    "STEEL IN CANT-RETURNS": {
+      "rowCount": 110,
+      "formulaCount": 0,
+      "type": "calculation"
+    },
+    "C1-Abutment Cap": {
+      "rowCount": 110,
+      "formulaCount": 0,
+      "type": "other"
+    },
+    "C1-DIRT WALL REINFORCEMENT": {
+      "rowCount": 50,
+      "formulaCount": 0,
+      "type": "other"
+    },
+    "C1-DIRT DirectLoad_BM": {
+      "rowCount": 97,
+      "formulaCount": 6,
+      "type": "other"
+    },
+    "C1-DIRT LL_BM": {
+      "rowCount": 144,
+      "formulaCount": 33,
+      "type": "other"
+    },
+    "INSERT ESTIMATE": {
+      "rowCount": 3,
+      "formulaCount": 0,
+      "type": "other"
+    },
+    "Tech Report": {
+      "rowCount": 44,
+      "formulaCount": 0,
+      "type": "documentation"
+    },
+    "General Abs. ": {
+      "rowCount": 28,
+      "formulaCount": 0,
+      "type": "other"
+    },
+    "Abstract": {
+      "rowCount": 113,
+      "formulaCount": 0,
+      "type": "output"
+    },
+    "Bridge measurements": {
+      "rowCount": 236,
+      "formulaCount": 0,
+      "type": "documentation"
+    }
+  }
+}
