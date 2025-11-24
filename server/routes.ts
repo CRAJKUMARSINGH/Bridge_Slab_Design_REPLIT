@@ -81,8 +81,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Excel Export route alias (/api/projects/:id/export/excel)
+  app.get("/api/projects/:id/export/excel", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      
+      const designData = project.designData as any;
+      const buffer = await generateCompleteExcelReport(
+        designData.input,
+        designData.output,
+        project.name || "Bridge Design"
+      );
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_44sheet_report.xlsx"`);
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error exporting Excel:", error);
+      res.status(500).json({ error: "Failed to export Excel" });
+    }
+  });
+
   // PDF Export route (100+ page vetting report)
   app.get("/api/projects/:id/export-pdf", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      
+      const designData = project.designData as any;
+      if (!designData || !designData.output) {
+        return res.status(400).json({ error: "Project does not have design data. Please re-generate the design." });
+      }
+      
+      const buffer = await generatePDF(project, designData.output);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `inline; filename="${project.name || "design"}_vetting_report.pdf"`);
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error exporting PDF:", error);
+      res.status(500).json({ error: "Failed to export PDF" });
+    }
+  });
+
+  // PDF Export route alias (/api/projects/:id/export/pdf)
+  app.get("/api/projects/:id/export/pdf", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const project = await storage.getProject(id);
