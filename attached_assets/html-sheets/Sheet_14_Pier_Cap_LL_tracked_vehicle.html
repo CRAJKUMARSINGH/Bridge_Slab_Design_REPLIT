@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIER CAP LL TRACKED VEHICLE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #34495e;
+      margin-top: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #bdc3c7;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #ecf0f1;
+    }
+    tr:hover {
+      background-color: #d5dbdb;
+    }
+    .formula {
+      background-color: #fff9e6;
+      font-family: 'Courier New', monospace;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    .result {
+      background-color: #d4edda;
+      font-weight: bold;
+      color: #155724;
+    }
+    .step {
+      background-color: #e7f3ff;
+      border-left: 4px solid #3498db;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .red { color: red; font-weight: bold; }
+    .green { color: green; font-weight: bold; }
+    .note {
+      background-color: #fff3cd;
+      border: 1px solid #ffc107;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 4px;
+      color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PIER CAP LL TRACKED VEHICLE</h1>
+    <p><strong>Project:</strong> DESIGN OF SUBMERSIBLE SKEW BRIDGE ACROSS BEDACH RIVER</p><table>
+<thead>
+<tr><th>LIVE LOAD CALCULATION :-</th></tr>
+</thead>
+<tbody>
+<tr><td>[1] CLASS  AA TRACKED VEHICLE :-</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>(a) Dispersion width along the span</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> According to clause 305.13   IRC- 21-2000</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = Length of Contact   +   2 (Wearing coat + depth of Slab)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> =</td><td>3.60</td><td> + 2 ( 0.075 + 0.775 )</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> =</td><td>5.30</td><td>M</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>(b) Dispersion width across the span</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> According to clause 305.13   IRC- 21-2000</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> be  =  K  x       ( 1  - x/Le )   +bw</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>K  =  A Constant having the value depending upon the ratio</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>(L1/Le  where.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>be = the effective width of the slab on which the load acts.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Le  = Effective  Span</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>x   = the distance of c.g. of concentrate load from the near support</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>bw    =   The breadth of concentration area of the load i.e. Dimension of</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>              the tyre or track contact area over the road surface </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Heve ,</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Le  =  10.00 M     &  L1   = 7.00 M</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>  =  L1</td><td> =</td><td>7.00</td><td> =</td><td>0.70</td><td></td><td></td><td></td></tr>
+<tr><td>      Le</td><td></td><td>10.00</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Value  of    K   =</td><td></td><td>2.40</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>bw   =</td><td>0.85 + 2 x 0.075</td><td></td><td> = 1.0 M</td><td></td><td></td><td></td><td></td></tr>
+<tr><td> X    =    L</td><td> =</td><td>10.00</td><td> =</td><td>5.0 M</td><td></td><td></td><td></td></tr>
+<tr><td>2.00</td><td></td><td>2.00</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> be =     2.4 x 4</td><td></td><td>( 1 - 5/10)</td><td>+</td><td>1.00</td><td></td><td></td><td></td></tr>
+<tr><td>          =</td><td>5.80</td><td>M</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Impact factor is  13.75%   as pere IRC Section-II, Clause - 211-3 (a) (i)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>DISPERSION ACROSS SPAN (CLASS AA TRACKED VEHICAL)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>The tracked vehicle is placed at a distance of minimum clearence of 1-2 m from Kerb</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> Dispersion across span </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = C/C distance between wheels </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>    + width from centre of wheel on clearence side</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>    + Least on other side or halp the dispersion of one wheel.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = 2.05 + 1.93  + Least of 2.715 OR  5.8/2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = 2.05 + 1.93  + 2.715</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = 6.695</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Impact factor = 1.1375 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> Total load with impact</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>= 70   x    1.1375</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> =     79.63 T</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = Intensity of Load</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = </td><td>79.63</td><td></td><td> =</td><td>2.24</td><td>T/M</td><td></td><td></td></tr>
+<tr><td></td><td>5.30 x 6.695</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Maximum Reaction</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>For Maximum reaction at support the Centre of gravity of the loads should be adjacent to one support should be adjacent to one support</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Reaction RA= 2.24x 3.00 x 1.50 /10.00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td>=</td><td>1.01</td><td>T</td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Reaction RB= 2.24x 3.00 -1.01</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td>=</td><td>5.71</td><td>T</td><td></td><td></td><td></td></tr>
+<tr><td>DISPERSION ALONG SPAN (CLASS AA TRACKED VEHICLE)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>(a) Dispersion width along the span :-</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>  tp  =</td><td>tc   =  2  (tw + ts )</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>  tp  =  </td><td>width of dispersion parallel to span </td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>  tc  = </td><td>width of tyre contact area parallel to span</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>  ts  =</td><td>Overall depth of slab</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> tw  =</td><td>Thickness</td><td>of Wearing coat</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Dispersion along the span</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = 0.15  +  2 ( 0.075 + 0.775 )</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> =</td><td>1.90</td><td>M</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> Dispersion between two wheel is overlapping hence restricted to 1-2 M</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = Dispersion combined for two wheels </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = C/c distance between  +   </td><td></td><td></td><td>Longitudinal</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>    two wheels</td><td></td><td></td><td>dispersion</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>  = 1-2</td><td></td><td>+</td><td>1.90</td><td></td><td></td><td></td><td></td></tr>
+<tr><td> =  3.1 M</td><td>( along the span )</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Impact factor = 1.1375 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> Total load with impact</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>= 70   x    1.1375</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> =     79.63 T</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = Intensity of Load</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td> = </td><td>79.63</td><td></td><td> =</td><td>7.91</td><td>T/M</td><td></td><td></td></tr>
+<tr><td></td><td>1.90 x 5.30</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Maximum Reaction</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>For Maximum reaction at support the Centre of gravity of the loads should be adjacent to one support should be adjacent to one support</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Reaction RA= 7.91x 3.00 x 1.50 /10.00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td>=</td><td>3.56</td><td>T</td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Reaction RB= 7.91x 3.00 -3.56</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td>=</td><td>20.17</td><td>T</td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -1,287 +1,466 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bridge Design - All 49 Sheets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design of Submersible Bridge - 42 Design Sheets</title>
   <style>
-    body { font-family: Arial; margin: 20px; background: #f5f5f5; }
-    h1 { color: #365070; border-bottom: 3px solid #365070; padding: 10px 0; }
-    .info { background: #e8f0f7; padding: 15px; border-radius: 4px; margin: 15px 0; border-left: 4px solid #365070; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
-    .card { background: white; border: 1px solid #ddd; padding: 12px; text-decoration: none; color: inherit; cursor: pointer; transition: 0.2s; border-radius: 4px; }
-    .card:hover { background: #e8f0f7; border-color: #365070; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .num { font-size: 11px; color: #999; margin-bottom: 5px; }
-    .name { font-size: 13px; font-weight: bold; color: #365070; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 40px;
+      text-align: center;
+      border-bottom: 4px solid #3498db;
+    }
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+    .header p {
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+    .content {
+      padding: 40px;
+    }
+    .sheets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .sheet-card {
+      background: white;
+      border: 2px solid #ecf0f1;
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    .sheet-card:hover {
+      border-color: #3498db;
+      box-shadow: 0 10px 30px rgba(52, 152, 219, 0.2);
+      transform: translateY(-5px);
+    }
+    .sheet-number {
+      display: inline-block;
+      background: #3498db;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+    }
+    .sheet-title {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+    .sheet-description {
+      font-size: 0.9em;
+      color: #7f8c8d;
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+    .sheet-link {
+      color: #3498db;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .sheet-link:hover {
+      color: #2980b9;
+      text-decoration: underline;
+    }
+    .categories {
+      margin-bottom: 30px;
+    }
+    .category {
+      margin-bottom: 30px;
+    }
+    .category-title {
+      font-size: 1.4em;
+      color: #2c3e50;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      background: #ecf0f1;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .stat-item h3 {
+      color: #3498db;
+      font-size: 2em;
+      margin-bottom: 5px;
+    }
+    .stat-item p {
+      color: #7f8c8d;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
-  <h1>Submersible Bridge Design System - All 49 Sheets</h1>
-  <p><strong>Project:</strong> Construction of Submersible Bridge on KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM</p>
-  <p><strong>Design Parameters:</strong> Span 30m | Width 7.5m | Discharge 902.15 m³/s | M25 Concrete | Fe415 Steel</p>
-  
-  <div class="info">
-    <strong>✓ Complete Design Documentation</strong><br>
-    All 49 sheets display complete cell-by-cell Excel data with parameters, calculations, and results for vetting agency verification and design approval.
-  </div>
+  <div class="container">
+    <div class="header">
+      <h1>Submersible Bridge Design System</h1>
+      <p>Complete IRC:6-2016 & IRC:112-2015 Compliant Design Documentation</p>
+    </div>
+    
+    <div class="content">
+      <div class="stats">
+        <div class="stat-item">
+          <h3>42</h3>
+          <p>Design Sheets</p>
+        </div>
+        <div class="stat-item">
+          <h3>Complete</h3>
+          <p>With Detailed Calculations</p>
+        </div>
+        <div class="stat-item">
+          <h3>IRC:6-2016</h3>
+          <p>Standards Compliant</p>
+        </div>
+      </div>
 
-  <h2>Design Sheets (49 Total)</h2>
-  <div class="grid">
+      <div class="categories">
+        <!-- HYDRAULICS & BASIC DATA -->
+        <div class="category">
+          <div class="category-title">📊 Project Data & Hydraulics</div>
+          <div class="sheets-grid">
+            <a href="Sheet_01_INDEX.html" class="sheet-card" data-testid="sheet-link-index">
+              <div class="sheet-number">1</div>
+              <div class="sheet-title">Index</div>
+              <div class="sheet-description">Project overview and sheet references</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_02_afflux_calculation.html" class="sheet-card" data-testid="sheet-link-afflux">
+              <div class="sheet-number">2</div>
+              <div class="sheet-title">Afflux Calculation</div>
+              <div class="sheet-description">Molesworth formula with step-by-step hydraulic analysis</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_03_HYDRAULICS.html" class="sheet-card" data-testid="sheet-link-hydraulics">
+              <div class="sheet-number">3</div>
+              <div class="sheet-title">Hydraulics</div>
+              <div class="sheet-description">Velocity determination and flood level analysis</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_04_Deck_Anchorage.html" class="sheet-card" data-testid="sheet-link-deck">
+              <div class="sheet-number">4</div>
+              <div class="sheet-title">Deck Anchorage</div>
+              <div class="sheet-description">Uplift checks and anchorage calculations</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_05_CROSS_SECTION.html" class="sheet-card" data-testid="sheet-link-section">
+              <div class="sheet-number">5</div>
+              <div class="sheet-title">Cross Section</div>
+              <div class="sheet-description">River cross-section measurements</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_06_Bed_Slope.html" class="sheet-card" data-testid="sheet-link-slope">
+              <div class="sheet-number">6</div>
+              <div class="sheet-title">Bed Slope</div>
+              <div class="sheet-description">Riverbed slope analysis</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_07_SBC.html" class="sheet-card" data-testid="sheet-link-sbc">
+              <div class="sheet-number">7</div>
+              <div class="sheet-title">SBC (Safe Bearing Capacity)</div>
+              <div class="sheet-description">Geotechnical soil bearing capacity</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+          </div>
+        </div>
 
-    <a href="/api/html-sheets/Sheet_01_Cover_Page.html" target="_blank" class="card">
-      <div class="num">Sheet 1</div>
-      <div class="name">Cover Page</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_02_Project_Inputs.html" target="_blank" class="card">
-      <div class="num">Sheet 2</div>
-      <div class="name">Project Inputs</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_03_Hydraulics.html" target="_blank" class="card">
-      <div class="num">Sheet 3</div>
-      <div class="name">Hydraulics</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_04_Pier_Design.html" target="_blank" class="card">
-      <div class="num">Sheet 4</div>
-      <div class="name">Pier Design</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_05_Pier_Reinforcement.html" target="_blank" class="card">
-      <div class="num">Sheet 5</div>
-      <div class="name">Pier Reinforcement</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_06_Abutment_Design.html" target="_blank" class="card">
-      <div class="num">Sheet 6</div>
-      <div class="name">Abutment Design</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_07_Abutment_Reinforcement.html" target="_blank" class="card">
-      <div class="num">Sheet 7</div>
-      <div class="name">Abutment Reinforcement</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_08_Load_Analysis.html" target="_blank" class="card">
-      <div class="num">Sheet 8</div>
-      <div class="name">Load Analysis</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_09_Slab_Design.html" target="_blank" class="card">
-      <div class="num">Sheet 9</div>
-      <div class="name">Slab Design</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_10_Slab_Reinforcement.html" target="_blank" class="card">
-      <div class="num">Sheet 10</div>
-      <div class="name">Slab Reinforcement</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_11_Quantities.html" target="_blank" class="card">
-      <div class="num">Sheet 11</div>
-      <div class="name">Quantities</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_12_Slab_Moment_Distribution.html" target="_blank" class="card">
-      <div class="num">Sheet 12</div>
-      <div class="name">Slab Moment Distribution</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_13_Slab_Shear_Distribution.html" target="_blank" class="card">
-      <div class="num">Sheet 13</div>
-      <div class="name">Slab Shear Distribution</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_14_Pier_Moment_Analysis.html" target="_blank" class="card">
-      <div class="num">Sheet 14</div>
-      <div class="name">Pier Moment Analysis</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_15_Pier_Shear_Analysis.html" target="_blank" class="card">
-      <div class="num">Sheet 15</div>
-      <div class="name">Pier Shear Analysis</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_16_Abutment_Moment_Analysis.html" target="_blank" class="card">
-      <div class="num">Sheet 16</div>
-      <div class="name">Abutment Moment Analysis</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_17_Abutment_Pressure_Distribution.html" target="_blank" class="card">
-      <div class="num">Sheet 17</div>
-      <div class="name">Abutment Pressure Distribution</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_18_Foundation_Settlement_Check.html" target="_blank" class="card">
-      <div class="num">Sheet 18</div>
-      <div class="name">Foundation Settlement Check</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_19_Scour_Analysis.html" target="_blank" class="card">
-      <div class="num">Sheet 19</div>
-      <div class="name">Scour Analysis</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_20_Seismic_Considerations.html" target="_blank" class="card">
-      <div class="num">Sheet 20</div>
-      <div class="name">Seismic Considerations</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_21_Temperature_Effects.html" target="_blank" class="card">
-      <div class="num">Sheet 21</div>
-      <div class="name">Temperature Effects</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_22_Material_Specifications.html" target="_blank" class="card">
-      <div class="num">Sheet 22</div>
-      <div class="name">Material Specifications</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_23_Concrete_Grades.html" target="_blank" class="card">
-      <div class="num">Sheet 23</div>
-      <div class="name">Concrete Grades</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_24_Steel_Specifications.html" target="_blank" class="card">
-      <div class="num">Sheet 24</div>
-      <div class="name">Steel Specifications</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_25_Reinforcement_Schedule___Slab.html" target="_blank" class="card">
-      <div class="num">Sheet 25</div>
-      <div class="name">Reinforcement Schedule   Slab</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_26_Reinforcement_Schedule___Pier.html" target="_blank" class="card">
-      <div class="num">Sheet 26</div>
-      <div class="name">Reinforcement Schedule   Pier</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_27_Reinforcement_Schedule___Abutme.html" target="_blank" class="card">
-      <div class="num">Sheet 27</div>
-      <div class="name">Reinforcement Schedule   Abutme</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_28_Bearing_and_Expansion_Joints.html" target="_blank" class="card">
-      <div class="num">Sheet 28</div>
-      <div class="name">Bearing and Expansion Joints</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_29_Drainage_Design.html" target="_blank" class="card">
-      <div class="num">Sheet 29</div>
-      <div class="name">Drainage Design</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_30_Wearing_Coat_Specification.html" target="_blank" class="card">
-      <div class="num">Sheet 30</div>
-      <div class="name">Wearing Coat Specification</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_31_Guard_Rail_Design.html" target="_blank" class="card">
-      <div class="num">Sheet 31</div>
-      <div class="name">Guard Rail Design</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_32_Parapet_Wall_Design.html" target="_blank" class="card">
-      <div class="num">Sheet 32</div>
-      <div class="name">Parapet Wall Design</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_33_Inspection___Maintenance.html" target="_blank" class="card">
-      <div class="num">Sheet 33</div>
-      <div class="name">Inspection   Maintenance</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_34_Construction_Specifications.html" target="_blank" class="card">
-      <div class="num">Sheet 34</div>
-      <div class="name">Construction Specifications</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_35_Quality_Control.html" target="_blank" class="card">
-      <div class="num">Sheet 35</div>
-      <div class="name">Quality Control</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_36_Safety_Provisions.html" target="_blank" class="card">
-      <div class="num">Sheet 36</div>
-      <div class="name">Safety Provisions</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_37_Environmental_Impact.html" target="_blank" class="card">
-      <div class="num">Sheet 37</div>
-      <div class="name">Environmental Impact</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_38_Cost_Estimate.html" target="_blank" class="card">
-      <div class="num">Sheet 38</div>
-      <div class="name">Cost Estimate</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_39_Schedule_of_Rates.html" target="_blank" class="card">
-      <div class="num">Sheet 39</div>
-      <div class="name">Schedule of Rates</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_40_Design_Drawings_Index.html" target="_blank" class="card">
-      <div class="num">Sheet 40</div>
-      <div class="name">Design Drawings Index</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_41_Report_Summary.html" target="_blank" class="card">
-      <div class="num">Sheet 41</div>
-      <div class="name">Report Summary</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_42_References___Standards.html" target="_blank" class="card">
-      <div class="num">Sheet 42</div>
-      <div class="name">References   Standards</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_43_Calculations_Verification.html" target="_blank" class="card">
-      <div class="num">Sheet 43</div>
-      <div class="name">Calculations Verification</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_44_Cover_Page.html" target="_blank" class="card">
-      <div class="num">Sheet 44</div>
-      <div class="name">Cover Page</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_45_Project_Inputs.html" target="_blank" class="card">
-      <div class="num">Sheet 45</div>
-      <div class="name">Project Inputs</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_46_Hydraulics.html" target="_blank" class="card">
-      <div class="num">Sheet 46</div>
-      <div class="name">Hydraulics</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_47_Pier_Design.html" target="_blank" class="card">
-      <div class="num">Sheet 47</div>
-      <div class="name">Pier Design</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_48_Pier_Reinforcement.html" target="_blank" class="card">
-      <div class="num">Sheet 48</div>
-      <div class="name">Pier Reinforcement</div>
-    </a>
-  
-    <a href="/api/html-sheets/Sheet_49_Abutment_Design.html" target="_blank" class="card">
-      <div class="num">Sheet 49</div>
-      <div class="name">Abutment Design</div>
-    </a>
-  
-  </div>
-  
-  <div class="info" style="margin-top: 30px;">
-    <strong>Standards Referenced:</strong><br>
-    • IRC:6-2016 (Loading on Bridges)<br>
-    • IRC:112-2015 (Code of Practice for Concrete Road Bridges)<br>
-    • IS 7784 (Hydraulic Design)<br>
-    • IRC:78-1983 (Scour & Waterway)<br>
-    <br>
-    Each sheet contains complete Excel data for technical review and vetting agency approval.
+        <!-- PIER DESIGN -->
+        <div class="category">
+          <div class="category-title">🏗️ Pier Design & Analysis</div>
+          <div class="sheets-grid">
+            <a href="Sheet_08_STABILITY_CHECK_FOR_PIER.html" class="sheet-card" data-testid="sheet-link-pier-stability">
+              <div class="sheet-number">8</div>
+              <div class="sheet-title">Pier Stability Check</div>
+              <div class="sheet-description">Stability analysis across all load cases</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_09_abstract_of_stresses.html" class="sheet-card" data-testid="sheet-link-stresses">
+              <div class="sheet-number">9</div>
+              <div class="sheet-title">Abstract of Stresses</div>
+              <div class="sheet-description">Comprehensive stress summary</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_10_STEEL_IN_FLARED_PIER_BASE_.html" class="sheet-card" data-testid="sheet-link-pier-steel-base">
+              <div class="sheet-number">10</div>
+              <div class="sheet-title">Steel in Flared Pier Base</div>
+              <div class="sheet-description">Reinforcement design for pier base</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_11_STEEL_IN_PIER.html" class="sheet-card" data-testid="sheet-link-pier-steel">
+              <div class="sheet-number">11</div>
+              <div class="sheet-title">Steel in Pier</div>
+              <div class="sheet-description">Main pier reinforcement schedule</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_12_FOOTING_DESIGN.html" class="sheet-card" data-testid="sheet-link-footing">
+              <div class="sheet-number">12</div>
+              <div class="sheet-title">Footing Design</div>
+              <div class="sheet-description">Pier footing design calculations</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_13_Footing_STRESS_DIAGRAM.html" class="sheet-card" data-testid="sheet-link-footing-stress">
+              <div class="sheet-number">13</div>
+              <div class="sheet-title">Footing Stress Diagram</div>
+              <div class="sheet-description">Footing stress visualization</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_14_Pier_Cap_LL_tracked_vehicle.html" class="sheet-card" data-testid="sheet-link-cap-ll">
+              <div class="sheet-number">14</div>
+              <div class="sheet-title">Pier Cap LL (Tracked Vehicle)</div>
+              <div class="sheet-description">Live load analysis on pier cap</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_15_Pier_Cap.html" class="sheet-card" data-testid="sheet-link-pier-cap">
+              <div class="sheet-number">15</div>
+              <div class="sheet-title">Pier Cap Design</div>
+              <div class="sheet-description">Complete pier cap design</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_16_LLOAD.html" class="sheet-card" data-testid="sheet-link-loads">
+              <div class="sheet-number">16</div>
+              <div class="sheet-title">Live Loads</div>
+              <div class="sheet-description">Live load distribution analysis</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_17_LLABSTRACT.html" class="sheet-card" data-testid="sheet-link-ll-abstract">
+              <div class="sheet-number">17</div>
+              <div class="sheet-title">LL Abstract</div>
+              <div class="sheet-description">Live load summary</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- TYPE-1 ABUTMENT -->
+        <div class="category">
+          <div class="category-title">🏢 Type-1 Abutment Design</div>
+          <div class="sheets-grid">
+            <a href="Sheet_18_TYPE1AbutMENT_Drawing.html" class="sheet-card" data-testid="sheet-link-abutment-draw">
+              <div class="sheet-number">18</div>
+              <div class="sheet-title">Type-1 Abutment Drawing</div>
+              <div class="sheet-description">Abutment structural layout</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_19_TYPE1STABILITY_CHECK_ABUTMENT.html" class="sheet-card" data-testid="sheet-link-abutment-stab">
+              <div class="sheet-number">19</div>
+              <div class="sheet-title">Type-1 Abutment Stability</div>
+              <div class="sheet-description">Abutment stability in all cases</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_20_TYPE1ABUTMENT_FOOTING_DESIGN.html" class="sheet-card" data-testid="sheet-link-abutment-foot">
+              <div class="sheet-number">20</div>
+              <div class="sheet-title">Type-1 Abutment Footing</div>
+              <div class="sheet-description">Footing design for abutment</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_21_TYPE1_Abut_Footing_STRESS.html" class="sheet-card" data-testid="sheet-link-abutment-stress">
+              <div class="sheet-number">21</div>
+              <div class="sheet-title">Type-1 Footing Stress</div>
+              <div class="sheet-description">Footing stress diagram</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_22_TYPE1STEEL_IN_ABUTMENT.html" class="sheet-card" data-testid="sheet-link-abutment-steel">
+              <div class="sheet-number">22</div>
+              <div class="sheet-title">Type-1 Steel in Abutment</div>
+              <div class="sheet-description">Reinforcement schedule</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_23_TYPE1Abutment_Cap.html" class="sheet-card" data-testid="sheet-link-abutment-cap">
+              <div class="sheet-number">23</div>
+              <div class="sheet-title">Type-1 Abutment Cap</div>
+              <div class="sheet-description">Cap design and analysis</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_24_TYPE1DIRT_WALL_REINFORCEMENT.html" class="sheet-card" data-testid="sheet-link-dirt-reinf">
+              <div class="sheet-number">24</div>
+              <div class="sheet-title">Type-1 Dirt Wall Reinforcement</div>
+              <div class="sheet-description">Backfill wall reinforcement</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_25_TYPE1DIRT_DirectLoad_BM.html" class="sheet-card" data-testid="sheet-link-dirt-dl">
+              <div class="sheet-number">25</div>
+              <div class="sheet-title">Type-1 Dirt Wall Direct Load</div>
+              <div class="sheet-description">Direct load bending moments</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_26_TYPE1DIRT_LL_BM.html" class="sheet-card" data-testid="sheet-link-dirt-ll">
+              <div class="sheet-number">26</div>
+              <div class="sheet-title">Type-1 Dirt Wall LL Load</div>
+              <div class="sheet-description">Live load bending moments</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- CANTILEVER ABUTMENT -->
+        <div class="category">
+          <div class="category-title">🔧 Cantilever Abutment Design</div>
+          <div class="sheets-grid">
+            <a href="Sheet_28_C1AbutMENT_Drawing.html" class="sheet-card" data-testid="sheet-link-c1-draw">
+              <div class="sheet-number">28</div>
+              <div class="sheet-title">C1 Abutment Drawing</div>
+              <div class="sheet-description">Cantilever abutment layout</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_29_C1STABILITY_CHECK_ABUTMENT.html" class="sheet-card" data-testid="sheet-link-c1-stab">
+              <div class="sheet-number">29</div>
+              <div class="sheet-title">C1 Abutment Stability</div>
+              <div class="sheet-description">Cantilever stability analysis</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_30_C1ABUTMENT_FOOTING_DESIGN.html" class="sheet-card" data-testid="sheet-link-c1-foot">
+              <div class="sheet-number">30</div>
+              <div class="sheet-title">C1 Abutment Footing</div>
+              <div class="sheet-description">Cantilever footing design</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_31_C1Abut_Footing_STRESS_DIAGRAM.html" class="sheet-card" data-testid="sheet-link-c1-stress">
+              <div class="sheet-number">31</div>
+              <div class="sheet-title">C1 Footing Stress</div>
+              <div class="sheet-description">Stress distribution diagram</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_32_CANRETURN_FOOTING_DESIGN.html" class="sheet-card" data-testid="sheet-link-can-foot">
+              <div class="sheet-number">32</div>
+              <div class="sheet-title">Cant Return Footing</div>
+              <div class="sheet-description">Return wall footing design</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_33_STEEL_IN_CANTABUTMENT.html" class="sheet-card" data-testid="sheet-link-c1-steel">
+              <div class="sheet-number">33</div>
+              <div class="sheet-title">Steel in Cant Abutment</div>
+              <div class="sheet-description">Reinforcement schedule</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_34_STEEL_IN_CANTRETURNS.html" class="sheet-card" data-testid="sheet-link-cant-returns">
+              <div class="sheet-number">34</div>
+              <div class="sheet-title">Steel in Cant Returns</div>
+              <div class="sheet-description">Return wall reinforcement</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_35_C1Abutment_Cap.html" class="sheet-card" data-testid="sheet-link-c1-cap">
+              <div class="sheet-number">35</div>
+              <div class="sheet-title">C1 Abutment Cap</div>
+              <div class="sheet-description">Cap design and analysis</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_36_C1DIRT_WALL_REINFORCEMENT.html" class="sheet-card" data-testid="sheet-link-c1-dirt-reinf">
+              <div class="sheet-number">36</div>
+              <div class="sheet-title">C1 Dirt Wall Reinforcement</div>
+              <div class="sheet-description">Backfill wall reinforcement</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_37_C1DIRT_DirectLoad_BM.html" class="sheet-card" data-testid="sheet-link-c1-dirt-dl">
+              <div class="sheet-number">37</div>
+              <div class="sheet-title">C1 Dirt Wall Direct Load</div>
+              <div class="sheet-description">Direct load bending moments</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_38_C1DIRT_LL_BM.html" class="sheet-card" data-testid="sheet-link-c1-dirt-ll">
+              <div class="sheet-number">38</div>
+              <div class="sheet-title">C1 Dirt Wall LL Load</div>
+              <div class="sheet-description">Live load bending moments</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- TECHNICAL & SUMMARY -->
+        <div class="category">
+          <div class="category-title">📋 Technical Reports & Summary</div>
+          <div class="sheets-grid">
+            <a href="Sheet_27_TechNote.html" class="sheet-card" data-testid="sheet-link-tech-note">
+              <div class="sheet-number">27</div>
+              <div class="sheet-title">Tech Note</div>
+              <div class="sheet-description">Technical specifications</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_39_Tech_Report.html" class="sheet-card" data-testid="sheet-link-tech-report">
+              <div class="sheet-number">39</div>
+              <div class="sheet-title">Tech Report</div>
+              <div class="sheet-description">Complete technical report</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_40_General_Abs_.html" class="sheet-card" data-testid="sheet-link-gen-abs">
+              <div class="sheet-number">40</div>
+              <div class="sheet-title">General Abstract</div>
+              <div class="sheet-description">Overall design summary</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_41_Abstract.html" class="sheet-card" data-testid="sheet-link-abstract">
+              <div class="sheet-number">41</div>
+              <div class="sheet-title">Abstract</div>
+              <div class="sheet-description">Detailed summary of all sheets</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+            <a href="Sheet_42_Bridge_measurements.html" class="sheet-card" data-testid="sheet-link-measurements">
+              <div class="sheet-number">42</div>
+              <div class="sheet-title">Bridge Measurements</div>
+              <div class="sheet-description">Complete bridge dimensions</div>
+              <div class="sheet-link">View Sheet →</div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; padding: 20px; background: #ecf0f1; border-radius: 8px; margin-top: 40px;">
+        <p style="color: #7f8c8d; font-size: 0.95em;">
+          All calculations follow <strong>IRC:6-2016</strong> and <strong>IRC:112-2015</strong> standards
+        </p>
+        <p style="color: #95a5a6; font-size: 0.85em; margin-top: 10px;">
+          Generated design documentation for vetting agency approval
+        </p>
+      </div>
+    </div>
   </div>
 </body>
 </html>
