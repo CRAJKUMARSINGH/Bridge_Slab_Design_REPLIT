@@ -557,17 +557,54 @@ export function calculateSlabDesign(input: DesignInput, hydraulics: DesignOutput
   const mainSteelMain = requiredSteel * input.span;
   const mainSteelDistribution = requiredSteel * input.width * 0.6;
 
-  // Stress points
+  // REAL stress calculations based on input parameters
   const stressDistribution: StressPoint[] = [];
+  
+  // Calculate maximum stresses based on actual loading and section properties
+  const slabArea = input.span * input.width;
+  const selfWeight = slabThickness * 25; // kN/m²
+  const liveLoad = wheelLoadClass / (input.span * input.width); // kN/m²
+  const totalLoad = selfWeight + liveLoad;
+  
+  // Maximum bending moment for the slab section
+  const maxMoment = (totalLoad * Math.pow(input.span, 2)) / 8;
+  
+  // Section properties
+  const sectionModulus = (input.width * Math.pow(slabThickness, 2)) / 6; // m³
+  const maxBendingStress = (maxMoment / sectionModulus) / 1000; // Convert to MPa
+  
+  // Shear calculations
+  const maxShear = (totalLoad * input.span) / 2;
+  const shearArea = input.width * slabThickness;
+  const maxShearStress = (maxShear / shearArea) / 1000; // Convert to MPa
+  
+  // Generate stress distribution points that vary based on input parameters
   for (let i = 1; i <= 34; i++) {
-    const stress = 50 + (i * 1.5);
+    // Vary stress values based on position and input parameters
+    const positionFactor = i / 34; // 0 to 1
+    
+    // Bending stress varies with position (maximum at center)
+    const bendingStress = maxBendingStress * Math.sin(positionFactor * Math.PI);
+    
+    // Shear stress varies with position (maximum at supports)
+    const shearStress = maxShearStress * Math.cos(positionFactor * Math.PI / 2);
+    
+    // Transverse stress based on load distribution
+    const transverseStress = bendingStress * (0.3 + 0.7 * (input.width / input.span));
+    
+    // Combined stress using von Mises criterion
+    const combinedStress = Math.sqrt(Math.pow(bendingStress, 2) + Math.pow(transverseStress, 2) + Math.pow(shearStress, 2));
+    
+    // Status based on material strength
+    const status = combinedStress < (fck / 3) ? "Safe" : "Check"; // Using working stress method
+    
     stressDistribution.push({
       location: `Point ${i}`,
-      longitudinalStress: parseFloat(stress.toFixed(2)),
-      transverseStress: parseFloat((stress * 0.8).toFixed(2)),
-      shearStress: parseFloat((stress * 0.3).toFixed(2)),
-      combinedStress: parseFloat(stress.toFixed(2)),
-      status: stress < fck ? "Safe" : "Check"
+      longitudinalStress: parseFloat(bendingStress.toFixed(2)),
+      transverseStress: parseFloat(transverseStress.toFixed(2)),
+      shearStress: parseFloat(shearStress.toFixed(2)),
+      combinedStress: parseFloat(combinedStress.toFixed(2)),
+      status: status
     });
   }
 

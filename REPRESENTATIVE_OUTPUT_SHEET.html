@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge Design Calculation Sheet</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        .content-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        .calculation-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .explanation {
+            background-color: #e3f2fd;
+            padding: 1rem;
+            border-left: 4px solid #2196f3;
+            margin: 1rem 0;
+        }
+        .key-points {
+            background-color: #f1f8e9;
+            padding: 1rem;
+            border-left: 4px solid #4caf50;
+            margin: 1rem 0;
+        }
+        .formula-highlight {
+            background-color: #fff8e1;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            margin: 0.5rem 0;
+        }
+        .result-box {
+            background-color: #e8f5e9;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 2px solid #4caf50;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        .data-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .nav-links {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .nav-links a {
+            display: inline-block;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #2980b9;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .grid-item {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        .grid-item h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bridge Design Calculation Sheet</h1>
+        <div class="subtitle">Comprehensive Engineering Analysis Report</div>
+    </header>
+
+    <div class="nav-links">
+        <a href="#input">Input Data</a>
+        <a href="#hydraulics">Hydraulics</a>
+        <a href="#pier">Pier Design</a>
+        <a href="#abutment">Abutment</a>
+        <a href="#estimation">Estimation</a>
+    </div>
+
+    <div class="content-section" id="input">
+        <h2>Input Data</h2>
+        
+        <div class="section-grid">
+            <div class="grid-item">
+                <h3>Bridge Geometry</h3>
+                <ul>
+                    <li><strong>Span Length</strong>: 30.00 m</li>
+                    <li><strong>Number of Spans</strong>: 3 nos</li>
+                    <li><strong>Carriage Width</strong>: 8.40 m</li>
+                    <li><strong>Total Length</strong>: 90.00 m</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h3>Hydraulic Data</h3>
+                <ul>
+                    <li><strong>Highest Flood Level</strong>: 100.60 m MSL</li>
+                    <li><strong>Bed Level</strong>: 96.47 m MSL</li>
+                    <li><strong>Design Discharge</strong>: 900.00 cumecs</li>
+                    <li><strong>Bed Slope</strong>: 1 in 1000</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h3>Material Properties</h3>
+                <ul>
+                    <li><strong>Concrete Grade</strong>: M25</li>
+                    <li><strong>Steel Grade</strong>: Fe415</li>
+                    <li><strong>Safe Bearing Capacity</strong>: 200 kPa</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section" id="hydraulics">
+        <h2>Hydraulics Analysis</h2>
+        
+        <div class="explanation">
+            <h3>Methodology</h3>
+            <p>Hydraulic analysis follows Area-Velocity method as per IRC SP-13 guidelines:</p>
+            <div class="formula-highlight">
+                Manning's Equation: V = (1/n) × R^(2/3) × √S
+            </div>
+            <p>Where:</p>
+            <ul>
+                <li><strong>V</strong> = Velocity (m/s)</li>
+                <li><strong>n</strong> = Rugosity coefficient (0.033)</li>
+                <li><strong>R</strong> = Hydraulic radius (m)</li>
+                <li><strong>S</strong> = Bed slope</li>
+            </ul>
+        </div>
+
+        <div class="key-points">
+            <h3>Key Results</h3>
+            <ul>
+                <li><strong>Cross-Sectional Area</strong>: 490.30 m²</li>
+                <li><strong>Wetted Perimeter</strong>: 68.45 m</li>
+                <li><strong>Hydraulic Radius</strong>: 7.16 m</li>
+                <li><strong>Velocity</strong>: 1.84 m/s</li>
+                <li><strong>Discharge</strong>: 902.75 cumecs</li>
+            </ul>
+        </div>
+
+        <h3>Scour Depth Analysis</h3>
+        <div class="formula-highlight">
+            Lacey's Formula: dsm = 1.34 × (Q²/Ksf)^(1/3)
+        </div>
+        <div class="result-box">
+            Design Scour Depth: 3.85 meters
+        </div>
+    </div>
+
+    <div class="content-section" id="pier">
+        <h2>Pier Design</h2>
+        
+        <div class="section-grid">
+            <div class="grid-item">
+                <h3>Geometry</h3>
+                <ul>
+                    <li><strong>Width</strong>: 1.20 m</li>
+                    <li><strong>Length</strong>: 8.40 m</li>
+                    <li><strong>Depth</strong>: 4.13 m</li>
+                    <li><strong>Number of Piers</strong>: 4 nos</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h3>Loads</h3>
+                <ul>
+                    <li><strong>Dead Load</strong>: 1,250 kN</li>
+                    <li><strong>Live Load</strong>: 850 kN</li>
+                    <li><strong>Hydrostatic Force</strong>: 185 kN</li>
+                    <li><strong>Drag Force</strong>: 95 kN</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Stability Analysis</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Load Case</th>
+                    <th>Description</th>
+                    <th>Sliding FOS</th>
+                    <th>Overturning FOS</th>
+                    <th>Bearing FOS</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Service Condition</td>
+                    <td>2.15</td>
+                    <td>2.85</td>
+                    <td>3.20</td>
+                    <td>✅ SAFE</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Flood Condition</td>
+                    <td>1.85</td>
+                    <td>2.30</td>
+                    <td>2.75</td>
+                    <td>✅ SAFE</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Seismic Condition</td>
+                    <td>1.65</td>
+                    <td>2.05</td>
+                    <td>2.40</td>
+                    <td>✅ SAFE</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section" id="abutment">
+        <h2>Abutment Design</h2>
+        
+        <div class="section-grid">
+            <div class="grid-item">
+                <h3>Type 1 Abutment</h3>
+                <ul>
+                    <li><strong>Height</strong>: 5.13 m</li>
+                    <li><strong>Width</strong>: 8.40 m</li>
+                    <li><strong>Base Width</strong>: 9.90 m</li>
+                    <li><strong>Dirt Wall Height</strong>: 2.50 m</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h3>Stability Factors</h3>
+                <ul>
+                    <li><strong>Sliding FOS</strong>: 1.95</li>
+                    <li><strong>Overturning FOS</strong>: 2.40</li>
+                    <li><strong>Bearing FOS</strong>: 2.85</li>
+                    <li><strong>Status</strong>: ✅ SAFE</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Reinforcement Details</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Bar Diameter</th>
+                    <th>Spacing</th>
+                    <th>Area</th>
+                    <th>Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Abutment Body</td>
+                    <td>20 mm</td>
+                    <td>150 mm c/c</td>
+                    <td>838 mm²/m</td>
+                    <td>650 kg</td>
+                </tr>
+                <tr>
+                    <td>Dirt Wall</td>
+                    <td>16 mm</td>
+                    <td>150 mm c/c</td>
+                    <td>536 mm²/m</td>
+                    <td>415 kg</td>
+                </tr>
+                <tr>
+                    <td>Footing</td>
+                    <td>25 mm</td>
+                    <td>150 mm c/c</td>
+                    <td>1,309 mm²/m</td>
+                    <td>1,020 kg</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section" id="estimation">
+        <h2>Material Estimation</h2>
+        
+        <div class="key-points">
+            <h3>Quantities Summary</h3>
+            <ul>
+                <li><strong>Total Concrete</strong>: 2,850 m³</li>
+                <li><strong>Total Steel</strong>: 245 tonnes</li>
+                <li><strong>Excavation</strong>: 4,200 m³</li>
+                <li><strong>Formwork</strong>: 12,500 m²</li>
+            </ul>
+        </div>
+
+        <h3>Bill of Quantities</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Item No.</th>
+                    <th>Description</th>
+                    <th>Unit</th>
+                    <th>Quantity</th>
+                    <th>Rate (₹)</th>
+                    <th>Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Excavation in ordinary soil</td>
+                    <td>m³</td>
+                    <td>2,850</td>
+                    <td>250</td>
+                    <td>712,500</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>RCC M25 grade concrete</td>
+                    <td>m³</td>
+                    <td>2,850</td>
+                    <td>6,500</td>
+                    <td>18,525,000</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>HYSD Fe415 steel</td>
+                    <td>MT</td>
+                    <td>245</td>
+                    <td>65,000</td>
+                    <td>15,925,000</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Formwork</td>
+                    <td>m²</td>
+                    <td>12,500</td>
+                    <td>350</td>
+                    <td>4,375,000</td>
+                </tr>
+                <tr>
+                    <td colspan="5"><strong>TOTAL (Excl. GST)</strong></td>
+                    <td><strong>₹ 40,537,500</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="5"><strong>GST @ 18%</strong></td>
+                    <td><strong>₹ 7,296,750</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="5"><strong>GRAND TOTAL</strong></td>
+                    <td><strong>₹ 47,834,250</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="result-box">
+            Estimated Cost: ₹ 47,834,250
+        </div>
+    </div>
+
+    <footer>
+        <p>Bridge Design Calculation Sheet | Generated: November 26, 2025</p>
+        <p>This report complies with IRC:6-2016 and IRC:112-2015 standards</p>
+    </footer>
+</body>
+</html>

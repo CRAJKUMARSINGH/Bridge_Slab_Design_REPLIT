@@ -6,20 +6,23 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Projects from "@/pages/Projects";
 import WorkbookLayout from "@/pages/Workbook";
+import LandingPage from "@/pages/LandingPage";
+import IntegrationDashboard from "@/pages/IntegrationDashboard";
+import Documentation from "@/pages/Documentation";
+import Settings from "@/pages/Settings";
 import { useEffect } from "react";
 
-function HtmlSheetsRedirect() {
-  useEffect(() => {
-    window.location.href = "/api/html-sheets-index";
-  }, []);
-  return <div style={{ padding: "20px", textAlign: "center" }}>Loading 49 bridge design sheets...</div>;
-}
+// Removed HtmlSheetsRedirect component as we're using LandingPage
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={HtmlSheetsRedirect} />
+      <Route path="/" component={LandingPage} />
+      <Route path="/projects" component={Projects} />
       <Route path="/workbook/:id" component={WorkbookLayout} />
+      <Route path="/integration" component={IntegrationDashboard} />
+      <Route path="/docs" component={Documentation} />
+      <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
   );

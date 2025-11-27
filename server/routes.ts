@@ -3,7 +3,8 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema } from "@shared/schema";
 import { generateCompleteExcelReport } from "./excel-export";
-import { generateCompleteWorkbookFromTemplate } from "./excel-template-export";
+import { generateCompleteWorkbookFromTemplate, generateWorkbookFromTestTemplate, generateEnhancedWorkbookFromTemplate } from "./excel-template-export";
+import { generateExcelReport as generateEnhancedTemplateExcelReport } from "./excel-template-enhanced";
 import { generatePDF } from "./pdf-export";
 import { generateHTMLDesignReport } from "./design-report";
 import { parseExcelForDesignInput } from "./excel-parser";
@@ -108,6 +109,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Excel Export route with specific test template
+  app.get("/api/projects/:id/export/excel/:templateId", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const templateId = parseInt(req.params.templateId);
+      
+      if (isNaN(templateId) || templateId < 1 || templateId > 3) {
+        return res.status(400).json({ error: "Invalid template ID. Must be 1, 2, or 3." });
+      }
+      
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      
+      const designData = project.designData as any;
+      const buffer = await generateWorkbookFromTestTemplate(
+        designData.input,
+        designData.output,
+        project.name || "Bridge Design",
+        templateId
+      );
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_template_${templateId}.xlsx"`);
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error exporting Excel with test template:", error);
+      res.status(500).json({ error: "Failed to export Excel with test template" });
+    }
+  });
+
+  // Excel Export route with enhanced template (includes specialized input sheets)
+  app.get("/api/projects/:id/export/excel/enhanced", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      
+      const designData = project.designData as any;
+      const buffer = await generateEnhancedWorkbookFromTemplate(
+        designData.input,
+        designData.output,
+        project.name || "Bridge Design"
+      );
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_enhanced_template.xlsx"`);
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error exporting enhanced Excel template:", error);
+      res.status(500).json({ error: "Failed to export enhanced Excel template" });
+    }
+  });
+
+  // Excel Export route with master template (preserves complete structure)
+  app.get("/api/projects/:id/export/excel/master", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      
+      const designData = project.designData as any;
+      const buffer = await generateEnhancedTemplateExcelReport(
+        designData.input,
+        designData.output,
+        project.name || "Bridge Design"
+      );
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_master_template.xlsx"`);
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error exporting master Excel template:", error);
+      res.status(500).json({ error: "Failed to export master Excel template" });
+    }
+  });
+
+  // New endpoint: Enhanced template with complete input data population
+  app.get("/api/projects/:id/export/excel/enhanced-complete", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await storage.getProject(id);
+      
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+      
+      const designData = project.designData as any;
+      const buffer = await generateEnhancedTemplateExcelReport(
+        designData.input,
+        designData.output,
+        project.name || "Bridge Design"
+      );
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.setHeader("Content-Disposition", `attachment; filename="${project.name || "design"}_enhanced_complete.xlsx"`);
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error exporting enhanced complete Excel template:", error);
+      res.status(500).json({ error: "Failed to export enhanced complete Excel template" });
+    }
+  });
+
   // HTML Design Report (detailed engineering documentation)
   app.get("/api/projects/:id/report/html", async (req, res) => {
     try {
@@ -200,6 +308,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error serving PDF:", error);
       res.status(500).json({ error: "PDF not found" });
+    }
+  });
+
+  // Serve DXF files from OUTPUT directory
+  app.get("/api/output/:filename", async (req, res) => {
+    try {
+      const fs = await import("fs");
+      const path = await import("path");
+      const safeFilename = req.params.filename.replace(/\.\./g, '').replace(/\//g, '');
+      // Only allow DXF, SVG, and TXT files for security
+      if (!safeFilename.match(/\.(dxf|svg|txt|pdf)$/i)) {
+        return res.status(400).json({ error: "Invalid file type" });
+      }
+      const filePath = path.join(process.cwd(), "OUTPUT", safeFilename);
+      const buffer = fs.readFileSync(filePath);
+      
+      // Set appropriate content type based on file extension
+      const ext = path.extname(safeFilename).toLowerCase();
+      const contentType = {
+        '.dxf': 'application/dxf',
+        '.svg': 'image/svg+xml',
+        '.txt': 'text/plain',
+        '.pdf': 'application/pdf'
+      }[ext] || 'application/octet-stream';
+      
+      res.setHeader("Content-Type", contentType);
+      res.setHeader("Content-Disposition", `inline; filename=${safeFilename}`);
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error serving output file:", error);
+      res.status(404).json({ error: "File not found" });
     }
   });
 

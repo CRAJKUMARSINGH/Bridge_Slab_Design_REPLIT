@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afflux Calculation Viewer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        .content-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+        .calculation-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .explanation {
+            background-color: #e3f2fd;
+            padding: 1rem;
+            border-left: 4px solid #2196f3;
+            margin: 1rem 0;
+        }
+        .key-points {
+            background-color: #f1f8e9;
+            padding: 1rem;
+            border-left: 4px solid #4caf50;
+            margin: 1rem 0;
+        }
+        .formula-highlight {
+            background-color: #fff8e1;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            margin: 0.5rem 0;
+        }
+        .result-box {
+            background-color: #e8f5e9;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 2px solid #4caf50;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+        }
+        .nav-links {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .nav-links a {
+            display: inline-block;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #5a67d8;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Afflux Calculation Analysis</h1>
+        <div class="subtitle">Bridge Hydraulics Engineering</div>
+    </header>
+
+    <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#calculation">Calculation</a>
+        <a href="#results">Results</a>
+        <a href="#conclusion">Conclusion</a>
+    </div>
+
+    <div class="content-section" id="overview">
+        <h2>What is Afflux?</h2>
+        <p>Afflux is the rise in water level upstream of a bridge structure caused by the obstruction to flow created by the bridge piers, abutments, and deck slab. It's a critical parameter in bridge design to ensure the structure can safely accommodate flood flows.</p>
+        
+        <div class="explanation">
+            <h3>Why Afflux Matters</h3>
+            <p>Understanding afflux is essential for:</p>
+            <ul>
+                <li>Determining the required deck elevation</li>
+                <li>Ensuring adequate clearance during flood events</li>
+                <li>Preventing backwater effects on upstream areas</li>
+                <li>Ensuring safe passage of debris and floating objects</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-section" id="calculation">
+        <h2>Afflux Calculation Process</h2>
+        
+        <div class="explanation">
+            <h3>Methodology</h3>
+            <p>The calculation follows IS: 7784 (Part-I) 1975 using the Molesworth Formula:</p>
+            <div class="formula-highlight">
+                Afflux h = ((V²/17.85) + 0.0152) × (A²/a² - 1)
+            </div>
+            <p>Where:</p>
+            <ul>
+                <li><strong>h</strong> = afflux in meters</li>
+                <li><strong>V</strong> = velocity in the unobstructed stream (m/s)</li>
+                <li><strong>A</strong> = unobstructed sectional area of the river (m²)</li>
+                <li><strong>a</strong> = obstructed sectional area at the bridge (m²)</li>
+            </ul>
+        </div>
+
+        <div class="key-points">
+            <h3>Key Parameters Considered</h3>
+            <ul>
+                <li><strong>Unobstructed Area (A)</strong>: 490.30 m²</li>
+                <li><strong>Obstructed Area (a)</strong>: 337.92 m²</li>
+                <li><strong>Stream Velocity (V)</strong>: 1.84 m/s</li>
+                <li><strong>Bridge Configuration</strong>: 12 spans of 8.00m each</li>
+                <li><strong>Pier Obstruction</strong>: 11 piers of 1.20m width</li>
+            </ul>
+        </div>
+
+        <h3>Detailed Calculation</h3>
+        <div class="calculation-container">
+            <!-- We'll embed the original HTML table here -->
+            <iframe src="attached_assets/html-sheets/Sheet_02_afflux_calculation.html" 
+                    style="width:100%; height:800px; border:none;"
+                    title="Afflux Calculation Details"></iframe>
+        </div>
+    </div>
+
+    <div class="content-section" id="results">
+        <h2>Calculation Results</h2>
+        
+        <div class="result-box">
+            Calculated Afflux: 0.23 meters
+        </div>
+        
+        <div class="key-points">
+            <h3>Key Results</h3>
+            <ul>
+                <li><strong>Afflux Height</strong>: 0.23 m</li>
+                <li><strong>Afflux Flood Level</strong>: 100.83 m</li>
+                <li><strong>Deck Slab Top Level</strong>: 101.60 m</li>
+                <li><strong>Clearance</strong>: 0.77 m above afflux level</li>
+                <li><strong>Obstructed Velocity</strong>: 2.67 m/s</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Result Interpretation</h3>
+            <p>The calculated afflux of 0.23 meters indicates a relatively minor impact on the upstream water level. With the deck slab positioned at 101.60m and the afflux flood level at 100.83m, there is adequate clearance of 0.77 meters, ensuring:</p>
+            <ul>
+                <li>No hindrance to traffic during high floods</li>
+                <li>Sufficient freeboard for safety</li>
+                <li>Proper hydraulic performance of the structure</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-section" id="conclusion">
+        <h2>Engineering Conclusion</h2>
+        
+        <div class="result-box">
+            Design Verification: PASS
+        </div>
+        
+        <p>The afflux calculation confirms that the bridge design meets all hydraulic requirements:</p>
+        <ul>
+            <li>Afflux is within acceptable limits (0.23m)</li>
+            <li>Adequate clearance between deck and flood level</li>
+            <li>Safe velocity conditions (2.67 m/s)</li>
+            <li>No risk of upstream flooding</li>
+        </ul>
+        
+        <div class="explanation">
+            <h3>Design Recommendations</h3>
+            <ol>
+                <li>Maintain current deck elevation of 101.60m</li>
+                <li>Ensure proper debris management during flood seasons</li>
+                <li>Monitor upstream water levels during extreme events</li>
+                <li>Consider future sedimentation effects in long-term maintenance</li>
+            </ol>
+        </div>
+    </div>
+
+    <footer>
+        <p>Bridge Design Hydraulics Analysis | Afflux Calculation Report</p>
+        <p>This analysis is based on IS: 7784 (Part-I) 1975 standards</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .bridge-deck { fill: #87CEEB; stroke: #000080; stroke-width: 2; }
+    .pier { fill: #696969; stroke: #2F4F4F; stroke-width: 2; }
+    .abutment { fill: #A9A9A9; stroke: #2F4F4F; stroke-width: 2; }
+    .text { font-family: Arial, sans-serif; font-size: 14px; fill: #000000; }
+    .title { font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; fill: #000080; }
+  </style>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" class="title">Bridge General Arrangement</text>
+  
+  <!-- Bridge Deck -->
+  <rect x="50" y="200" width="400.0" height="200.0" class="bridge-deck" />
+  
+  <!-- Piers -->
+  <rect x="240.0" y="400.0" width="20.0" height="160.0" class="pier" />
+  <rect x="0" y="400.0" width="40.0" height="160.0" class="abutment" />
+  <rect x="450.0" y="400.0" width="40.0" height="160.0" class="abutment" />
+  <!-- Labels -->
+  <text x="250.0" y="180" text-anchor="middle" class="text">Span: 20.0m</text>
+  <text x="250.0" y="420.0" text-anchor="middle" class="text">Width: 10.0m</text>
+  <text x="20" y="610.0" class="text">Piers: 1</text>
+  
+  <!-- Legend -->
+  <rect x="650" y="100" width="20" height="20" class="bridge-deck" />
+  <text x="680" y="115" class="text">Bridge Deck</text>
+  
+  <rect x="650" y="130" width="20" height="20" class="pier" />
+  <text x="680" y="145" class="text">Pier</text>
+  
+  <rect x="650" y="160" width="20" height="20" class="abutment" />
+  <text x="680" y="175" class="text">Abutment</text>
+</svg>

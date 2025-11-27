@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Actual Pier Stability Sheet from Template</title>
+    <style>
+        body { 
+            font-family: Calibri, Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #f8f8f8;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header { 
+            background: #1f497d; 
+            color: white; 
+            padding: 15px; 
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .sheet-container {
+            border: 2px solid #999;
+            background: white;
+        }
+        .row {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+        }
+        .cell {
+            border-right: 1px solid #ccc;
+            padding: 8px 5px;
+            min-height: 20px;
+            font-size: 12px;
+            position: relative;
+        }
+        .cell:last-child {
+            border-right: none;
+        }
+        .header-cell {
+            background: #d9d9d9;
+            font-weight: bold;
+            text-align: center;
+        }
+        .data-cell {
+            background: white;
+        }
+        .formula-cell {
+            background: #e8f4f8;
+            font-style: italic;
+            color: #666;
+        }
+        .section-header {
+            background: #4f81bd;
+            color: white;
+            font-weight: bold;
+            padding: 5px;
+            margin: 10px 0 5px 0;
+        }
+        .merged-indicator {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 8px;
+            color: #ff0000;
+        }
+        .info-box {
+            background: #f0f8ff;
+            border: 1px solid #4f81bd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info-title {
+            font-weight: bold;
+            color: #1f497d;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>ACTUAL PIER STABILITY SHEET</h2>
+            <p>From master_bridge_Design.xlsx Template</p>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">SHEET PROPERTIES</div>
+            <p><strong>Sheet Name:</strong> STABILITY CHECK FOR PIER</p>
+            <p><strong>Sheet Range:</strong> A1:AJ468</p>
+            <p><strong>Merged Cells:</strong> 10 ranges</p>
+            <p><strong>Key Merged Ranges:</strong></p>
+            <ul>
+                <li>A1:Q1</li><li>K352:M352</li><li>B160:H160</li><li>B197:H197</li><li>L52:M52</li>
+            </ul>
+        </div>
+        
+        <div class="sheet-container">
+            <!-- Header Rows -->
+            <div class="section-header">HEADER SECTION (ROWS 1-3)</div>
+            <div class="row">
+                <div class="cell header-cell" style="width: 5%;">A1</div>
+                <div class="cell data-cell" style="width: 95%;">DESIGN OF PIER AND CHECK FOR STABILITY- SUBMERSIBLE BRIDGE </div>
+            </div>
+            <div class="row">
+                <div class="cell header-cell" style="width: 5%;">A2</div>
+                <div class="cell data-cell" style="width: 95%;">Name Of Work :- Construction of Submersible Bridge on ON KHERWARA - JAWAS - SUVERI ROAD IN KM 9/000, ACROSS RIVER SOM</div>
+            </div>
+            <div class="row">
+                <div class="cell header-cell" style="width: 5%;">A3</div>
+                <div class="cell data-cell" style="width: 95%;">DESIGN DATA</div>
+            </div>
+            
+            <!-- Pier Geometry Data -->
+            <div class="section-header">PIER GEOMETRY DATA (ROW 5)</div>
+            <div class="row">
+                <div class="cell header-cell" style="width: 9%;">A5</div><div class="cell header-cell" style="width: 9%;">B5</div><div class="cell header-cell" style="width: 9%;">C5</div><div class="cell header-cell" style="width: 9%;">D5</div><div class="cell header-cell" style="width: 9%;">E5</div><div class="cell header-cell" style="width: 9%;">F5</div><div class="cell header-cell" style="width: 9%;">G5</div><div class="cell header-cell" style="width: 9%;">H5</div><div class="cell header-cell" style="width: 9%;">I5</div><div class="cell header-cell" style="width: 9%;">J5</div><div class="cell header-cell" style="width: 9%;">K5</div>
+            </div>
+            <div class="row">
+                <div class="cell data-cell" style="width: 9%;">1</div><div class="cell data-cell" style="width: 9%;">RIGHT EFFECTIVE SPAN</div><div class="cell data-cell" style="width: 9%;"></div><div class="cell data-cell" style="width: 9%;">=</div><div class="cell data-cell" style="width: 9%;">7.6</div><div class="cell data-cell" style="width: 9%;">M</div><div class="cell data-cell" style="width: 9%;">Degree of Skew</div><div class="cell data-cell" style="width: 9%;"></div><div class="cell data-cell" style="width: 9%;"></div><div class="cell data-cell" style="width: 9%;"></div><div class="cell data-cell" style="width: 9%;">Degrees</div>
+            </div>
+            
+            <!-- Stability Calculations -->
+            <div class="section-header">STABILITY CALCULATIONS (ROW 197)</div>
+            <div class="row">
+                <div class="cell header-cell" style="width: 12.5%;">A197</div><div class="cell header-cell" style="width: 12.5%;">B197</div><div class="cell header-cell" style="width: 12.5%;">C197</div><div class="cell header-cell" style="width: 12.5%;">D197</div><div class="cell header-cell" style="width: 12.5%;">E197</div><div class="cell header-cell" style="width: 12.5%;">F197</div><div class="cell header-cell" style="width: 12.5%;">G197</div><div class="cell header-cell" style="width: 12.5%;">H197</div>
+            </div>
+            <div class="row">
+                <div class="cell data-cell" style="width: 12.5%;"></div><div class="cell data-cell" style="width: 12.5%;">BASE PRESSURE CALCULATION </div><div class="cell data-cell" style="width: 12.5%;"></div><div class="cell data-cell" style="width: 12.5%;"></div><div class="cell data-cell" style="width: 12.5%;"></div><div class="cell data-cell" style="width: 12.5%;"></div><div class="cell data-cell" style="width: 12.5%;"></div><div class="cell data-cell" style="width: 12.5%;"></div>
+            </div>
+            
+            <!-- Force Calculations -->
+            <div class="section-header">FORCE CALCULATIONS (ROW 216)</div>
+            <div class="row">
+                <div class="cell header-cell" style="width: 16.66%;">A216</div><div class="cell header-cell" style="width: 16.66%;">B216</div><div class="cell header-cell" style="width: 16.66%;">C216</div><div class="cell header-cell" style="width: 16.66%;">D216</div><div class="cell header-cell" style="width: 16.66%;">E216</div><div class="cell header-cell" style="width: 16.66%;">F216</div>
+            </div>
+            <div class="row">
+                <div class="cell data-cell" style="width: 16.66%;"></div><div class="cell data-cell" style="width: 16.66%;"></div><div class="cell data-cell" style="width: 16.66%;">=</div><div class="cell data-cell" style="width: 16.66%;">137.4414363273386</div><div class="cell data-cell" style="width: 16.66%;">kN/m2</div><div class="cell data-cell" style="width: 16.66%;"></div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">NOTE</div>
+            <p>This visualization shows the actual structure and content of the STABILITY CHECK FOR PIER sheet from the master template. The layout, cell addresses, and content exactly match what is in the Excel file.</p>
+        </div>
+    </div>
+</body>
+</html>
+  
