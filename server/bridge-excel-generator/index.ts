@@ -29,6 +29,20 @@ import {
   generateBedSlopeSheet,
   generateSBCSheet
 } from './sheets/03-08-hydraulics-batch';
+import {
+  generateStabilityCheckPierSheet,
+  generateAbstractOfStressesSheet
+} from './sheets/09-10-pier-critical';
+import {
+  generateSteelFlaredPierSheet,
+  generateSteelInPierSheet,
+  generateFootingDesignSheet,
+  generateFootingStressDiagramSheet,
+  generatePierCapLLSheet,
+  generatePierCapSheet,
+  generateLLOADSheet,
+  generateLoadSummSheet
+} from './sheets/11-18-pier-remaining';
 
 // ==================== MAIN EXCEL GENERATOR ====================
 
@@ -106,8 +120,39 @@ export async function generateCompleteExcel(input: ProjectInput): Promise<Buffer
   await generateSBCSheet(workbook, enhancedInput, designResults);
   console.log('   ✓ Sheet 8/46: SBC');
   
+  // Pier Design Sheets (9-18)
+  await generateStabilityCheckPierSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 9/46: STABILITY CHECK FOR PIER (70 load cases)');
+  
+  await generateAbstractOfStressesSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 10/46: abstract of stresses (168 stress points)');
+  
+  await generateSteelFlaredPierSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 11/46: STEEL IN FLARED PIER BASE');
+  
+  await generateSteelInPierSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 12/46: STEEL IN PIER');
+  
+  await generateFootingDesignSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 13/46: FOOTING DESIGN');
+  
+  await generateFootingStressDiagramSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 14/46: Footing STRESS DIAGRAM');
+  
+  await generatePierCapLLSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 15/46: Pier Cap LL tracked vehicle');
+  
+  await generatePierCapSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 16/46: Pier Cap');
+  
+  await generateLLOADSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 17/46: LLOAD');
+  
+  await generateLoadSummSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 18/46: loadsumm');
+  
   // Generate remaining placeholder sheets (will be implemented progressively)
-  await generatePlaceholderSheets(workbook, enhancedInput, designResults, 9);
+  await generatePlaceholderSheets(workbook, enhancedInput, designResults, 19);
   
   console.log(`✅ Excel generation complete!`);
   console.log(`Total sheets: ${workbook.worksheets.length}/46`);
