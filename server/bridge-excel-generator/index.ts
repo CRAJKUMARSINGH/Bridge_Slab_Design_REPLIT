@@ -55,6 +55,15 @@ import {
   generateType1DirtDirectLoadBMSheet,
   generateType1DirtLLBMSheet
 } from './sheets/19-28-abutment-type1';
+import {
+  generateTechNoteSheet,
+  generateInsertEstimateSheet,
+  generateTechReportSheet,
+  generateGeneralAbsSheet,
+  generateAbstractSheet,
+  generateBridgeMeasurementsSheet,
+  generateC1AbutmentSheets
+} from './sheets/29-46-remaining';
 
 // ==================== MAIN EXCEL GENERATOR ====================
 
@@ -194,8 +203,28 @@ export async function generateCompleteExcel(input: ProjectInput): Promise<Buffer
   await generateType1DirtLLBMSheet(workbook, enhancedInput, designResults);
   console.log('   ✓ Sheet 28/46: TYPE1-DIRT LL_BM');
   
-  // Generate remaining placeholder sheets (will be implemented progressively)
-  await generatePlaceholderSheets(workbook, enhancedInput, designResults, 29);
+  // Technical Notes & Estimation Sheets (29-34)
+  await generateTechNoteSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 29/46: TechNote');
+  
+  await generateInsertEstimateSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 30/46: INSERT ESTIMATE');
+  
+  await generateTechReportSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 31/46: Tech Report');
+  
+  await generateGeneralAbsSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 32/46: General Abs.');
+  
+  await generateAbstractSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 33/46: Abstract');
+  
+  await generateBridgeMeasurementsSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 34/46: Bridge measurements');
+  
+  // C1 Abutment Sheets (35-46)
+  await generateC1AbutmentSheets(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheets 35-46: C1 Abutment (12 sheets)');
   
   console.log(`✅ Excel generation complete!`);
   console.log(`Total sheets: ${workbook.worksheets.length}/46`);
@@ -205,143 +234,7 @@ export async function generateCompleteExcel(input: ProjectInput): Promise<Buffer
   return Buffer.from(buffer);
 }
 
-/**
- * Generate placeholder sheets (temporary - will be replaced in Phase 2)
- * This creates the structure for remaining sheets
- * @param startFrom - Start from this sheet number (1-based)
- */
-async function generatePlaceholderSheets(
-  workbook: ExcelJS.Workbook,
-  input: EnhancedProjectInput,
-  design: DesignOutput,
-  startFrom: number = 1
-): Promise<void> {
-  
-  const sheetNames = [
-    // Sheets 1-8: Hydraulics and Cross-section
-    'INDEX',
-    'INSERT- HYDRAULICS',
-    'afflux calculation',
-    'HYDRAULICS',
-    'Deck Anchorage',
-    'CROSS SECTION',
-    'Bed Slope',
-    'SBC',
-    
-    // Sheets 9-18: Pier Design
-    'STABILITY CHECK FOR PIER',
-    'abstract of stresses',
-    'STEEL IN FLARED PIER BASE',
-    'STEEL IN PIER',
-    'FOOTING DESIGN',
-    'Footing STRESS DIAGRAM',
-    'Pier Cap LL tracked vehicle',
-    'Pier Cap',
-    'LLOAD',
-    'loadsumm',
-    
-    // Sheets 19-28: Type1 Abutment
-    'INSERT TYPE1-ABUT',
-    'TYPE1-AbutMENT Drawing',
-    'TYPE1-STABILITY CHECK ABUTMENT',
-    'TYPE1-ABUTMENT FOOTING DESIGN',
-    'TYPE1- Abut Footing STRESS',
-    'TYPE1-STEEL IN ABUTMENT',
-    'TYPE1-Abutment Cap',
-    'TYPE1-DIRT WALL REINFORCEMENT',
-    'TYPE1-DIRT DirectLoad_BM',
-    'TYPE1-DIRT LL_BM',
-    
-    // Sheets 29-34: Technical Notes and Estimation
-    'TechNote',
-    'INSERT ESTIMATE',
-    'Tech Report',
-    'General Abs.',
-    'Abstract',
-    'Bridge measurements',
-    
-    // Sheets 35-46: C1 Abutment (Cantilever)
-    'INSERT C1-ABUT',
-    'C1-AbutMENT Drawing',
-    'C1-STABILITY CHECK ABUTMENT',
-    'C1-ABUTMENT FOOTING DESIGN',
-    'C1- Abut Footing STRESS DIAGRAM',
-    'CAN RETURN FOOTING DESIGN',
-    'STEEL IN CANT ABUTMENT',
-    'STEEL IN CANT RETURNS',
-    'C1-Abutment Cap',
-    'C1-DIRT WALL REINFORCEMENT',
-    'C1-DIRT DirectLoad_BM',
-    'C1-DIRT LL_BM'
-  ];
-  
-  let sheetNumber = 1;
-  for (const sheetName of sheetNames) {
-    // Skip already generated sheets
-    if (sheetNumber < startFrom) {
-      sheetNumber++;
-      continue;
-    }
-    const sheet = workbook.addWorksheet(sheetName);
-    
-    // Add header
-    sheet.mergeCells('A1:F1');
-    const headerCell = sheet.getCell('A1');
-    headerCell.value = sheetName.toUpperCase();
-    headerCell.font = { bold: true, size: 14, color: { argb: 'FFFFFFFF' } };
-    headerCell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF0066CC' }
-    };
-    headerCell.alignment = { horizontal: 'center', vertical: 'middle' };
-    sheet.getRow(1).height = 30;
-    
-    // Add project info
-    sheet.getCell('A3').value = 'Project:';
-    sheet.getCell('B3').value = input.projectName;
-    sheet.getCell('A4').value = 'Location:';
-    sheet.getCell('B4').value = input.location;
-    sheet.getCell('A5').value = 'Sheet:';
-    sheet.getCell('B5').value = `${sheetNumber} of 46`;
-    
-    // Add specific content based on sheet type
-    if (sheetName === 'STABILITY CHECK FOR PIER') {
-      sheet.getCell('A7').value = `Load Cases: ${design.pier.loadCases.length}`;
-      sheet.getCell('A8').value = `Stress Points: ${design.pier.stressDistribution.length}`;
-      sheet.getCell('A9').value = 'Status: Ready for detailed implementation in Phase 2';
-    } else if (sheetName === 'TYPE1-STABILITY CHECK ABUTMENT') {
-      sheet.getCell('A7').value = `Load Cases: ${design.abutment.loadCases.length}`;
-      sheet.getCell('A8').value = `Stress Points: ${design.abutment.stressDistribution.length}`;
-      sheet.getCell('A9').value = 'Status: Ready for detailed implementation in Phase 2';
-    } else if (sheetName === 'INDEX') {
-      sheet.getCell('A7').value = 'Sheet Index:';
-      let row = 8;
-      sheetNames.forEach((name, idx) => {
-        sheet.getCell(`A${row}`).value = `${idx + 1}. ${name}`;
-        row++;
-      });
-    } else {
-      sheet.getCell('A7').value = 'Status: Placeholder - will be implemented in Phase 2';
-      sheet.getCell('A8').value = 'This sheet will contain:';
-      sheet.getCell('A9').value = '  • Detailed calculations';
-      sheet.getCell('A10').value = '  • Live formulas';
-      sheet.getCell('A11').value = '  • Proper formatting';
-      sheet.getCell('A12').value = '  • All required data';
-    }
-    
-    // Set column widths
-    sheet.getColumn('A').width = 30;
-    sheet.getColumn('B').width = 20;
-    sheet.getColumn('C').width = 15;
-    sheet.getColumn('D').width = 15;
-    sheet.getColumn('E').width = 15;
-    sheet.getColumn('F').width = 15;
-    
-    console.log(`   ✓ Sheet ${sheetNumber}/46: ${sheetName}`);
-    sheetNumber++;
-  }
-}
+// All 46 sheets are now implemented!
 
 /**
  * Save Excel to file (for testing)
