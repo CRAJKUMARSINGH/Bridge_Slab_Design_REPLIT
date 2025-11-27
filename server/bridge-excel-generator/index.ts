@@ -43,6 +43,18 @@ import {
   generateLLOADSheet,
   generateLoadSummSheet
 } from './sheets/11-18-pier-remaining';
+import {
+  generateInsertType1AbutSheet,
+  generateType1AbutmentDrawingSheet,
+  generateType1StabilityCheckSheet,
+  generateType1FootingDesignSheet,
+  generateType1FootingStressSheet,
+  generateType1SteelInAbutmentSheet,
+  generateType1AbutmentCapSheet,
+  generateType1DirtWallReinforcementSheet,
+  generateType1DirtDirectLoadBMSheet,
+  generateType1DirtLLBMSheet
+} from './sheets/19-28-abutment-type1';
 
 // ==================== MAIN EXCEL GENERATOR ====================
 
@@ -151,8 +163,39 @@ export async function generateCompleteExcel(input: ProjectInput): Promise<Buffer
   await generateLoadSummSheet(workbook, enhancedInput, designResults);
   console.log('   ✓ Sheet 18/46: loadsumm');
   
+  // Type1 Abutment Sheets (19-28)
+  await generateInsertType1AbutSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 19/46: INSERT TYPE1-ABUT');
+  
+  await generateType1AbutmentDrawingSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 20/46: TYPE1-AbutMENT Drawing');
+  
+  await generateType1StabilityCheckSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 21/46: TYPE1-STABILITY CHECK ABUTMENT (155 load cases)');
+  
+  await generateType1FootingDesignSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 22/46: TYPE1-ABUTMENT FOOTING DESIGN');
+  
+  await generateType1FootingStressSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 23/46: TYPE1- Abut Footing STRESS (153 stress points)');
+  
+  await generateType1SteelInAbutmentSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 24/46: TYPE1-STEEL IN ABUTMENT');
+  
+  await generateType1AbutmentCapSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 25/46: TYPE1-Abutment Cap');
+  
+  await generateType1DirtWallReinforcementSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 26/46: TYPE1-DIRT WALL REINFORCEMENT');
+  
+  await generateType1DirtDirectLoadBMSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 27/46: TYPE1-DIRT DirectLoad_BM');
+  
+  await generateType1DirtLLBMSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 28/46: TYPE1-DIRT LL_BM');
+  
   // Generate remaining placeholder sheets (will be implemented progressively)
-  await generatePlaceholderSheets(workbook, enhancedInput, designResults, 19);
+  await generatePlaceholderSheets(workbook, enhancedInput, designResults, 29);
   
   console.log(`✅ Excel generation complete!`);
   console.log(`Total sheets: ${workbook.worksheets.length}/46`);
