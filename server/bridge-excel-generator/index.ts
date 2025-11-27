@@ -21,6 +21,14 @@ import { generateCompleteDesign } from './design-engine-merged';
 // Import sheet generators
 import { generateIndexSheet } from './sheets/01-index';
 import { generateInsertHydraulicsSheet } from './sheets/02-insert-hydraulics';
+import {
+  generateAffluxCalculationSheet,
+  generateHydraulicsSheet,
+  generateDeckAnchorageSheet,
+  generateCrossSectionSheet,
+  generateBedSlopeSheet,
+  generateSBCSheet
+} from './sheets/03-08-hydraulics-batch';
 
 // ==================== MAIN EXCEL GENERATOR ====================
 
@@ -73,15 +81,33 @@ export async function generateCompleteExcel(input: ProjectInput): Promise<Buffer
   // Step 4: Generate all sheets
   console.log('📊 Step 4/4: Generating sheets...');
   
-  // Generate implemented sheets
+  // Generate implemented sheets (Hydraulics 1-8)
   await generateIndexSheet(workbook, enhancedInput, designResults);
   console.log('   ✓ Sheet 1/46: INDEX');
   
   await generateInsertHydraulicsSheet(workbook, enhancedInput, designResults);
   console.log('   ✓ Sheet 2/46: INSERT-HYDRAULICS');
   
+  await generateAffluxCalculationSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 3/46: afflux calculation');
+  
+  await generateHydraulicsSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 4/46: HYDRAULICS');
+  
+  await generateDeckAnchorageSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 5/46: Deck Anchorage');
+  
+  await generateCrossSectionSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 6/46: CROSS SECTION');
+  
+  await generateBedSlopeSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 7/46: Bed Slope');
+  
+  await generateSBCSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 8/46: SBC');
+  
   // Generate remaining placeholder sheets (will be implemented progressively)
-  await generatePlaceholderSheets(workbook, enhancedInput, designResults, 3);
+  await generatePlaceholderSheets(workbook, enhancedInput, designResults, 9);
   
   console.log(`✅ Excel generation complete!`);
   console.log(`Total sheets: ${workbook.worksheets.length}/46`);
