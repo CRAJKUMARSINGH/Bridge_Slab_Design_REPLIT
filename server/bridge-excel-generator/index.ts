@@ -18,6 +18,10 @@ import ExcelJS from 'exceljs';
 import { ProjectInput, EnhancedProjectInput, DesignOutput } from './types';
 import { generateCompleteDesign } from './design-engine-merged';
 
+// Import sheet generators
+import { generateIndexSheet } from './sheets/01-index';
+import { generateInsertHydraulicsSheet } from './sheets/02-insert-hydraulics';
+
 // ==================== MAIN EXCEL GENERATOR ====================
 
 /**
@@ -69,9 +73,15 @@ export async function generateCompleteExcel(input: ProjectInput): Promise<Buffer
   // Step 4: Generate all sheets
   console.log('📊 Step 4/4: Generating sheets...');
   
-  // For now, we'll create placeholder sheets
-  // In Phase 2, we'll implement each sheet generator
-  await generatePlaceholderSheets(workbook, enhancedInput, designResults);
+  // Generate implemented sheets
+  await generateIndexSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 1/46: INDEX');
+  
+  await generateInsertHydraulicsSheet(workbook, enhancedInput, designResults);
+  console.log('   ✓ Sheet 2/46: INSERT-HYDRAULICS');
+  
+  // Generate remaining placeholder sheets (will be implemented progressively)
+  await generatePlaceholderSheets(workbook, enhancedInput, designResults, 3);
   
   console.log(`✅ Excel generation complete!`);
   console.log(`Total sheets: ${workbook.worksheets.length}/46`);
@@ -83,12 +93,14 @@ export async function generateCompleteExcel(input: ProjectInput): Promise<Buffer
 
 /**
  * Generate placeholder sheets (temporary - will be replaced in Phase 2)
- * This creates the structure for all 46 sheets
+ * This creates the structure for remaining sheets
+ * @param startFrom - Start from this sheet number (1-based)
  */
 async function generatePlaceholderSheets(
   workbook: ExcelJS.Workbook,
   input: EnhancedProjectInput,
-  design: DesignOutput
+  design: DesignOutput,
+  startFrom: number = 1
 ): Promise<void> {
   
   const sheetNames = [
@@ -151,6 +163,11 @@ async function generatePlaceholderSheets(
   
   let sheetNumber = 1;
   for (const sheetName of sheetNames) {
+    // Skip already generated sheets
+    if (sheetNumber < startFrom) {
+      sheetNumber++;
+      continue;
+    }
     const sheet = workbook.addWorksheet(sheetName);
     
     // Add header
